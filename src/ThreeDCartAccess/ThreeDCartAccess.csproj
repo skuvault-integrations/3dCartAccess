@@ -52,9 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IThreeDCartOrdersService.cs" />
     <Compile Include="IThreeDCartProductsService.cs" />
+    <Compile Include="Misc\ActionPolicies.cs" />
+    <Compile Include="Misc\ThreeDCartLogger.cs" />
+    <Compile Include="Misc\WebRequestServices.cs" />
     <Compile Include="Misc\XmlSerializeHelpers.cs" />
     <Compile Include="Models\Configuration\ThreeDCartConfig.cs" />
+    <Compile Include="Models\Order\ThreeDCartOrder.cs" />
     <Compile Include="Models\Product\ThreeDCartProduct.cs" />
     <Compile Include="Models\ThreeDCartError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +69,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="ThreeDCartFactory.cs" />
+    <Compile Include="ThreeDCartOrdersService.cs" />
     <Compile Include="ThreeDCartProductsService.cs" />
   </ItemGroup>
   <ItemGroup>

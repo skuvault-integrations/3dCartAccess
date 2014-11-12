@@ -6,7 +6,7 @@ namespace ThreeDCartAccess.Misc
 {
 	public static class XmlSerializeHelpers
 	{
-		public static string Serialize< T >( T obj )
+		public static string Serialize< T >( this T obj )
 		{
 			var serializer = new XmlSerializer( typeof( T ) );
 			using( StringWriter writer = new Utf8StringWriter() )
@@ -16,7 +16,7 @@ namespace ThreeDCartAccess.Misc
 			}
 		}
 
-		public static T Deserialize< T >( string xml )
+		public static T Deserialize< T >( this string xml )
 		{
 			var serializer = new XmlSerializer( typeof( T ) );
 			var result = ( T )serializer.Deserialize( new StringReader( xml ) );

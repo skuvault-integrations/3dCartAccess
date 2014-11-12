@@ -6,9 +6,9 @@ using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.Models.Configuration;
 
-namespace ThreeDCartAccessTests.Products
+namespace ThreeDCartAccessTests.Orders
 {
-	public class ProductTests
+	public class OrderTests
 	{
 		private IThreeDCartFactory ThreeDCartFactory;
 		private ThreeDCartConfig Config;
@@ -29,20 +29,20 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
-		public void GetProducts()
+		public void GetOrders()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var result = service.GetProducts();
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetOrders();
 
 			result.Should().NotBeNull();
 			//result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
-		public async Task GetProductsAsync()
+		public async Task GetOrdersAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var result = await service.GetProductsAsync();
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = await service.GetOrdersAsync();
 
 			result.Should().NotBeNull();
 			//result.Count().Should().BeGreaterThan( 0 );

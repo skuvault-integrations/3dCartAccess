@@ -3,11 +3,11 @@ using System.Xml.Serialization;
 
 namespace ThreeDCartAccess.Models
 {
-	[Serializable()]
-	[XmlRoot(ElementName = "Error")]
+	[ Serializable() ]
+	[ XmlRoot( ElementName = "Error" ) ]
 	public class ThreeDCartError
 	{
-		[XmlText]
+		[ XmlText ]
 		public string Message{ get; set; }
 	}
 }

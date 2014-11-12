@@ -1,7 +1,7 @@
-﻿using CuttingEdge.Conditions;
-using ServiceStack;
+﻿using System.Threading.Tasks;
+using System.Xml.Linq;
+using CuttingEdge.Conditions;
 using ThreeDCartAccess.Misc;
-using ThreeDCartAccess.Models;
 using ThreeDCartAccess.Models.Configuration;
 using ThreeDCartAccess.Models.Product;
 using ThreeDCartAccess.ThreeDCartService;
@@ -12,6 +12,7 @@ namespace ThreeDCartAccess
 	{
 		public readonly ThreeDCartConfig _config;
 		private readonly cartAPISoapClient _service;
+		private readonly WebRequestServices _webRequestServices;
 
 		public ThreeDCartProductsService( ThreeDCartConfig config )
 		{
@@ -19,20 +20,26 @@ namespace ThreeDCartAccess
 
 			this._config = config;
 			this._service = new cartAPISoapClient();
+			this._webRequestServices = new WebRequestServices();
 		}
 
-		public void GetProducts()
+		public ThreeDCartProduct GetProducts()
 		{
-			var res = this._service.getProduct( _config.StoreUrl, _config.UserKey, 100, 1, "", "" );
+			var result = this._webRequestServices.Get< ThreeDCartProduct, XElement >(
+				() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" ) );
+			return result;
+		}
 
-			if( res.Name.LocalName == "Error" )
-			{ 
-				var result = XmlSerializeHelpers.Deserialize< ThreeDCartError >( res.ToString() );
-			}
-			else
-			{
-				var result = XmlSerializeHelpers.Deserialize< ThreeDCartProduct >( res.ToString() );
-			}
+		public async Task< ThreeDCartProduct > GetProductsAsync()
+		{
+			var result = await this._webRequestServices.GetAsync< ThreeDCartProduct, XElement >(
+				async () =>
+				{
+					var funcRes = await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" );
+					return funcRes.Body.getProductResult;
+				} );
+
+			return result;
 		}
 	}
 }
