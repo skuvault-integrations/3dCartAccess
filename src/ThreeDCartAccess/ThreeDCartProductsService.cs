@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CuttingEdge.Conditions;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.Models.Configuration;
@@ -9,7 +10,7 @@ namespace ThreeDCartAccess
 {
 	public class ThreeDCartProductsService: IThreeDCartProductsService
 	{
-		public readonly ThreeDCartConfig _config;
+		private readonly ThreeDCartConfig _config;
 		private readonly cartAPISoapClient _service;
 		private readonly WebRequestServices _webRequestServices;
 
@@ -22,18 +23,18 @@ namespace ThreeDCartAccess
 			this._webRequestServices = new WebRequestServices();
 		}
 
-		public ThreeDCartProduct GetProducts()
+		public IEnumerable< ThreeDCartProduct > GetProducts()
 		{
-			var result = this._webRequestServices.Get< ThreeDCartProduct >( this._config,
+			var result = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
 				() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" ) );
-			return result;
+			return result.Products;
 		}
 
-		public async Task< ThreeDCartProduct > GetProductsAsync()
+		public async Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync()
 		{
-			var result = await this._webRequestServices.GetAsync< ThreeDCartProduct >( this._config,
+			var result = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
 				async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" ) ).Body.getProductResult );
-			return result;
+			return result.Products;
 		}
 	}
 }

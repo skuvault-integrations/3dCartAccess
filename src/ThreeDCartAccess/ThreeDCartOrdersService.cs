@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CuttingEdge.Conditions;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.Models.Configuration;
@@ -9,7 +10,7 @@ namespace ThreeDCartAccess
 {
 	public class ThreeDCartOrdersService: IThreeDCartOrdersService
 	{
-		public readonly ThreeDCartConfig _config;
+		private readonly ThreeDCartConfig _config;
 		private readonly cartAPISoapClient _service;
 		private readonly WebRequestServices _webRequestServices;
 
@@ -22,18 +23,18 @@ namespace ThreeDCartAccess
 			this._webRequestServices = new WebRequestServices();
 		}
 
-		public ThreeDCartOrder GetOrders()
+		public IEnumerable< ThreeDCartOrder > GetOrders()
 		{
-			var result = this._webRequestServices.Get< ThreeDCartOrder >( this._config,
+			var result = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
 				() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, 100, 1, false, "", "", "", "", "" ) );
-			return result;
+			return result.Orders;
 		}
 
-		public async Task< ThreeDCartOrder > GetOrdersAsync()
+		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync()
 		{
-			var result = await this._webRequestServices.GetAsync< ThreeDCartOrder >( this._config,
+			var result = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
 				async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, false, "", "", "", "", "" ) ).Body.getOrderResult );
-			return result;
+			return result.Orders;
 		}
 	}
 }
