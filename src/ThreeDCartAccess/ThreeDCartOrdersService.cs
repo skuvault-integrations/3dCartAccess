@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Xml.Linq;
 using CuttingEdge.Conditions;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.Models.Configuration;
@@ -25,20 +24,15 @@ namespace ThreeDCartAccess
 
 		public ThreeDCartOrder GetOrders()
 		{
-			var result = this._webRequestServices.Get< ThreeDCartOrder, XElement >(
+			var result = this._webRequestServices.Get< ThreeDCartOrder >( this._config,
 				() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, 100, 1, false, "", "", "", "", "" ) );
 			return result;
 		}
 
 		public async Task< ThreeDCartOrder > GetOrdersAsync()
 		{
-			var result = await this._webRequestServices.GetAsync< ThreeDCartOrder, XElement >(
-				async () =>
-				{
-					var funcRes = await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, false, "", "", "", "", "" );
-					return funcRes.Body.getOrderResult;
-				} );
-
+			var result = await this._webRequestServices.GetAsync< ThreeDCartOrder >( this._config,
+				async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, false, "", "", "", "", "" ) ).Body.getOrderResult );
 			return result;
 		}
 	}
