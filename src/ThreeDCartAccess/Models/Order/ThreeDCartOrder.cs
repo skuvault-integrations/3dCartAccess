@@ -5,13 +5,13 @@ namespace ThreeDCartAccess.Models.Order
 	public class ThreeDCartOrder
 	{
 		[ XmlElement( ElementName = "OrderID" ) ]
-		public string OrderID{ get; set; }
+		public string OrderId{ get; set; }
 
 		[ XmlElement( ElementName = "InvoiceNumber" ) ]
 		public string InvoiceNumber{ get; set; }
 
 		[ XmlElement( ElementName = "CustomerID" ) ]
-		public string CustomerID{ get; set; }
+		public string CustomerId{ get; set; }
 
 		[ XmlElement( ElementName = "Date" ) ]
 		public string Date{ get; set; }
@@ -41,7 +41,7 @@ namespace ThreeDCartAccess.Models.Order
 		public string DateStarted{ get; set; }
 
 		[ XmlElement( ElementName = "UserID" ) ]
-		public string UserID{ get; set; }
+		public string UserId{ get; set; }
 
 		[ XmlElement( ElementName = "LastUpdate" ) ]
 		public string LastUpdate{ get; set; }

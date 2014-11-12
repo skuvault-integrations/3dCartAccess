@@ -5,10 +5,10 @@ namespace ThreeDCartAccess.Models.Order
 	public class ThreeDCartOrderItem
 	{
 		[ XmlElement( ElementName = "ShipmentID" ) ]
-		public string ShipmentID{ get; set; }
+		public string ShipmentId{ get; set; }
 
 		[ XmlElement( ElementName = "ProductID" ) ]
-		public string ProductID{ get; set; }
+		public string ProductId{ get; set; }
 
 		[ XmlElement( ElementName = "ProductName" ) ]
 		public string ProductName{ get; set; }
@@ -29,7 +29,7 @@ namespace ThreeDCartAccess.Models.Order
 		public string Weight{ get; set; }
 
 		[ XmlElement( ElementName = "WarehouseID" ) ]
-		public string WarehouseID{ get; set; }
+		public string WarehouseId{ get; set; }
 
 		[ XmlElement( ElementName = "DateAdded" ) ]
 		public string DateAdded{ get; set; }

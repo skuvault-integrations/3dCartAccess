@@ -5,7 +5,7 @@ namespace ThreeDCartAccess.Models.Order
 	public class ThreeDCartShipment
 	{
 		[ XmlElement( ElementName = "ShipmentID" ) ]
-		public string ShipmentID{ get; set; }
+		public string ShipmentId{ get; set; }
 
 		[ XmlElement( ElementName = "ShipmentDate" ) ]
 		public string ShipmentDate{ get; set; }

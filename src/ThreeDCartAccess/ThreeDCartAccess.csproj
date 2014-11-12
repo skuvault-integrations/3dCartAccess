@@ -67,6 +67,7 @@
     <Compile Include="Models\Order\ThreeDCartShippingInformation.cs" />
     <Compile Include="Models\Product\ThreeDCartProduct.cs" />
     <Compile Include="Models\Product\ThreeDCartProducts.cs" />
+    <Compile Include="Models\Product\ThreeDCartUpdatedInventory.cs" />
     <Compile Include="Models\ThreeDCartError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\ThreeDCartService\Reference.cs">

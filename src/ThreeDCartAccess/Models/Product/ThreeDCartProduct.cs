@@ -4,7 +4,7 @@ namespace ThreeDCartAccess.Models.Product
 {
 	public class ThreeDCartProduct
 	{
-		[ XmlElement( ElementName = "ProductId" ) ]
+		[ XmlElement( ElementName = "ProductID" ) ]
 		public string ProductId{ get; set; }
 
 		[ XmlElement( ElementName = "ProductName" ) ]

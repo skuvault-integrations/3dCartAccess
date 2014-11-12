@@ -8,5 +8,7 @@ namespace ThreeDCartAccess
 	{
 		IEnumerable< ThreeDCartProduct > GetProducts();
 		Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync();
+		ThreeDCartUpdatedInventory UpdateProductInventory( string productId, int quantity, bool isReplaceQty );
+		Task< ThreeDCartUpdatedInventory > UpdateProductInventoryAsync( string productId, int quantity, bool isReplaceQty );
 	}
 }

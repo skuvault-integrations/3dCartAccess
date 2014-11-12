@@ -32,20 +32,40 @@ namespace ThreeDCartAccessTests.Products
 		public void GetProducts()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var result = service.GetProducts();
+			var result = service.GetProducts().ToList();
 
 			result.Should().NotBeNull();
-			//result.Count().Should().BeGreaterThan( 0 );
+			result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
 		public async Task GetProductsAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var result = await service.GetProductsAsync();
+			var result = ( await service.GetProductsAsync() ).ToList();
 
 			result.Should().NotBeNull();
-			//result.Count().Should().BeGreaterThan( 0 );
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public void UpdateProductInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var result = service.UpdateProductInventory( "testSku1", 2, true );
+
+			result.Should().NotBeNull();
+			result.Quantity.Should().Be( 2 );
+		}
+
+		[ Test ]
+		public async Task UpdateProductInventoryAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var result = await service.UpdateProductInventoryAsync( "testSku1", 2, true );
+
+			result.Should().NotBeNull();
+			result.Quantity.Should().Be( 2 );
 		}
 	}
 }

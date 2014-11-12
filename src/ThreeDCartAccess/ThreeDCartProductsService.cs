@@ -36,5 +36,19 @@ namespace ThreeDCartAccess
 				async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" ) ).Body.getProductResult );
 			return result.Products;
 		}
+
+		public ThreeDCartUpdatedInventory UpdateProductInventory( string productId, int quantity, bool isReplaceQty )
+		{
+			var result = this._webRequestServices.Submit< ThreeDCartUpdatedInventory >( this._config,
+				() => this._service.updateProductInventory( this._config.StoreUrl, this._config.UserKey, productId, quantity, isReplaceQty, "" ) );
+			return result;
+		}
+
+		public async Task< ThreeDCartUpdatedInventory > UpdateProductInventoryAsync( string productId, int quantity, bool isReplaceQty )
+		{
+			var result = await this._webRequestServices.SubmitAsync< ThreeDCartUpdatedInventory >( this._config,
+				async () => ( await this._service.updateProductInventoryAsync( this._config.StoreUrl, this._config.UserKey, productId, quantity, isReplaceQty, "" ) ).Body.updateProductInventoryResult );
+			return result;
+		}
 	}
 }
