@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LINQtoCSV;
 using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.Models.Configuration;
+using ThreeDCartAccess.Models.Product;
 
 namespace ThreeDCartAccessTests.Products
 {
@@ -49,23 +51,53 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
-		public void UpdateProductInventory()
+		public void UpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var result = service.UpdateProductInventory( "testSku1", 2, true );
+			var inventory = new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true };
+			var result = service.UpdateInventory( inventory );
 
 			result.Should().NotBeNull();
 			result.Quantity.Should().Be( 2 );
 		}
 
 		[ Test ]
-		public async Task UpdateProductInventoryAsync()
+		public async Task UpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var result = await service.UpdateProductInventoryAsync( "testSku1", 2, true );
+			var inventory = new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true };
+			var result = await service.UpdateInventoryAsync( inventory );
 
 			result.Should().NotBeNull();
 			result.Quantity.Should().Be( 2 );
+		}
+
+		[ Test ]
+		public void UpdateInventoryList()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var inventory = new List< ThreeDCartUpdateInventory >
+			{
+				new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true }
+			};
+			var result = service.UpdateInventory( inventory ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().Be( 1 );
+		}
+
+		[ Test ]
+		public async Task UpdateInventoryListAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var inventory = new List< ThreeDCartUpdateInventory >
+			{
+				new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true }
+			};
+			var result = ( await service.UpdateInventoryAsync( inventory ) ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().Be( 1 );
 		}
 	}
 }

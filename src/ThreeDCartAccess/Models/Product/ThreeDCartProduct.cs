@@ -35,7 +35,7 @@ namespace ThreeDCartAccess.Models.Product
 		public string OnSale{ get; set; }
 
 		[ XmlElement( ElementName = "Stock" ) ]
-		public string Stock{ get; set; }
+		public int Stock{ get; set; }
 
 		[ XmlElement( ElementName = "StockAlert" ) ]
 		public string StockAlert{ get; set; }

@@ -37,17 +37,42 @@ namespace ThreeDCartAccess
 			return result.Products;
 		}
 
-		public ThreeDCartUpdatedInventory UpdateProductInventory( string productId, int quantity, bool isReplaceQty )
+		public ThreeDCartUpdateInventory UpdateInventory( ThreeDCartUpdateInventory inventory )
 		{
-			var result = this._webRequestServices.Submit< ThreeDCartUpdatedInventory >( this._config,
-				() => this._service.updateProductInventory( this._config.StoreUrl, this._config.UserKey, productId, quantity, isReplaceQty, "" ) );
+			var result = this._webRequestServices.Submit< ThreeDCartUpdateInventory >( this._config,
+				() => this._service.updateProductInventory( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.Quantity, inventory.IsReplaceQty, "" ) );
 			return result;
 		}
 
-		public async Task< ThreeDCartUpdatedInventory > UpdateProductInventoryAsync( string productId, int quantity, bool isReplaceQty )
+		public async Task< ThreeDCartUpdateInventory > UpdateInventoryAsync( ThreeDCartUpdateInventory inventory )
 		{
-			var result = await this._webRequestServices.SubmitAsync< ThreeDCartUpdatedInventory >( this._config,
-				async () => ( await this._service.updateProductInventoryAsync( this._config.StoreUrl, this._config.UserKey, productId, quantity, isReplaceQty, "" ) ).Body.updateProductInventoryResult );
+			var result = await this._webRequestServices.SubmitAsync< ThreeDCartUpdateInventory >( this._config,
+				async () => ( await this._service.updateProductInventoryAsync( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.Quantity, inventory.IsReplaceQty, "" ) )
+					.Body.updateProductInventoryResult );
+			return result;
+		}
+
+		public IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory )
+		{
+			var result = new List< ThreeDCartUpdateInventory >();
+			foreach( var inv in inventory )
+			{
+				var response = this.UpdateInventory( inv );
+				if( response != null )
+					result.Add( response );
+			}
+			return result;
+		}
+
+		public async Task< IEnumerable< ThreeDCartUpdateInventory > > UpdateInventoryAsync( IEnumerable< ThreeDCartUpdateInventory > inventory )
+		{
+			var result = new List< ThreeDCartUpdateInventory >();
+			foreach( var inv in inventory )
+			{
+				var response = await this.UpdateInventoryAsync( inv );
+				if( response != null )
+					result.Add( response );
+			}
 			return result;
 		}
 	}

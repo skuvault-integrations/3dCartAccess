@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LINQtoCSV;
@@ -43,6 +44,26 @@ namespace ThreeDCartAccessTests.Orders
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
 			var result = ( await service.GetOrdersAsync() ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public void GetOrdersByDate()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetOrders( DateTime.Now.AddDays( -1 ), DateTime.Now ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetOrdersByDateAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = ( await service.GetOrdersAsync( DateTime.Now.AddDays( -1 ), DateTime.Now ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );

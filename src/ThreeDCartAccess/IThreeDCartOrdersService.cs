@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThreeDCartAccess.Models.Order;
 
@@ -8,5 +9,8 @@ namespace ThreeDCartAccess
 	{
 		IEnumerable< ThreeDCartOrder > GetOrders();
 		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync();
+
+		IEnumerable< ThreeDCartOrder > GetOrders( DateTime startDateUtc, DateTime endDateUtc );
+		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );
 	}
 }
