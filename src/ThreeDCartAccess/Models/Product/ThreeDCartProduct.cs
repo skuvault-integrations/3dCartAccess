@@ -20,19 +20,19 @@ namespace ThreeDCartAccess.Models.Product
 		public string Distributor{ get; set; }
 
 		[ XmlElement( ElementName = "Cost" ) ]
-		public string Cost{ get; set; }
+		public decimal Cost{ get; set; }
 
 		[ XmlElement( ElementName = "Price" ) ]
-		public string Price{ get; set; }
+		public decimal Price{ get; set; }
 
 		[ XmlElement( ElementName = "RetailPrice" ) ]
-		public string RetailPrice{ get; set; }
+		public decimal RetailPrice{ get; set; }
 
 		[ XmlElement( ElementName = "SalePrice" ) ]
-		public string SalePrice{ get; set; }
+		public decimal SalePrice{ get; set; }
 
 		[ XmlElement( ElementName = "OnSale" ) ]
-		public string OnSale{ get; set; }
+		public int OnSale{ get; set; }
 
 		[ XmlElement( ElementName = "Stock" ) ]
 		public int Stock{ get; set; }
@@ -41,22 +41,22 @@ namespace ThreeDCartAccess.Models.Product
 		public string StockAlert{ get; set; }
 
 		[ XmlElement( ElementName = "Weight" ) ]
-		public string Weight{ get; set; }
+		public decimal Weight{ get; set; }
 
 		[ XmlElement( ElementName = "Width" ) ]
-		public string Width{ get; set; }
+		public decimal Width{ get; set; }
 
 		[ XmlElement( ElementName = "Height" ) ]
-		public string Height{ get; set; }
+		public decimal Height{ get; set; }
 
 		[ XmlElement( ElementName = "Depth" ) ]
-		public string Depth{ get; set; }
+		public decimal Depth{ get; set; }
 
 		[ XmlElement( ElementName = "MinimumOrder" ) ]
-		public string MinimumOrder{ get; set; }
+		public int MinimumOrder{ get; set; }
 
 		[ XmlElement( ElementName = "MaximumOrder" ) ]
-		public string MaximumOrder{ get; set; }
+		public int MaximumOrder{ get; set; }
 
 		[ XmlElement( ElementName = "DateCreated" ) ]
 		public string DateCreated{ get; set; }
@@ -65,7 +65,7 @@ namespace ThreeDCartAccess.Models.Product
 		public string Description{ get; set; }
 
 		[ XmlElement( ElementName = "ShipCost" ) ]
-		public string ShipCost{ get; set; }
+		public decimal ShipCost{ get; set; }
 
 		[ XmlElement( ElementName = "Title" ) ]
 		public string Title{ get; set; }

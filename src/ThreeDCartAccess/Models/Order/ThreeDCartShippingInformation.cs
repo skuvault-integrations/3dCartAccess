@@ -9,6 +9,6 @@ namespace ThreeDCartAccess.Models.Order
 		public ThreeDCartShipment Shipment{ get; set; }
 
 		[ XmlElement( ElementName = "OrderItems" ) ]
-		public List< ThreeDCartOrderItem > OrderItem{ get; set; }
+		public List< ThreeDCartOrderItem > OrderItems{ get; set; }
 	}
 }

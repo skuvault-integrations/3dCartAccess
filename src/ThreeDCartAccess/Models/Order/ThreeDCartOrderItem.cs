@@ -5,7 +5,7 @@ namespace ThreeDCartAccess.Models.Order
 	public class ThreeDCartOrderItem
 	{
 		[ XmlElement( ElementName = "ShipmentID" ) ]
-		public string ShipmentId{ get; set; }
+		public long ShipmentId{ get; set; }
 
 		[ XmlElement( ElementName = "ProductID" ) ]
 		public string ProductId{ get; set; }
@@ -14,22 +14,22 @@ namespace ThreeDCartAccess.Models.Order
 		public string ProductName{ get; set; }
 
 		[ XmlElement( ElementName = "Quantity" ) ]
-		public string Quantity{ get; set; }
+		public int Quantity{ get; set; }
 
 		[ XmlElement( ElementName = "UnitPrice" ) ]
-		public string UnitPrice{ get; set; }
+		public decimal UnitPrice{ get; set; }
 
 		[ XmlElement( ElementName = "UnitCost" ) ]
-		public string UnitCost{ get; set; }
+		public decimal UnitCost{ get; set; }
 
 		[ XmlElement( ElementName = "OptionPrice" ) ]
-		public string OptionPrice{ get; set; }
+		public decimal OptionPrice{ get; set; }
 
 		[ XmlElement( ElementName = "Weight" ) ]
-		public string Weight{ get; set; }
+		public decimal Weight{ get; set; }
 
 		[ XmlElement( ElementName = "WarehouseID" ) ]
-		public string WarehouseId{ get; set; }
+		public long WarehouseId{ get; set; }
 
 		[ XmlElement( ElementName = "DateAdded" ) ]
 		public string DateAdded{ get; set; }

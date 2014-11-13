@@ -1,17 +1,18 @@
 ﻿using System.Xml.Serialization;
+using Netco.Extensions;
 
 namespace ThreeDCartAccess.Models.Order
 {
 	public class ThreeDCartOrder
 	{
 		[ XmlElement( ElementName = "OrderID" ) ]
-		public string OrderId{ get; set; }
+		public long OrderId{ get; set; }
 
 		[ XmlElement( ElementName = "InvoiceNumber" ) ]
 		public string InvoiceNumber{ get; set; }
 
 		[ XmlElement( ElementName = "CustomerID" ) ]
-		public string CustomerId{ get; set; }
+		public long CustomerId{ get; set; }
 
 		[ XmlElement( ElementName = "Date" ) ]
 		public string Date{ get; set; }
@@ -20,19 +21,25 @@ namespace ThreeDCartAccess.Models.Order
 		public string Time{ get; set; }
 
 		[ XmlElement( ElementName = "Total" ) ]
-		public string Total{ get; set; }
+		public decimal Total{ get; set; }
 
 		[ XmlElement( ElementName = "Shipping" ) ]
-		public string Shipping{ get; set; }
+		public decimal Shipping{ get; set; }
 
 		[ XmlElement( ElementName = "PaymentMethod" ) ]
 		public string PaymentMethod{ get; set; }
 
 		[ XmlElement( ElementName = "Discount" ) ]
-		public string Discount{ get; set; }
+		public decimal Discount{ get; set; }
 
 		[ XmlElement( ElementName = "OrderStatus" ) ]
-		public string OrderStatus{ get; set; }
+		public string OrderStatusStr{ get; set; }
+
+		[ XmlIgnore ]
+		public ThreeDCartOrderStatusEnum OrderStatus
+		{
+			get { return this.OrderStatusStr.ToEnum< ThreeDCartOrderStatusEnum >(); }
+		}
 
 		[ XmlElement( ElementName = "Referer" ) ]
 		public string Referer{ get; set; }
@@ -47,12 +54,28 @@ namespace ThreeDCartAccess.Models.Order
 		public string LastUpdate{ get; set; }
 
 		[ XmlElement( ElementName = "Weight" ) ]
-		public string Weight{ get; set; }
+		public decimal Weight{ get; set; }
 
 		[ XmlElement( ElementName = "BillingAddress" ) ]
 		public ThreeDCartBillingAddress BillingAddress{ get; set; }
 
 		[ XmlElement( ElementName = "ShippingInformation" ) ]
 		public ThreeDCartShippingInformation ShippingInformation{ get; set; }
+
+		public enum ThreeDCartOrderStatusEnum
+		{
+			New,
+			Processing,
+			Partial,
+			Shipped,
+			Cancelled,
+			Hold,
+			NotCompleted,
+			Custom1,
+			Custom2,
+			Custom3,
+			Unpaid,
+			Review
+		}
 	}
 }
