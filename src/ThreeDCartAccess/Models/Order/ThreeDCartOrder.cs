@@ -14,6 +14,12 @@ namespace ThreeDCartAccess.Models.Order
 		[ XmlElement( ElementName = "CustomerID" ) ]
 		public long CustomerId{ get; set; }
 
+		[ XmlElement( ElementName = "DateStarted" ) ]
+		public string DateStarted{ get; set; }
+
+		[ XmlElement( ElementName = "LastUpdate" ) ]
+		public string LastUpdate{ get; set; }
+
 		[ XmlElement( ElementName = "Date" ) ]
 		public string Date{ get; set; }
 
@@ -44,14 +50,11 @@ namespace ThreeDCartAccess.Models.Order
 		[ XmlElement( ElementName = "Referer" ) ]
 		public string Referer{ get; set; }
 
-		[ XmlElement( ElementName = "DateStarted" ) ]
-		public string DateStarted{ get; set; }
+		[ XmlElement( ElementName = "SalesPerson" ) ]
+		public string SalesPerson{ get; set; }
 
 		[ XmlElement( ElementName = "UserID" ) ]
 		public string UserId{ get; set; }
-
-		[ XmlElement( ElementName = "LastUpdate" ) ]
-		public string LastUpdate{ get; set; }
 
 		[ XmlElement( ElementName = "Weight" ) ]
 		public decimal Weight{ get; set; }

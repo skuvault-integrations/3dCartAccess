@@ -36,5 +36,17 @@ namespace ThreeDCartAccess.Models.Order
 
 		[ XmlElement( ElementName = "PageAdded" ) ]
 		public string PageAdded{ get; set; }
+
+		[ XmlElement( ElementName = "ProdType" ) ]
+		public string ProdType{ get; set; }
+
+		[ XmlElement( ElementName = "Taxable" ) ]
+		public string Taxable{ get; set; }
+
+		[ XmlElement( ElementName = "ItemPrice" ) ]
+		public decimal ItemPrice{ get; set; }
+
+		[ XmlElement( ElementName = "Total" ) ]
+		public decimal Total{ get; set; }
 	}
 }

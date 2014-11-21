@@ -8,7 +8,8 @@ namespace ThreeDCartAccess.Models.Order
 		[ XmlElement( ElementName = "Shipment" ) ]
 		public ThreeDCartShipment Shipment{ get; set; }
 
-		[ XmlElement( ElementName = "OrderItems" ) ]
+		[ XmlArray( ElementName = "OrderItems" ) ]
+		[ XmlArrayItem( ElementName = "Item" ) ]
 		public List< ThreeDCartOrderItem > OrderItems{ get; set; }
 	}
 }

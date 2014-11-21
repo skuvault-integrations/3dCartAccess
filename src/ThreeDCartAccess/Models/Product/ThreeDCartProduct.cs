@@ -10,6 +10,12 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "ProductName" ) ]
 		public string ProductName{ get; set; }
 
+		[ XmlElement( ElementName = "DateCreated" ) ]
+		public string DateCreated{ get; set; }
+
+		[ XmlElement( ElementName = "LastUpdate" ) ]
+		public string LastUpdate{ get; set; }
+
 		[ XmlElement( ElementName = "Mfgid" ) ]
 		public string Mfgid{ get; set; }
 
@@ -31,14 +37,11 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "SalePrice" ) ]
 		public decimal SalePrice{ get; set; }
 
-		[ XmlElement( ElementName = "OnSale" ) ]
-		public int OnSale{ get; set; }
-
 		[ XmlElement( ElementName = "Stock" ) ]
 		public int Stock{ get; set; }
 
 		[ XmlElement( ElementName = "StockAlert" ) ]
-		public string StockAlert{ get; set; }
+		public int StockAlert{ get; set; }
 
 		[ XmlElement( ElementName = "Weight" ) ]
 		public decimal Weight{ get; set; }
@@ -58,9 +61,6 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "MaximumOrder" ) ]
 		public int MaximumOrder{ get; set; }
 
-		[ XmlElement( ElementName = "DateCreated" ) ]
-		public string DateCreated{ get; set; }
-
 		[ XmlElement( ElementName = "Description" ) ]
 		public string Description{ get; set; }
 
@@ -70,55 +70,70 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "Title" ) ]
 		public string Title{ get; set; }
 
+		[ XmlElement( ElementName = "OnSale" ) ]
+		public bool OnSale{ get; set; }
+
 		[ XmlElement( ElementName = "HomeSpecial" ) ]
-		public string HomeSpecial{ get; set; }
+		public bool HomeSpecial{ get; set; }
 
 		[ XmlElement( ElementName = "CategorySpecial" ) ]
-		public string CategorySpecial{ get; set; }
+		public bool CategorySpecial{ get; set; }
 
-		[ XmlElement( ElementName = "Hide" ) ]
-		public string Hide{ get; set; }
-
-		[ XmlElement( ElementName = "FreeShipping" ) ]
-		public string FreeShipping{ get; set; }
+		[ XmlElement( ElementName = "NonSearchable" ) ]
+		public bool NonSearchable{ get; set; }
 
 		[ XmlElement( ElementName = "NonTax" ) ]
-		public string NonTax{ get; set; }
+		public bool NonTax{ get; set; }
 
 		[ XmlElement( ElementName = "NotForsale" ) ]
-		public string NotForsale{ get; set; }
+		public bool NotForsale{ get; set; }
+
+		[ XmlElement( ElementName = "Hide" ) ]
+		public bool Hide{ get; set; }
 
 		[ XmlElement( ElementName = "GiftCertificate" ) ]
-		public string GiftCertificate{ get; set; }
+		public bool GiftCertificate{ get; set; }
+
+		[ XmlElement( ElementName = "FreeShipping" ) ]
+		public bool FreeShipping{ get; set; }
+
+		[ XmlElement( ElementName = "SelfShip" ) ]
+		public bool SelfShip{ get; set; }
 
 		[ XmlElement( ElementName = "UserId" ) ]
 		public string UserId{ get; set; }
-
-		[ XmlElement( ElementName = "LastUpdate" ) ]
-		public string LastUpdate{ get; set; }
 
 		[ XmlElement( ElementName = "MinOrder" ) ]
 		public string MinOrder{ get; set; }
 
 		[ XmlElement( ElementName = "ListingDisplayType" ) ]
-		public string ListingDisplayType{ get; set; }
+		public int ListingDisplayType{ get; set; }
 
 		[ XmlElement( ElementName = "ShowOutStock" ) ]
-		public string ShowOutStock{ get; set; }
+		public int ShowOutStockInt{ get; set; }
+
+		[ XmlIgnore ]
+		public ShowOutStockEnum ShowOutStock
+		{
+			get { return ( ShowOutStockEnum )this.ShowOutStockInt; }
+		}
 
 		[ XmlElement( ElementName = "PricingGroupOpt" ) ]
-		public string PricingGroupOpt{ get; set; }
+		public bool PricingGroupOpt{ get; set; }
 
 		[ XmlElement( ElementName = "QuantityDiscountOpt" ) ]
-		public string QuantityDiscountOpt{ get; set; }
+		public bool QuantityDiscountOpt{ get; set; }
 
 		[ XmlElement( ElementName = "LoginLevel" ) ]
-		public string LoginLevel{ get; set; }
+		public int LoginLevel{ get; set; }
+	}
 
-		[ XmlElement( ElementName = "SelfShip" ) ]
-		public string SelfShip{ get; set; }
-
-		[ XmlElement( ElementName = "NonSearchable" ) ]
-		public string NonSearchable{ get; set; }
+	public enum ShowOutStockEnum
+	{
+		Undefined = 0,
+		Default = -1,
+		OutOfStock = 1,
+		BackOrder = 2,
+		WaitingList = 3
 	}
 }

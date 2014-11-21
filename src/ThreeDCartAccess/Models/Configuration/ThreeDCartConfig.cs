@@ -12,6 +12,8 @@ namespace ThreeDCartAccess.Models.Configuration
 			Condition.Requires( storeUrl, "storeUrl" ).IsNotNullOrWhiteSpace();
 			Condition.Requires( userKey, "userKey" ).IsNotNullOrWhiteSpace();
 
+			storeUrl = storeUrl.ToLower().TrimEnd( '\\', '/' ).Replace( "https://", "" ).Replace( "http://", "" ).Replace( "www.", "" );
+
 			this.StoreUrl = storeUrl;
 			this.UserKey = userKey;
 		}
