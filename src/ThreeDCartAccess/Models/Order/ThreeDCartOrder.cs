@@ -1,5 +1,5 @@
 ﻿using System.Xml.Serialization;
-using Netco.Extensions;
+using ThreeDCartAccess.Misc;
 
 namespace ThreeDCartAccess.Models.Order
 {
@@ -67,18 +67,19 @@ namespace ThreeDCartAccess.Models.Order
 
 		public enum ThreeDCartOrderStatusEnum
 		{
-			New,
-			Processing,
-			Partial,
-			Shipped,
-			Cancelled,
-			Hold,
-			NotCompleted,
-			Custom1,
-			Custom2,
-			Custom3,
-			Unpaid,
-			Review
+			Undefined = 0,
+			New = 1,
+			Processing = 2,
+			Partial = 3,
+			Shipped = 4,
+			Cancel = 5,
+			Hold = 6,
+			NotCompleted = 7,
+			Custom1 = 8,
+			Custom2 = 9,
+			Custom3 = 10,
+			Unpaid = 11,
+			Review = 12
 		}
 	}
 }
