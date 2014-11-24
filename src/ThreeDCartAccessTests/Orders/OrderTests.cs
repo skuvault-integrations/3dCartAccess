@@ -68,5 +68,25 @@ namespace ThreeDCartAccessTests.Orders
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
+
+		[ Test ]
+		public void GetOrderStatuses()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetOrderStatuses().ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetOrderStatusesAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = ( await service.GetOrderStatusesAsync() ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
 	}
 }

@@ -65,7 +65,7 @@ namespace ThreeDCartAccess.Misc
 			{
 				ThreeDCartLogger.Log.Error( "Failed" + logStr );
 				var error = xElementStr.Deserialize< ThreeDCartError >();
-				throw new Exception( error.Message );
+				throw new Exception( error.Message ?? error.Description );
 			}
 
 			ThreeDCartLogger.Log.Trace( "Success" + logStr );

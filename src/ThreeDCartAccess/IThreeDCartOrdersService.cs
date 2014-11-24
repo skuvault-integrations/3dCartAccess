@@ -12,5 +12,8 @@ namespace ThreeDCartAccess
 
 		IEnumerable< ThreeDCartOrder > GetOrders( DateTime startDateUtc, DateTime endDateUtc );
 		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );
+
+		IEnumerable< ThreeDCartOrderStatus > GetOrderStatuses();
+		Task< IEnumerable< ThreeDCartOrderStatus > > GetOrderStatusesAsync();
 	}
 }
