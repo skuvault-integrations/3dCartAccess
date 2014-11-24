@@ -13,6 +13,8 @@ namespace ThreeDCartAccess
 		private readonly ThreeDCartConfig _config;
 		private readonly cartAPISoapClient _service;
 		private readonly WebRequestServices _webRequestServices;
+		private const int _batchSize = 100;
+		private const int _maxCount = int.MaxValue;
 
 		public ThreeDCartProductsService( ThreeDCartConfig config )
 		{
@@ -25,16 +27,32 @@ namespace ThreeDCartAccess
 
 		public IEnumerable< ThreeDCartProduct > GetProducts()
 		{
-			var result = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
-				() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" ) );
-			return result.Products;
+			var result = new List< ThreeDCartProduct >();
+			for( var i = 1; i < _maxCount; i += _batchSize )
+			{
+				var portion = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
+					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) );
+				result.AddRange( portion.Products );
+				if( portion.Products.Count != _batchSize )
+					return result;
+			}
+
+			return result;
 		}
 
 		public async Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync()
 		{
-			var result = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
-				async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, 100, 1, "", "" ) ).Body.getProductResult );
-			return result.Products;
+			var result = new List< ThreeDCartProduct >();
+			for( var i = 1; i < _maxCount; i += _batchSize )
+			{
+				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
+					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) ).Body.getProductResult );
+				result.AddRange( portion.Products );
+				if( portion.Products.Count != _batchSize )
+					return result;
+			}
+
+			return result;
 		}
 
 		public ThreeDCartUpdateInventory UpdateInventory( ThreeDCartUpdateInventory inventory )
