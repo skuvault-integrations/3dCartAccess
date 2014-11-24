@@ -33,7 +33,7 @@ namespace ThreeDCartAccessTests.Orders
 		public void GetOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetOrders().ToList();
+			var result = service.GetOrders( null, null, true ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -67,6 +67,24 @@ namespace ThreeDCartAccessTests.Orders
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public void GetOrdersCount()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetOrdersCount();
+
+			result.Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetOrdersCountAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = ( await service.GetOrdersCountAsync() );
+
+			result.Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CuttingEdge.Conditions;
 using ThreeDCartAccess.Misc;
@@ -16,8 +17,7 @@ namespace ThreeDCartAccess
 		private readonly cartAPISoapClient _service;
 		private readonly cartAPIAdvancedSoapClient _advancedService;
 		private readonly WebRequestServices _webRequestServices;
-		private const int _batchSize = 100;
-		private const int _maxCount = int.MaxValue;
+		private const int _batchSize = 5;
 
 		public ThreeDCartOrdersService( ThreeDCartConfig config )
 		{
@@ -29,64 +29,48 @@ namespace ThreeDCartAccess
 			this._webRequestServices = new WebRequestServices();
 		}
 
-		public IEnumerable< ThreeDCartOrder > GetOrders()
+		public IEnumerable< ThreeDCartOrder > GetOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
 		{
 			var result = new List< ThreeDCartOrder >();
-			for( var i = 1; i < _maxCount; i += _batchSize )
+			var ordersCount = this.GetOrdersCount( startDateUtc, endDateUtc );
+			for( var i = 1; i < ordersCount; i += _batchSize )
 			{
 				var portion = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
 					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", "", "", "" ) );
-				result.AddRange( portion.Orders );
-				if( portion.Orders.Count != _batchSize )
-					return result;
+				var filtered = this.FilterNotCompletedOrdersIfNeeded( portion.Orders, includeNotCompleted );
+				result.AddRange( filtered );
 			}
 
 			return result;
 		}
 
-		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync()
+		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
 		{
 			var result = new List< ThreeDCartOrder >();
-			for( var i = 1; i < _maxCount; i += _batchSize )
+			var ordersCount = await this.GetOrdersCountAsync( startDateUtc, endDateUtc );
+			for( var i = 1; i < ordersCount; i += _batchSize )
 			{
 				var portion = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
 					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", "", "", "" ) ).Body.getOrderResult );
-				result.AddRange( portion.Orders );
-				if( portion.Orders.Count != _batchSize )
-					return result;
+				var filtered = this.FilterNotCompletedOrdersIfNeeded( portion.Orders, includeNotCompleted );
+				result.AddRange( filtered );
 			}
 
 			return result;
 		}
 
-		public IEnumerable< ThreeDCartOrder > GetOrders( DateTime startDateUtc, DateTime endDateUtc )
+		public int GetOrdersCount( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
 		{
-			var result = new List< ThreeDCartOrder >();
-			for( var i = 1; i < _maxCount; i += _batchSize )
-			{
-				var portion = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
-					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", "", "", "" ) );
-				result.AddRange( portion.Orders );
-				if( portion.Orders.Count != _batchSize )
-					return result;
-			}
-
-			return result;
+			var result = this._webRequestServices.Get< ThreeDCartOrdersCount >( this._config,
+				() => this._service.getOrderCount( this._config.StoreUrl, this._config.UserKey, false, "", "", "", "", "" ) );
+			return result.Quantity;
 		}
 
-		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime startDateUtc, DateTime endDateUtc )
+		public async Task< int > GetOrdersCountAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
 		{
-			var result = new List< ThreeDCartOrder >();
-			for( var i = 1; i < _maxCount; i += _batchSize )
-			{
-				var portion = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
-					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", "", "", "" ) ).Body.getOrderResult );
-				result.AddRange( portion.Orders );
-				if( portion.Orders.Count != _batchSize )
-					return result;
-			}
-
-			return result;
+			var result = await this._webRequestServices.GetAsync< ThreeDCartOrdersCount >( this._config,
+				async () => ( await this._service.getOrderCountAsync( this._config.StoreUrl, this._config.UserKey, false, "", "", "", "", "" ) ).Body.getOrderCountResult );
+			return result.Quantity;
 		}
 
 		public IEnumerable< ThreeDCartOrderStatus > GetOrderStatuses()
@@ -103,6 +87,11 @@ namespace ThreeDCartAccess
 			var result = await this._webRequestServices.GetAsync< ThreeDCartOrderStatuses >( this._config,
 				async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
 			return result.Statuses;
+		}
+
+		private IEnumerable< ThreeDCartOrder > FilterNotCompletedOrdersIfNeeded( IEnumerable< ThreeDCartOrder > orders, bool includeNotCompleted )
+		{
+			return includeNotCompleted ? orders : orders.Where( x => x.OrderStatus != ThreeDCartOrderStatusEnum.NotCompleted );
 		}
 	}
 }

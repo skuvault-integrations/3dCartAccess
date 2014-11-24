@@ -14,7 +14,6 @@ namespace ThreeDCartAccess
 		private readonly cartAPISoapClient _service;
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
-		private const int _maxCount = int.MaxValue;
 
 		public ThreeDCartProductsService( ThreeDCartConfig config )
 		{
@@ -28,7 +27,8 @@ namespace ThreeDCartAccess
 		public IEnumerable< ThreeDCartProduct > GetProducts()
 		{
 			var result = new List< ThreeDCartProduct >();
-			for( var i = 1; i < _maxCount; i += _batchSize )
+			var productsCount = this.GetProductsCount();
+			for( var i = 1; i < productsCount; i += _batchSize )
 			{
 				var portion = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
 					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) );
@@ -43,7 +43,8 @@ namespace ThreeDCartAccess
 		public async Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync()
 		{
 			var result = new List< ThreeDCartProduct >();
-			for( var i = 1; i < _maxCount; i += _batchSize )
+			var productsCount = await this.GetProductsCountAsync();
+			for( var i = 1; i < productsCount; i += _batchSize )
 			{
 				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
 					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) ).Body.getProductResult );
@@ -53,6 +54,20 @@ namespace ThreeDCartAccess
 			}
 
 			return result;
+		}
+
+		public int GetProductsCount()
+		{
+			var result = this._webRequestServices.Get< ThreeDCartProductsCount >( this._config,
+				() => this._service.getProductCount( this._config.StoreUrl, this._config.UserKey, "" ) );
+			return result.Quantity;
+		}
+
+		public async Task< int > GetProductsCountAsync()
+		{
+			var result = await this._webRequestServices.GetAsync< ThreeDCartProductsCount >( this._config,
+				async () => ( await this._service.getProductCountAsync( this._config.StoreUrl, this._config.UserKey, "" ) ).Body.getProductCountResult );
+			return result.Quantity;
 		}
 
 		public ThreeDCartUpdateInventory UpdateInventory( ThreeDCartUpdateInventory inventory )

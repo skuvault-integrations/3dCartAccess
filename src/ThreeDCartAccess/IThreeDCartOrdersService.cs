@@ -7,13 +7,13 @@ namespace ThreeDCartAccess
 {
 	public interface IThreeDCartOrdersService
 	{
-		IEnumerable< ThreeDCartOrder > GetOrders();
-		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync();
-
-		IEnumerable< ThreeDCartOrder > GetOrders( DateTime startDateUtc, DateTime endDateUtc );
-		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );
+		IEnumerable< ThreeDCartOrder > GetOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
+		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
 
 		IEnumerable< ThreeDCartOrderStatus > GetOrderStatuses();
 		Task< IEnumerable< ThreeDCartOrderStatus > > GetOrderStatusesAsync();
+
+		int GetOrdersCount( DateTime? startDateUtc = null, DateTime? endDateUtc = null );
+		Task< int > GetOrdersCountAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null );
 	}
 }

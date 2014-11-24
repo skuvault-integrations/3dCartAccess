@@ -61,10 +61,12 @@
     <Compile Include="Models\Order\ThreeDCartOrder.cs" />
     <Compile Include="Models\Order\ThreeDCartOrderItem.cs" />
     <Compile Include="Models\Order\ThreeDCartOrders.cs" />
+    <Compile Include="Models\Order\ThreeDCartOrdersCount.cs" />
     <Compile Include="Models\Order\ThreeDCartOrderStatus.cs" />
     <Compile Include="Models\Order\ThreeDCartOrderStatuses.cs" />
     <Compile Include="Models\Order\ThreeDCartShipment.cs" />
     <Compile Include="Models\Order\ThreeDCartShippingInformation.cs" />
+    <Compile Include="Models\Product\ThreeDCartProductsCount.cs" />
     <Compile Include="Models\Product\ThreeDCartProduct.cs" />
     <Compile Include="Models\Product\ThreeDCartProducts.cs" />
     <Compile Include="Models\Product\ThreeDCartUpdatedInventory.cs" />
