@@ -2,7 +2,7 @@
 (
 )
 
-$project_short_name = "3dCart"
+$project_short_name = "ThreeDCart"
 $project_name = "$($project_short_name)Access"
 
 # Folder structure:
