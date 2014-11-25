@@ -25,7 +25,7 @@ namespace ThreeDCartAccessTests.Orders
 			if( testConfig != null )
 			{
 				this.ThreeDCartFactory = new ThreeDCartFactory();
-				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey );
+				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey, testConfig.TimeZone );
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace ThreeDCartAccessTests.Orders
 		public void GetOrdersByDate()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetOrders( DateTime.Now.AddDays( -1 ), DateTime.Now ).ToList();
+			var result = service.GetOrders( DateTime.UtcNow.AddHours( -13 ), DateTime.UtcNow ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -63,7 +63,7 @@ namespace ThreeDCartAccessTests.Orders
 		public async Task GetOrdersByDateAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetOrdersAsync( DateTime.Now.AddDays( -1 ), DateTime.Now ) ).ToList();
+			var result = ( await service.GetOrdersAsync( DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );

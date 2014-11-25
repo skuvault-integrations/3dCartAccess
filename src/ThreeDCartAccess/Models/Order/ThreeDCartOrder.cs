@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Globalization;
+using System.Xml.Serialization;
 using ThreeDCartAccess.Misc;
 
 namespace ThreeDCartAccess.Models.Order
@@ -15,16 +17,50 @@ namespace ThreeDCartAccess.Models.Order
 		public long CustomerId{ get; set; }
 
 		[ XmlElement( ElementName = "DateStarted" ) ]
-		public string DateStarted{ get; set; }
+		public string DateTimeStartedStr{ get; set; }
+
+		[ XmlIgnore ]
+		public DateTime DateTimeStartedUtc
+		{
+			get { return this.GetDateInUtc( this.DateTimeStartedStr, ref this._dateTimeStartedUtc ); }
+		}
+
+		private DateTime _dateTimeStartedUtc = DateTime.MinValue;
 
 		[ XmlElement( ElementName = "LastUpdate" ) ]
-		public string LastUpdate{ get; set; }
+		public string DateTimeUpdatedStr{ get; set; }
+
+		[ XmlIgnore ]
+		public DateTime DateTimeUpdatedUtc
+		{
+			get { return this.GetDateInUtc( this.DateTimeUpdatedStr, ref this._dateTimeUpdatedUtc ); }
+		}
+
+		private DateTime _dateTimeUpdatedUtc = DateTime.MinValue;
 
 		[ XmlElement( ElementName = "Date" ) ]
-		public string Date{ get; set; }
+		public string DateCreatedStr{ get; set; }
 
 		[ XmlElement( ElementName = "Time" ) ]
-		public string Time{ get; set; }
+		public string TimeCreatedStr{ get; set; }
+
+		[ XmlIgnore ]
+		public DateTime DateTimeCreatedUtc
+		{
+			get
+			{
+				if( this._dateTimeCreatedUtc != DateTime.MinValue )
+					return this._dateTimeCreatedUtc;
+
+				var dateCreated = DateTime.Parse( this.DateCreatedStr, _culture );
+				var timeCreated = DateTime.Parse( this.TimeCreatedStr, _culture );
+				var tmp = dateCreated.Add( new TimeSpan( timeCreated.Hour, timeCreated.Minute, timeCreated.Second ) );
+				var result = tmp.AddHours( -this.TimeZone );
+				return result;
+			}
+		}
+
+		private readonly DateTime _dateTimeCreatedUtc = DateTime.MinValue;
 
 		[ XmlElement( ElementName = "Total" ) ]
 		public decimal Total{ get; set; }
@@ -64,5 +100,22 @@ namespace ThreeDCartAccess.Models.Order
 
 		[ XmlElement( ElementName = "ShippingInformation" ) ]
 		public ThreeDCartShippingInformation ShippingInformation{ get; set; }
+
+		#region misc
+		private static readonly CultureInfo _culture = new CultureInfo( "en-US" );
+
+		[ XmlIgnore ]
+		public int TimeZone{ get; internal set; }
+
+		private DateTime GetDateInUtc( string dateTime, ref DateTime cachedDateTime )
+		{
+			if( cachedDateTime != DateTime.MinValue )
+				return cachedDateTime;
+
+			var tmp = DateTime.Parse( dateTime, _culture );
+			cachedDateTime = tmp.AddHours( -this.TimeZone );
+			return cachedDateTime;
+		}
+		#endregion
 	}
 }

@@ -26,7 +26,7 @@ namespace ThreeDCartAccessTests.Products
 			if( testConfig != null )
 			{
 				this.ThreeDCartFactory = new ThreeDCartFactory();
-				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey );
+				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey, testConfig.TimeZone );
 			}
 		}
 
