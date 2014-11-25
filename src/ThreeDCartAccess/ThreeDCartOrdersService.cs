@@ -45,8 +45,7 @@ namespace ThreeDCartAccess
 				result.AddRange( filtered );
 			}
 
-			result = this.SetTimeZone( result );
-			result = this.FilterByDateIfNeeded( result, startDateUtc, endDateUtc );
+			result = this.SetTimeZoneAndFilterByDate( result, startDateUtc, endDateUtc );
 			return result;
 		}
 
@@ -64,8 +63,7 @@ namespace ThreeDCartAccess
 				result.AddRange( filtered );
 			}
 
-			result = this.SetTimeZone( result );
-			result = this.FilterByDateIfNeeded( result, startDateUtc, endDateUtc );
+			result = this.SetTimeZoneAndFilterByDate( result, startDateUtc, endDateUtc );
 			return result;
 		}
 
@@ -120,21 +118,22 @@ namespace ThreeDCartAccess
 			return includeNotCompleted ? orders : orders.Where( x => x.OrderStatus != ThreeDCartOrderStatusEnum.NotCompleted );
 		}
 
-		private List< ThreeDCartOrder > SetTimeZone( List< ThreeDCartOrder > orders )
+		private List< ThreeDCartOrder > SetTimeZoneAndFilterByDate( IEnumerable< ThreeDCartOrder > orders, DateTime? startDateUtc, DateTime? endDateUtc )
 		{
+			if( startDateUtc == null )
+				startDateUtc = DateTime.MinValue;
+			if( endDateUtc == null )
+				endDateUtc = DateTime.MaxValue;
+
+			var result = new List< ThreeDCartOrder >();
 			foreach( var order in orders )
 			{
 				order.TimeZone = this._config.TimeZone;
+				if( order.DateTimeCreatedUtc >= startDateUtc && order.DateTimeCreatedUtc <= endDateUtc ||
+				    order.DateTimeUpdatedUtc >= startDateUtc && order.DateTimeUpdatedUtc <= endDateUtc )
+					result.Add( order );
 			}
-			return orders;
-		}
-
-		private List< ThreeDCartOrder > FilterByDateIfNeeded( List< ThreeDCartOrder > orders, DateTime? startDateUtc, DateTime? endDateUtc )
-		{
-			if( startDateUtc == null && endDateUtc == null )
-				return orders;
-			return orders.Where( x => x.DateTimeCreatedUtc >= startDateUtc && x.DateTimeCreatedUtc <= endDateUtc ||
-			                          x.DateTimeUpdatedUtc >= startDateUtc && x.DateTimeUpdatedUtc <= endDateUtc ).ToList();
+			return result;
 		}
 
 		private string GetDate( DateTime? date )

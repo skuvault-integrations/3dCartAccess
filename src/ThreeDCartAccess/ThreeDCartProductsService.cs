@@ -33,8 +33,6 @@ namespace ThreeDCartAccess
 				var portion = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
 					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) );
 				result.AddRange( portion.Products );
-				if( portion.Products.Count != _batchSize )
-					return result;
 			}
 
 			return result;
@@ -49,8 +47,6 @@ namespace ThreeDCartAccess
 				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
 					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) ).Body.getProductResult );
 				result.AddRange( portion.Products );
-				if( portion.Products.Count != _batchSize )
-					return result;
 			}
 
 			return result;
