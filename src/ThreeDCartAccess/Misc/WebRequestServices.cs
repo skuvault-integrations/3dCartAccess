@@ -63,8 +63,13 @@ namespace ThreeDCartAccess.Misc
 
 			if( xElement.Name.LocalName == "Error" )
 			{
-				ThreeDCartLogger.Log.Error( "Failed" + logStr );
 				var error = xElementStr.Deserialize< ThreeDCartError >();
+				if( error.Id == 46 || error.Id == 47 || error.Id == 48 || error.Id == 49 )
+				{
+					ThreeDCartLogger.Log.Trace( "Success" + logStr );
+					return default( T );
+				}
+				ThreeDCartLogger.Log.Error( "Failed" + logStr );
 				throw new Exception( error.Message ?? error.Description );
 			}
 

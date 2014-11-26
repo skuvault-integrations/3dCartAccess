@@ -11,7 +11,7 @@ namespace ThreeDCartAccess.Models
 		public string Message{ get; set; }
 
 		[ XmlElement ]
-		public string Id{ get; set; }
+		public int Id{ get; set; }
 
 		[ XmlElement ]
 		public string Description{ get; set; }

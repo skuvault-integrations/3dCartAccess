@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -30,10 +31,51 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		public void GetNewOrders()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetNewOrders( null, null, true ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetNewOrdersAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = ( await service.GetNewOrdersAsync() ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public void GetNewOrdersByDate()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetNewOrders( new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetNewOrdersByDateAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
 		public void GetOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetOrders( null, null, true ).ToList();
+			var numbers = new List< string > { "AB-1014" };
+			var result = service.GetOrders( numbers, null, null, true ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -43,7 +85,8 @@ namespace ThreeDCartAccessTests.Orders
 		public async Task GetOrdersAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetOrdersAsync() ).ToList();
+			var numbers = new List< string > { "AB-1014" };
+			var result = ( await service.GetOrdersAsync( numbers ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -53,7 +96,8 @@ namespace ThreeDCartAccessTests.Orders
 		public void GetOrdersByDate()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetOrders( DateTime.UtcNow.AddHours( -13 ), DateTime.UtcNow ).ToList();
+			var numbers = new List< string > { "AB-1014" };
+			var result = service.GetOrders( numbers, new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -63,10 +107,29 @@ namespace ThreeDCartAccessTests.Orders
 		public async Task GetOrdersByDateAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetOrdersAsync( DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
+			var numbers = new List< string > { "AB-1014" };
+			var result = ( await service.GetOrdersAsync( numbers, DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public void GetOrder()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.GetOrder( "AB-1014" );
+
+			result.Should().NotBeNull();
+		}
+
+		[ Test ]
+		public async Task GetOrderAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = ( await service.GetOrderAsync( "AB-1014" ) );
+
+			result.Should().NotBeNull();
 		}
 
 		[ Test ]

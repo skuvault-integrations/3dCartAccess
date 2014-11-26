@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CuttingEdge.Conditions;
+using Netco.Extensions;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.Models.Configuration;
 using ThreeDCartAccess.Models.Order;
@@ -31,40 +32,85 @@ namespace ThreeDCartAccess
 			this._webRequestServices = new WebRequestServices();
 		}
 
-		public IEnumerable< ThreeDCartOrder > GetOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		public IEnumerable< ThreeDCartOrder > GetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
 		{
 			var startDate = this.GetDate( startDateUtc );
 			var endDate = this.GetDate( endDateUtc );
 			var result = new List< ThreeDCartOrder >();
-			var ordersCount = this.GetOrdersCount( startDate, endDate );
-			for( var i = 1; i <= ordersCount; i += _batchSize )
+			for( var i = 1;; i += _batchSize )
 			{
 				var portion = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
 					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) );
+				if( portion == null )
+					break;
+
 				var filtered = this.FilterNotCompletedOrdersIfNeeded( portion.Orders, includeNotCompleted );
 				result.AddRange( filtered );
+				if( portion.Orders.Count != _batchSize )
+					break;
 			}
 
 			result = this.SetTimeZoneAndFilterByDate( result, startDateUtc, endDateUtc );
 			return result;
 		}
 
-		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		public async Task< IEnumerable< ThreeDCartOrder > > GetNewOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
 		{
 			var startDate = this.GetDate( startDateUtc );
 			var endDate = this.GetDate( endDateUtc );
 			var result = new List< ThreeDCartOrder >();
-			var ordersCount = await this.GetOrdersCountAsync( startDate, endDate );
-			for( var i = 1; i <= ordersCount; i += _batchSize )
+			for( var i = 1;; i += _batchSize )
 			{
 				var portion = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
 					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult );
+				if( portion == null )
+					break;
+
 				var filtered = this.FilterNotCompletedOrdersIfNeeded( portion.Orders, includeNotCompleted );
 				result.AddRange( filtered );
+				if( portion.Orders.Count != _batchSize )
+					break;
 			}
 
 			result = this.SetTimeZoneAndFilterByDate( result, startDateUtc, endDateUtc );
 			return result;
+		}
+
+		public IEnumerable< ThreeDCartOrder > GetOrders( IEnumerable< string > invoiceNumbers, DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		{
+			var orders = invoiceNumbers.Select( this.GetOrder ).Where( order => order != null );
+			var filtered = this.FilterNotCompletedOrdersIfNeeded( orders, includeNotCompleted );
+			var result = this.SetTimeZoneAndFilterByDate( filtered, startDateUtc, endDateUtc );
+			return result;
+		}
+
+		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( IEnumerable< string > invoiceNumbers, DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		{
+			var orders = await invoiceNumbers.ProcessInBatchAsync( 50, invoiceNumber =>
+			{
+				var order = this.GetOrderAsync( invoiceNumber );
+				return order;
+			} );
+
+			var filtered = this.FilterNotCompletedOrdersIfNeeded( orders, includeNotCompleted );
+			var result = this.SetTimeZoneAndFilterByDate( filtered, startDateUtc, endDateUtc );
+			return result;
+		}
+
+		public ThreeDCartOrder GetOrder( string invoiceNumber )
+		{
+			var portion = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
+				() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) );
+
+			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
+		}
+
+		public async Task< ThreeDCartOrder > GetOrderAsync( string invoiceNumber )
+		{
+			var portion = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
+				async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult );
+
+			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
 		}
 
 		public int GetOrdersCount( DateTime? startDateUtc = null, DateTime? endDateUtc = null )

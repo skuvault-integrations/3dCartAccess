@@ -27,12 +27,16 @@ namespace ThreeDCartAccess
 		public IEnumerable< ThreeDCartProduct > GetProducts()
 		{
 			var result = new List< ThreeDCartProduct >();
-			var productsCount = this.GetProductsCount();
-			for( var i = 1; i <= productsCount; i += _batchSize )
+			for( var i = 1;; i += _batchSize )
 			{
 				var portion = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
 					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) );
+				if( portion == null )
+					break;
+
 				result.AddRange( portion.Products );
+				if( portion.Products.Count != _batchSize )
+					break;
 			}
 
 			return result;
@@ -41,12 +45,16 @@ namespace ThreeDCartAccess
 		public async Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync()
 		{
 			var result = new List< ThreeDCartProduct >();
-			var productsCount = await this.GetProductsCountAsync();
-			for( var i = 1; i <= productsCount; i += _batchSize )
+			for( var i = 1;; i += _batchSize )
 			{
 				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
 					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) ).Body.getProductResult );
+				if( portion == null )
+					break;
+
 				result.AddRange( portion.Products );
+				if( portion.Products.Count != _batchSize )
+					break;
 			}
 
 			return result;
