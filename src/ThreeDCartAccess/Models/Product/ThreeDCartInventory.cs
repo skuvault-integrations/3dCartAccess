@@ -41,5 +41,14 @@ namespace ThreeDCartAccess.Models.Product
 
 		[ XmlIgnore ]
 		public int OptionStock{ get; set; }
+
+		[ XmlElement( ElementName = "show_out_stock" ) ]
+		public int ShowOutStockInt{ get; set; }
+
+		[ XmlIgnore ]
+		public ShowOutStockEnum ShowOutStock
+		{
+			get { return ( ShowOutStockEnum )this.ShowOutStockInt; }
+		}
 	}
 }

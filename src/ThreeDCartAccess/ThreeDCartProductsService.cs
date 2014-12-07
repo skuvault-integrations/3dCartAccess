@@ -47,7 +47,7 @@ namespace ThreeDCartAccess
 
 		public IEnumerable< ThreeDCartInventory > GetInventory()
 		{
-			const string sql = "select p.catalogid, p.id, p.name, p.stock, o.AO_Code, o.AO_Sufix, o.AO_Name, o.AO_Cost, o.AO_Stock from products AS p " +
+			const string sql = "select p.catalogid, p.id, p.name, p.stock, p.show_out_stock, o.AO_Code, o.AO_Sufix, o.AO_Name, o.AO_Cost, o.AO_Stock from products AS p " +
 			                   "LEFT JOIN options_Advanced AS o on p.catalogid = o.ProductID";
 			var result = this._webRequestServices.Get< ThreeDCartInventories >( this._config,
 				() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) );
