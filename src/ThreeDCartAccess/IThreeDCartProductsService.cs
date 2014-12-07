@@ -9,6 +9,9 @@ namespace ThreeDCartAccess
 		IEnumerable< ThreeDCartProduct > GetProducts();
 		Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync();
 
+		IEnumerable< ThreeDCartInventory > GetInventory();
+		Task< IEnumerable< ThreeDCartInventory > > GetInventoryAsync();
+
 		int GetProductsCount();
 		Task< int > GetProductsCountAsync();
 

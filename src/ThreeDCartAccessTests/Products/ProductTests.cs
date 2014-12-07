@@ -51,25 +51,46 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		public void GetInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var result = service.GetInventory().ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetInventoryAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var result = ( await service.GetInventoryAsync() ).ToList();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
 		public void UpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var inventory = new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true };
+			var oldQty = service.GetInventory().First( x => x.OptionCode == "redCode" ).OptionStock;
+			var inventory = new ThreeDCartUpdateInventory { ProductId = "testBundle2", OptionCode = "redCode", OldQuantity = oldQty, NewQuantity = 2, UpdateProductTotalStock = true };
 			var result = service.UpdateInventory( inventory );
 
 			result.Should().NotBeNull();
-			result.Quantity.Should().Be( 2 );
+			result.NewQuantity.Should().Be( 2 );
 		}
 
 		[ Test ]
 		public async Task UpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var inventory = new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true };
+			var inventory = new ThreeDCartUpdateInventory { OptionCode = "redCode", NewQuantity = 2 };
 			var result = await service.UpdateInventoryAsync( inventory );
 
 			result.Should().NotBeNull();
-			result.Quantity.Should().Be( 2 );
+			result.NewQuantity.Should().Be( 2 );
 		}
 
 		[ Test ]
@@ -78,7 +99,7 @@ namespace ThreeDCartAccessTests.Products
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
 			var inventory = new List< ThreeDCartUpdateInventory >
 			{
-				new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true }
+				new ThreeDCartUpdateInventory { ProductId = "testBundle2", NewQuantity = 5 }
 			};
 			var result = service.UpdateInventory( inventory ).ToList();
 
@@ -92,7 +113,7 @@ namespace ThreeDCartAccessTests.Products
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
 			var inventory = new List< ThreeDCartUpdateInventory >
 			{
-				new ThreeDCartUpdateInventory { ProductId = "testSku1", Quantity = 2, IsReplaceQty = true }
+				new ThreeDCartUpdateInventory { ProductId = "testSku1", NewQuantity = 2 }
 			};
 			var result = ( await service.UpdateInventoryAsync( inventory ) ).ToList();
 
