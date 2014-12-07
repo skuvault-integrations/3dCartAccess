@@ -45,10 +45,15 @@ namespace ThreeDCartAccess
 			return result;
 		}
 
+		private string GetSqlForGetInventory()
+		{
+			return "select p.catalogid, p.id, p.name, p.stock, p.show_out_stock, o.AO_Code, o.AO_Sufix, o.AO_Name, o.AO_Cost, o.AO_Stock from products AS p " +
+			       "LEFT JOIN options_Advanced AS o on p.catalogid = o.ProductID";
+		}
+
 		public IEnumerable< ThreeDCartInventory > GetInventory()
 		{
-			const string sql = "select p.catalogid, p.id, p.name, p.stock, p.show_out_stock, o.AO_Code, o.AO_Sufix, o.AO_Name, o.AO_Cost, o.AO_Stock from products AS p " +
-			                   "LEFT JOIN options_Advanced AS o on p.catalogid = o.ProductID";
+			var sql = this.GetSqlForGetInventory();
 			var result = this._webRequestServices.Get< ThreeDCartInventories >( this._config,
 				() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) );
 			return result.Inventory;
@@ -56,8 +61,7 @@ namespace ThreeDCartAccess
 
 		public async Task< IEnumerable< ThreeDCartInventory > > GetInventoryAsync()
 		{
-			const string sql = "select p.catalogid, p.id, p.name, p.stock, o.AO_Code, o.AO_Sufix, o.AO_Name, o.AO_Cost, o.AO_Stock from products AS p " +
-			                   "LEFT JOIN options_Advanced AS o on p.catalogid = o.ProductID";
+			var sql = this.GetSqlForGetInventory();
 			var result = await this._webRequestServices.GetAsync< ThreeDCartInventories >( this._config,
 				async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
 			return result.Inventory;
