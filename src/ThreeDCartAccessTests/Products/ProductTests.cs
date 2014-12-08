@@ -74,48 +74,25 @@ namespace ThreeDCartAccessTests.Products
 		public void UpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var oldQty = service.GetInventory().First( x => x.OptionCode == "redCode" ).OptionStock;
-			var inventory = new ThreeDCartUpdateInventory { ProductId = "testBundle2", OptionCode = "redCode", OldQuantity = oldQty, NewQuantity = 2, UpdateProductTotalStock = true };
-			var result = service.UpdateInventory( inventory );
+			var inventory = new List< ThreeDCartUpdateInventory >
+			{
+				new ThreeDCartUpdateInventory { ProductId = "testBundle2", OptionCode = "testBundle2-red", NewQuantity = 1 }
+			};
+			var result = service.UpdateInventory( inventory, true ).ToList();
 
 			result.Should().NotBeNull();
-			result.NewQuantity.Should().Be( 2 );
+			result.Count().Should().Be( 2 );
 		}
 
 		[ Test ]
 		public async Task UpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var inventory = new ThreeDCartUpdateInventory { OptionCode = "redCode", NewQuantity = 2 };
-			var result = await service.UpdateInventoryAsync( inventory );
-
-			result.Should().NotBeNull();
-			result.NewQuantity.Should().Be( 2 );
-		}
-
-		[ Test ]
-		public void UpdateInventoryList()
-		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
 			var inventory = new List< ThreeDCartUpdateInventory >
 			{
-				new ThreeDCartUpdateInventory { ProductId = "testBundle2", NewQuantity = 5 }
+				new ThreeDCartUpdateInventory { ProductId = "testBundle2", NewQuantity = 2 }
 			};
-			var result = service.UpdateInventory( inventory ).ToList();
-
-			result.Should().NotBeNull();
-			result.Count().Should().Be( 1 );
-		}
-
-		[ Test ]
-		public async Task UpdateInventoryListAsync()
-		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
-			var inventory = new List< ThreeDCartUpdateInventory >
-			{
-				new ThreeDCartUpdateInventory { ProductId = "testSku1", NewQuantity = 2 }
-			};
-			var result = ( await service.UpdateInventoryAsync( inventory ) ).ToList();
+			var result = ( await service.UpdateInventoryAsync( inventory, true ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().Be( 1 );

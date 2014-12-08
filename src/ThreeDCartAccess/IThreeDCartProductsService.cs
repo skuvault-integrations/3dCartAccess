@@ -12,13 +12,7 @@ namespace ThreeDCartAccess
 		IEnumerable< ThreeDCartInventory > GetInventory();
 		Task< IEnumerable< ThreeDCartInventory > > GetInventoryAsync();
 
-		int GetProductsCount();
-		Task< int > GetProductsCountAsync();
-
-		ThreeDCartUpdateInventory UpdateInventory( ThreeDCartUpdateInventory inventory );
-		Task< ThreeDCartUpdateInventory > UpdateInventoryAsync( ThreeDCartUpdateInventory inventory );
-
-		IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory );
-		Task< IEnumerable< ThreeDCartUpdateInventory > > UpdateInventoryAsync( IEnumerable< ThreeDCartUpdateInventory > inventory );
+		IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory, bool updateProductTotalStock = false );
+		Task< IEnumerable< ThreeDCartUpdateInventory > > UpdateInventoryAsync( IEnumerable< ThreeDCartUpdateInventory > inventory, bool updateProductTotalStock = false );
 	}
 }

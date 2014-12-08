@@ -15,15 +15,5 @@ namespace ThreeDCartAccess.Models.Product
 
 		[ XmlElement( ElementName = "NewInventory" ) ]
 		public int NewQuantity{ get; set; }
-
-		/// <summary>
-		/// Used only if <see cref="OptionCode"/> setted and <see cref="UpdateProductTotalStock"/> setted to true.
-		/// </summary>
-		public int OldQuantity{ get; set; }
-
-		/// <summary>
-		/// Update total product stock. Used only if <see cref="OptionCode"/> setted.
-		/// </summary>
-		public bool UpdateProductTotalStock{ get; set; }
 	}
 }

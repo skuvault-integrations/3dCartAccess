@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CuttingEdge.Conditions;
 using ThreeDCartAccess.Misc;
@@ -85,53 +86,71 @@ namespace ThreeDCartAccess
 			return result;
 		}
 
-		public int GetProductsCount()
-		{
-			var result = this._webRequestServices.Get< ThreeDCartProductsCount >( this._config,
-				() => this._service.getProductCount( this._config.StoreUrl, this._config.UserKey, "" ) );
-			return result.Quantity;
-		}
-
-		public async Task< int > GetProductsCountAsync()
-		{
-			var result = await this._webRequestServices.GetAsync< ThreeDCartProductsCount >( this._config,
-				async () => ( await this._service.getProductCountAsync( this._config.StoreUrl, this._config.UserKey, "" ) ).Body.getProductCountResult );
-			return result.Quantity;
-		}
-
-		public IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory )
+		public IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory, bool updateProductTotalStock = false )
 		{
 			var result = new List< ThreeDCartUpdateInventory >();
+			var productsWithOptions = new List< string >();
 			foreach( var inv in inventory )
 			{
-				var response = this.UpdateInventory( inv );
+				ThreeDCartUpdateInventory response;
+				if( string.IsNullOrEmpty( inv.OptionCode ) )
+					response = this.UpdateProductInventory( inv );
+				else
+				{
+					response = this.UpdateProductOptionInventory( inv );
+					if( !productsWithOptions.Contains( inv.ProductId ) )
+						productsWithOptions.Add( inv.ProductId );
+				}
 				if( response != null )
 					result.Add( response );
 			}
-			return result;
-		}
 
-		public async Task< IEnumerable< ThreeDCartUpdateInventory > > UpdateInventoryAsync( IEnumerable< ThreeDCartUpdateInventory > inventory )
-		{
-			var result = new List< ThreeDCartUpdateInventory >();
-			foreach( var inv in inventory )
+			if( !updateProductTotalStock || productsWithOptions.Count == 0 )
+				return result;
+
+			var updatedInventory = this.GetInventory().ToList();
+			foreach( var product in productsWithOptions )
 			{
-				var response = await this.UpdateInventoryAsync( inv );
+				var sum = updatedInventory.Where( x => x.IsProductOption && x.ProductId == product && x.OptionStock > 0 ).Sum( x => x.OptionStock );
+				var response = this.UpdateProductInventory( new ThreeDCartUpdateInventory { ProductId = product, NewQuantity = sum } );
 				if( response != null )
 					result.Add( response );
 			}
+
 			return result;
 		}
 
-		public ThreeDCartUpdateInventory UpdateInventory( ThreeDCartUpdateInventory inventory )
+		public async Task< IEnumerable< ThreeDCartUpdateInventory > > UpdateInventoryAsync( IEnumerable< ThreeDCartUpdateInventory > inventory, bool updateProductTotalStock = false )
 		{
-			var result = string.IsNullOrEmpty( inventory.OptionCode ) ? this.UpdateProductInventory( inventory ) : UpdateProductOptionInventory( inventory );
-			return result;
-		}
+			var result = new List< ThreeDCartUpdateInventory >();
+			var productsWithOptions = new List< string >();
+			foreach( var inv in inventory )
+			{
+				ThreeDCartUpdateInventory response;
+				if( string.IsNullOrEmpty( inv.OptionCode ) )
+					response = await this.UpdateProductInventoryAsync( inv );
+				else
+				{
+					response = await this.UpdateProductOptionInventoryAsync( inv );
+					if( !productsWithOptions.Contains( inv.ProductId ) )
+						productsWithOptions.Add( inv.ProductId );
+				}
+				if( response != null )
+					result.Add( response );
+			}
 
-		public async Task< ThreeDCartUpdateInventory > UpdateInventoryAsync( ThreeDCartUpdateInventory inventory )
-		{
-			var result = string.IsNullOrEmpty( inventory.OptionCode ) ? await this.UpdateProductInventoryAsync( inventory ) : await UpdateProductOptionInventoryAsync( inventory );
+			if( !updateProductTotalStock || productsWithOptions.Count == 0 )
+				return result;
+
+			var updatedInventory = this.GetInventory().ToList();
+			foreach( var product in productsWithOptions )
+			{
+				var sum = updatedInventory.Where( x => x.IsProductOption && x.ProductId == product && x.OptionStock > 0 ).Sum( x => x.OptionStock );
+				var response = await this.UpdateProductInventoryAsync( new ThreeDCartUpdateInventory { ProductId = product, NewQuantity = sum } );
+				if( response != null )
+					result.Add( response );
+			}
+
 			return result;
 		}
 
@@ -152,16 +171,7 @@ namespace ThreeDCartAccess
 
 		private string GetSqlForUpdateProductOptionInventory( ThreeDCartUpdateInventory inventory )
 		{
-			var sql = string.Format( "UPDATE options_Advanced SET AO_Stock = {0} WHERE AO_Sufix = '{1}'", inventory.NewQuantity, inventory.OptionCode );
-			if( !inventory.UpdateProductTotalStock )
-				return sql;
-
-			var diff = inventory.NewQuantity > 0
-				? inventory.OldQuantity > 0 ? inventory.NewQuantity - inventory.OldQuantity : inventory.NewQuantity
-				: inventory.OldQuantity > 0 ? -inventory.OldQuantity : 0;
-
-			var sql2 = string.Format( "UPDATE products SET stock = stock + {0} WHERE id = '{1}'", diff, inventory.ProductId );
-			return string.Format( "{0}|;;|{1}", sql, sql2 );
+			return string.Format( "UPDATE options_Advanced SET AO_Stock = {0} WHERE AO_Sufix = '{1}'", inventory.NewQuantity, inventory.OptionCode );
 		}
 
 		private ThreeDCartUpdateInventory UpdateProductOptionInventory( ThreeDCartUpdateInventory inventory )
