@@ -8,10 +8,17 @@ namespace ThreeDCartAccess.Misc
 {
 	internal class WebRequestServices
 	{
+		private readonly ActionPolicies _actionPolicies;
+
+		public WebRequestServices( ActionPolicies actionPolicies )
+		{
+			this._actionPolicies = actionPolicies;
+		}
+
 		public TResponse Get< TResponse >( ThreeDCartConfig config, Func< XElement > func )
 		{
 			this.LogRequest( func.Method.Name, config );
-			var result = ActionPolicies.Get.Get( () =>
+			var result = this._actionPolicies.Get.Get( () =>
 			{
 				var funkResult = func();
 				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
@@ -23,7 +30,7 @@ namespace ThreeDCartAccess.Misc
 		public async Task< TResponse > GetAsync< TResponse >( ThreeDCartConfig config, Func< Task< XElement > > func )
 		{
 			this.LogRequest( func.Method.Name, config );
-			var result = await ActionPolicies.GetAsync.Get( async () =>
+			var result = await this._actionPolicies.GetAsync.Get( async () =>
 			{
 				var funkResult = await func();
 				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
@@ -35,7 +42,7 @@ namespace ThreeDCartAccess.Misc
 		public TResponse Submit< TResponse >( ThreeDCartConfig config, Func< XElement > func )
 		{
 			this.LogRequest( func.Method.Name, config );
-			var result = ActionPolicies.Submit.Get( () =>
+			var result = this._actionPolicies.Submit.Get( () =>
 			{
 				var funkResult = func();
 				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
@@ -47,7 +54,7 @@ namespace ThreeDCartAccess.Misc
 		public async Task< TResponse > SubmitAsync< TResponse >( ThreeDCartConfig config, Func< Task< XElement > > func )
 		{
 			this.LogRequest( func.Method.Name, config );
-			var result = await ActionPolicies.SubmitAsync.Get( async () =>
+			var result = await this._actionPolicies.SubmitAsync.Get( async () =>
 			{
 				var funkResult = await func();
 				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );

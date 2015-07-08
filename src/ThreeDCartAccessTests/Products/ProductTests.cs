@@ -35,7 +35,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void GetProducts()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config, true );
 			var result = service.GetProducts().ToList();
 
 			result.Should().NotBeNull();
@@ -55,7 +55,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void GetInventory()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config, true );
 			var result = service.GetInventory().ToList();
 
 			result.Should().NotBeNull();

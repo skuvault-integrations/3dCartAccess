@@ -18,14 +18,15 @@ namespace ThreeDCartAccess
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
 
-		public ThreeDCartProductsService( ThreeDCartConfig config )
+		public ThreeDCartProductsService( ThreeDCartConfig config, bool retryOnlyOneTime )
 		{
 			Condition.Requires( config, "config" ).IsNotNull();
 
 			this._config = config;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
-			this._webRequestServices = new WebRequestServices();
+			var actionPolicies = retryOnlyOneTime ? new ActionPolicies( 1 ) : new ActionPolicies() ;
+			this._webRequestServices = new WebRequestServices( actionPolicies );
 		}
 
 		public IEnumerable< ThreeDCartProduct > GetProducts()
@@ -35,6 +36,24 @@ namespace ThreeDCartAccess
 			{
 				var portion = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
 					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) );
+				if( portion == null )
+					break;
+
+				result.AddRange( portion.Products );
+				if( portion.Products.Count != _batchSize )
+					break;
+			}
+
+			return result;
+		}
+
+		public async Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync()
+		{
+			var result = new List< ThreeDCartProduct >();
+			for( var i = 1;; i += _batchSize )
+			{
+				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
+					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) ).Body.getProductResult );
 				if( portion == null )
 					break;
 
@@ -66,24 +85,6 @@ namespace ThreeDCartAccess
 			var result = await this._webRequestServices.GetAsync< ThreeDCartInventories >( this._config,
 				async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
 			return result.Inventory;
-		}
-
-		public async Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync()
-		{
-			var result = new List< ThreeDCartProduct >();
-			for( var i = 1;; i += _batchSize )
-			{
-				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
-					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, "", "" ) ).Body.getProductResult );
-				if( portion == null )
-					break;
-
-				result.AddRange( portion.Products );
-				if( portion.Products.Count != _batchSize )
-					break;
-			}
-
-			return result;
 		}
 
 		public IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory, bool updateProductTotalStock = false )

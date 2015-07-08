@@ -5,56 +5,61 @@ using Netco.Utils;
 
 namespace ThreeDCartAccess.Misc
 {
-	public static class ActionPolicies
+	public class ActionPolicies
 	{
-#if DEBUG
-		private const int _retryCount = 1;
-#else
-		private const int _retryCount = 10;
-#endif
-
-		public static ActionPolicy Submit
+		public ActionPolicies( int retryCount = 10 )
 		{
-			get { return _sumbitPolicy; }
+			this._retryCount = retryCount;
 		}
 
-		private static readonly ActionPolicy _sumbitPolicy = ActionPolicy.Handle< Exception >().Retry( _retryCount, ( ex, i ) =>
-		{
-			ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API submit call for the {0} time", i );
-			SystemUtil.Sleep( TimeSpan.FromSeconds( 0.5 + i ) );
-		} );
+		private readonly int _retryCount;
 
-		public static ActionPolicyAsync SubmitAsync
+		public ActionPolicy Submit
 		{
-			get { return _sumbitAsyncPolicy; }
+			get
+			{
+				return ActionPolicy.Handle< Exception >().Retry( this._retryCount, ( ex, i ) =>
+				{
+					ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API submit call for the {0} time", i );
+					SystemUtil.Sleep( TimeSpan.FromSeconds( 10 + 20 * i ) );
+				} );
+			}
 		}
 
-		private static readonly ActionPolicyAsync _sumbitAsyncPolicy = ActionPolicyAsync.Handle< Exception >().RetryAsync( _retryCount, async ( ex, i ) =>
+		public ActionPolicyAsync SubmitAsync
 		{
-			ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API submit call for the {0} time", i );
-			await Task.Delay( TimeSpan.FromSeconds( 0.5 + i ) );
-		} );
-
-		public static ActionPolicy Get
-		{
-			get { return _getPolicy; }
+			get
+			{
+				return ActionPolicyAsync.Handle< Exception >().RetryAsync( this._retryCount, async ( ex, i ) =>
+				{
+					ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API submit call for the {0} time", i );
+					await Task.Delay( TimeSpan.FromSeconds( 10 + 20 * i ) );
+				} );
+			}
 		}
 
-		private static readonly ActionPolicy _getPolicy = ActionPolicy.Handle< Exception >().Retry( _retryCount, ( ex, i ) =>
+		public ActionPolicy Get
 		{
-			ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API get call for the {0} time", i );
-			SystemUtil.Sleep( TimeSpan.FromSeconds( 0.5 + i ) );
-		} );
-
-		public static ActionPolicyAsync GetAsync
-		{
-			get { return _getAsyncPolicy; }
+			get
+			{
+				return ActionPolicy.Handle< Exception >().Retry( this._retryCount, ( ex, i ) =>
+				{
+					ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API get call for the {0} time", i );
+					SystemUtil.Sleep( TimeSpan.FromSeconds( 10 + 20 * i ) );
+				} );
+			}
 		}
 
-		private static readonly ActionPolicyAsync _getAsyncPolicy = ActionPolicyAsync.Handle< Exception >().RetryAsync( _retryCount, async ( ex, i ) =>
+		public ActionPolicyAsync GetAsync
 		{
-			ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API get call for the {0} time", i );
-			await Task.Delay( TimeSpan.FromSeconds( 0.5 + i ) );
-		} );
+			get
+			{
+				return ActionPolicyAsync.Handle< Exception >().RetryAsync( this._retryCount, async ( ex, i ) =>
+				{
+					ThreeDCartLogger.Log.Trace( ex, "Retrying 3dCart API get call for the {0} time", i );
+					await Task.Delay( TimeSpan.FromSeconds( 10 + 20 * i ) );
+				} );
+			}
+		}
 	}
 }
