@@ -37,8 +37,21 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "SalePrice" ) ]
 		public decimal SalePrice{ get; set; }
 
+		[ XmlIgnore ]
+		public int Stock{ get; private set; }
+
 		[ XmlElement( ElementName = "Stock" ) ]
-		public int Stock{ get; set; }
+		public decimal StockDecimal
+		{
+			get { return this._stockDecimal; }
+			set
+			{
+				this._stockDecimal = value;
+				this.Stock = ( int )value;
+			}
+		}
+
+		private decimal _stockDecimal{ get; set; }
 
 		[ XmlElement( ElementName = "StockAlert" ) ]
 		public int StockAlert{ get; set; }

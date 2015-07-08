@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace ThreeDCartAccess.Models.Product
 {
@@ -10,8 +12,21 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "name" ) ]
 		public string Name{ get; set; }
 
+		[ XmlIgnore ]
+		public int Stock{ get; private set; }
+
 		[ XmlElement( ElementName = "stock" ) ]
-		public int Stock{ get; set; }
+		public decimal StockDecimal
+		{
+			get { return this._stockDecimal; }
+			set
+			{
+				this._stockDecimal = value;
+				this.Stock = ( int )value;
+			}
+		}
+
+		private decimal _stockDecimal{ get; set; }
 
 		[ XmlElement( ElementName = "AO_Code" ) ]
 		public string OptionId{ get; set; }
@@ -28,19 +43,25 @@ namespace ThreeDCartAccess.Models.Product
 		[ XmlElement( ElementName = "AO_Name" ) ]
 		public string OptionName{ get; set; }
 
+		[ XmlIgnore ]
+		public int OptionStock{ get; set; }
+
+		[ XmlIgnore ]
+		public decimal OptionStockDecimal{ get; set; }
+
 		[ XmlElement( ElementName = "AO_Stock" ) ]
 		public string OptionStockStr
 		{
-			get { return this.OptionStock.ToString(); }
+			get { return this.OptionStockDecimal.ToString(); }
 			set
 			{
 				if( !string.IsNullOrEmpty( value ) )
-					this.OptionStock = int.Parse( value );
+				{
+					this.OptionStockDecimal = decimal.Parse( value, CultureInfo.InvariantCulture );
+					this.OptionStock = ( int )this.OptionStockDecimal;
+				}
 			}
 		}
-
-		[ XmlIgnore ]
-		public int OptionStock{ get; set; }
 
 		[ XmlElement( ElementName = "show_out_stock" ) ]
 		public int ShowOutStockInt{ get; set; }
