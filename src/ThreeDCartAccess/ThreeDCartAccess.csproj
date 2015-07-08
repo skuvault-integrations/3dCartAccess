@@ -54,6 +54,7 @@
     <Compile Include="IThreeDCartProductsService.cs" />
     <Compile Include="Misc\ActionPolicies.cs" />
     <Compile Include="Misc\Extensions.cs" />
+    <Compile Include="Misc\ScriptsBuilder.cs" />
     <Compile Include="Misc\ThreeDCartLogger.cs" />
     <Compile Include="Misc\WebRequestServices.cs" />
     <Compile Include="Misc\XmlSerializeHelpers.cs" />
