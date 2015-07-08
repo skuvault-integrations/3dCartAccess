@@ -84,7 +84,7 @@ namespace ThreeDCartAccess.Models.Product
 		public string Title{ get; set; }
 
 		[ XmlElement( ElementName = "OnSale" ) ]
-		public bool OnSale{ get; set; }
+		public int OnSale{ get; set; }
 
 		[ XmlElement( ElementName = "HomeSpecial" ) ]
 		public bool HomeSpecial{ get; set; }

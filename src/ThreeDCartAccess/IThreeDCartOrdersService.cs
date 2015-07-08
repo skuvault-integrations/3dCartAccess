@@ -7,6 +7,7 @@ namespace ThreeDCartAccess
 {
 	public interface IThreeDCartOrdersService
 	{
+		bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null );
 		IEnumerable< ThreeDCartOrder > GetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
 		Task< IEnumerable< ThreeDCartOrder > > GetNewOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
 

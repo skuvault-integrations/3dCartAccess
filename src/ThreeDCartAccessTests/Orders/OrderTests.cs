@@ -33,6 +33,15 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		public void IsGetNewOrders()
+		{
+			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var result = service.IsGetNewOrders( null, null );
+
+			result.Should().Be( true );
+		}
+
+		[ Test ]
 		public void GetNewOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );

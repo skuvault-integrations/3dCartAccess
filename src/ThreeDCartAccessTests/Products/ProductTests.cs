@@ -33,9 +33,18 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		public void IsGetProducts()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var result = service.IsGetProducts();
+
+			result.Should().Be( true );
+		}
+
+		[ Test ]
 		public void GetProducts()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config, true );
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
 			var result = service.GetProducts().ToList();
 
 			result.Should().NotBeNull();
@@ -53,9 +62,18 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		public void IsGetInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var result = service.IsGetInventory();
+
+			result.Should().Be( true );
+		}
+
+		[ Test ]
 		public void GetInventory()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config, true );
+			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
 			var result = service.GetInventory().ToList();
 
 			result.Should().NotBeNull();

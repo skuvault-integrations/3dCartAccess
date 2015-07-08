@@ -4,20 +4,20 @@ namespace ThreeDCartAccess
 {
 	public interface IThreeDCartFactory
 	{
-		IThreeDCartProductsService CreateProductsService( ThreeDCartConfig config, bool retryOnlyOneTime = false );
-		IThreeDCartOrdersService CreateOrdersService( ThreeDCartConfig config, bool retryOnlyOneTime = false );
+		IThreeDCartProductsService CreateProductsService( ThreeDCartConfig config );
+		IThreeDCartOrdersService CreateOrdersService( ThreeDCartConfig config );
 	}
 
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
-		public IThreeDCartProductsService CreateProductsService( ThreeDCartConfig config, bool retryOnlyOneTime = false )
+		public IThreeDCartProductsService CreateProductsService( ThreeDCartConfig config )
 		{
-			return new ThreeDCartProductsService( config, retryOnlyOneTime );
+			return new ThreeDCartProductsService( config );
 		}
 
-		public IThreeDCartOrdersService CreateOrdersService( ThreeDCartConfig config, bool retryOnlyOneTime = false )
+		public IThreeDCartOrdersService CreateOrdersService( ThreeDCartConfig config )
 		{
-			return new ThreeDCartOrdersService( config, retryOnlyOneTime );
+			return new ThreeDCartOrdersService( config );
 		}
 	}
 }

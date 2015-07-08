@@ -22,15 +22,30 @@ namespace ThreeDCartAccess
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
 
-		public ThreeDCartOrdersService( ThreeDCartConfig config, bool retryOnlyOneTime )
+		public ThreeDCartOrdersService( ThreeDCartConfig config )
 		{
 			Condition.Requires( config, "config" ).IsNotNull();
 
 			this._config = config;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
-			var actionPolicies = retryOnlyOneTime ? new ActionPolicies( 1 ) : new ActionPolicies() ;
-			this._webRequestServices = new WebRequestServices( actionPolicies );
+			this._webRequestServices = new WebRequestServices();
+		}
+
+		public bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
+		{
+			try
+			{
+				var startDate = this.GetDate( startDateUtc );
+				var endDate = this.GetDate( endDateUtc );
+				var result = this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" );
+				var parsedResult = this._webRequestServices.ParseResult< ThreeDCartOrders >( "IsGetNewOrders", this._config, result );
+				return true;
+			}
+			catch( Exception )
+			{
+				return false;
+			}
 		}
 
 		public IEnumerable< ThreeDCartOrder > GetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )

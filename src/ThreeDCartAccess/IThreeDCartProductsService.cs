@@ -6,9 +6,11 @@ namespace ThreeDCartAccess
 {
 	public interface IThreeDCartProductsService
 	{
+		bool IsGetProducts();
 		IEnumerable< ThreeDCartProduct > GetProducts();
 		Task< IEnumerable< ThreeDCartProduct > > GetProductsAsync();
 
+		bool IsGetInventory();
 		IEnumerable< ThreeDCartInventory > GetInventory();
 		Task< IEnumerable< ThreeDCartInventory > > GetInventoryAsync();
 

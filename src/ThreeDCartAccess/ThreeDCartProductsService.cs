@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CuttingEdge.Conditions;
@@ -18,15 +19,28 @@ namespace ThreeDCartAccess
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
 
-		public ThreeDCartProductsService( ThreeDCartConfig config, bool retryOnlyOneTime )
+		public ThreeDCartProductsService( ThreeDCartConfig config )
 		{
 			Condition.Requires( config, "config" ).IsNotNull();
 
 			this._config = config;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
-			var actionPolicies = retryOnlyOneTime ? new ActionPolicies( 1 ) : new ActionPolicies() ;
-			this._webRequestServices = new WebRequestServices( actionPolicies );
+			this._webRequestServices = new WebRequestServices();
+		}
+
+		public bool IsGetProducts()
+		{
+			try
+			{
+				var result = this._service.getProduct( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, "", "" );
+				var parsedResult = this._webRequestServices.ParseResult< ThreeDCartProducts >( "IsGetProducts", this._config, result );
+				return true;
+			}
+			catch( Exception )
+			{
+				return false;
+			}
 		}
 
 		public IEnumerable< ThreeDCartProduct > GetProducts()
@@ -69,6 +83,21 @@ namespace ThreeDCartAccess
 		{
 			return "select p.catalogid, p.id, p.name, p.stock, p.show_out_stock, o.AO_Code, o.AO_Sufix, o.AO_Name, o.AO_Cost, o.AO_Stock from products AS p " +
 			       "LEFT JOIN options_Advanced AS o on p.catalogid = o.ProductID";
+		}
+
+		public bool IsGetInventory()
+		{
+			try
+			{
+				var sql = this.GetSqlForGetInventory();
+				var result = this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" );
+				var parsedResult = this._webRequestServices.ParseResult< ThreeDCartInventories >( "IsGetInventory", this._config, result );
+				return true;
+			}
+			catch( Exception )
+			{
+				return false;
+			}
 		}
 
 		public IEnumerable< ThreeDCartInventory > GetInventory()
