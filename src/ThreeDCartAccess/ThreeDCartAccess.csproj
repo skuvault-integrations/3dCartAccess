@@ -75,6 +75,7 @@
     <Compile Include="Models\Product\ThreeDCartProducts.cs" />
     <Compile Include="Models\Product\ThreeDCartUpdatedInventory.cs" />
     <Compile Include="Models\Product\ThreeDCartUpdatedOptionInventory.cs" />
+    <Compile Include="Models\RunQueryResponse.cs" />
     <Compile Include="Models\ThreeDCartError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Global\GlobalAssemblyInfo.cs">

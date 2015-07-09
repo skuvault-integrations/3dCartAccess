@@ -6,9 +6,12 @@ namespace ThreeDCartAccess.Models.Product
 {
 	[ Serializable() ]
 	[ XmlRoot( ElementName = "runQueryResponse" ) ]
-	public class ThreeDCartInventories
+	public class ThreeDCartInventories: RunQueryResponse
 	{
 		[ XmlElement( ElementName = "runQueryRecord" ) ]
 		public List< ThreeDCartInventory > Inventory{ get; set; }
+
+		[ XmlIgnore ]
+		public bool IsFullInventory{ get; set; }
 	}
 }

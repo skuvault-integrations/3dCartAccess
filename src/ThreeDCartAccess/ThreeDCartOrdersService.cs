@@ -38,8 +38,8 @@ namespace ThreeDCartAccess
 			{
 				var startDate = this.GetDate( startDateUtc );
 				var endDate = this.GetDate( endDateUtc );
-				var result = this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" );
-				var parsedResult = this._webRequestServices.ParseResult< ThreeDCartOrders >( "IsGetNewOrders", this._config, result );
+				var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
+					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
 				return true;
 			}
 			catch( Exception )
@@ -55,8 +55,9 @@ namespace ThreeDCartAccess
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
-				var portion = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
-					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) );
+				var portion = ActionPolicies.Get.Get(
+					() => this._webRequestServices.Execute< ThreeDCartOrders >( "GetNewOrders", this._config,
+						() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ) );
 				if( portion == null )
 					break;
 
@@ -77,8 +78,9 @@ namespace ThreeDCartAccess
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
-				var portion = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
-					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult );
+				var portion = await ActionPolicies.GetAsync.Get(
+					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetNewOrdersAsync", this._config,
+						async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult ) );
 				if( portion == null )
 					break;
 
@@ -115,16 +117,18 @@ namespace ThreeDCartAccess
 
 		public ThreeDCartOrder GetOrder( string invoiceNumber )
 		{
-			var portion = this._webRequestServices.Get< ThreeDCartOrders >( this._config,
-				() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) );
+			var portion = ActionPolicies.Get.Get(
+				() => this._webRequestServices.Execute< ThreeDCartOrders >( "GetOrder", this._config,
+					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ) );
 
 			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
 		}
 
 		public async Task< ThreeDCartOrder > GetOrderAsync( string invoiceNumber )
 		{
-			var portion = await this._webRequestServices.GetAsync< ThreeDCartOrders >( this._config,
-				async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult );
+			var portion = await ActionPolicies.GetAsync.Get(
+				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
+					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult ) );
 
 			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
 		}
@@ -147,31 +151,35 @@ namespace ThreeDCartAccess
 
 		private int GetOrdersCount( string startDateUtc, string endDateUtc )
 		{
-			var result = this._webRequestServices.Get< ThreeDCartOrdersCount >( this._config,
-				() => this._service.getOrderCount( this._config.StoreUrl, this._config.UserKey, false, "", "", startDateUtc, endDateUtc, "" ) );
+			var result = ActionPolicies.Get.Get(
+				() => this._webRequestServices.Execute< ThreeDCartOrdersCount >( "GetOrdersCount", this._config,
+					() => this._service.getOrderCount( this._config.StoreUrl, this._config.UserKey, false, "", "", startDateUtc, endDateUtc, "" ) ) );
 			return result.Quantity;
 		}
 
 		private async Task< int > GetOrdersCountAsync( string startDateUtc, string endDateUtc )
 		{
-			var result = await this._webRequestServices.GetAsync< ThreeDCartOrdersCount >( this._config,
-				async () => ( await this._service.getOrderCountAsync( this._config.StoreUrl, this._config.UserKey, false, "", "", startDateUtc, endDateUtc, "" ) ).Body.getOrderCountResult );
+			var result = await ActionPolicies.GetAsync.Get(
+				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrdersCount >( "GetOrdersCountAsync", this._config,
+					async () => ( await this._service.getOrderCountAsync( this._config.StoreUrl, this._config.UserKey, false, "", "", startDateUtc, endDateUtc, "" ) ).Body.getOrderCountResult ) );
 			return result.Quantity;
 		}
 
 		public IEnumerable< ThreeDCartOrderStatus > GetOrderStatuses()
 		{
-			const string sql = "select id, StatusID, StatusDefinition, StatusText, Visible from order_Status";
-			var result = this._webRequestServices.Get< ThreeDCartOrderStatuses >( this._config,
-				() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) );
+			var sql = ScriptsBuilder.GetOrderStatuses();
+			var result = ActionPolicies.Get.Get(
+				() => this._webRequestServices.Execute< ThreeDCartOrderStatuses >( "GetOrderStatuses", this._config,
+					() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) ) );
 			return result.Statuses;
 		}
 
 		public async Task< IEnumerable< ThreeDCartOrderStatus > > GetOrderStatusesAsync()
 		{
-			const string sql = "select id, StatusID, StatusDefinition, StatusText, Visible from order_Status";
-			var result = await this._webRequestServices.GetAsync< ThreeDCartOrderStatuses >( this._config,
-				async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
+			var sql = ScriptsBuilder.GetOrderStatuses();
+			var result = await ActionPolicies.GetAsync.Get(
+				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrderStatuses >( "GetOrderStatusesAsync", this._config,
+					async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult ) );
 			return result.Statuses;
 		}
 

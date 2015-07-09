@@ -34,8 +34,8 @@ namespace ThreeDCartAccess
 		{
 			try
 			{
-				var result = this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, 1, "", "" );
-				var parsedResult = this._webRequestServices.ParseResult< ThreeDCartProducts >( "IsGetProducts", this._config, result );
+				var parsedResult = this._webRequestServices.Execute< ThreeDCartProducts >( "IsGetProducts", this._config,
+					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, 1, "", "" ) );
 				return true;
 			}
 			catch( Exception )
@@ -49,8 +49,9 @@ namespace ThreeDCartAccess
 			var result = new List< ThreeDCartProduct >();
 			for( var i = 1;; i += BatchSize )
 			{
-				var portion = this._webRequestServices.Get< ThreeDCartProducts >( this._config,
-					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, i, "", "" ) );
+				var portion = ActionPolicies.Get.Get(
+					() => this._webRequestServices.Execute< ThreeDCartProducts >( "GetProducts", this._config,
+						() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, i, "", "" ) ) );
 				if( portion == null )
 					break;
 
@@ -67,8 +68,9 @@ namespace ThreeDCartAccess
 			var result = new List< ThreeDCartProduct >();
 			for( var i = 1;; i += BatchSize )
 			{
-				var portion = await this._webRequestServices.GetAsync< ThreeDCartProducts >( this._config,
-					async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, BatchSize, i, "", "" ) ).Body.getProductResult );
+				var portion = await ActionPolicies.GetAsync.Get(
+					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartProducts >( "GetProductsAsync", this._config,
+						async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, BatchSize, i, "", "" ) ).Body.getProductResult ) );
 				if( portion == null )
 					break;
 
@@ -84,9 +86,7 @@ namespace ThreeDCartAccess
 		{
 			try
 			{
-				var sql = ScriptsBuilder.GetInventory( BatchSizeAdvanced, 1 );
-				var result = this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" );
-				var parsedResult = this._webRequestServices.ParseResult< ThreeDCartInventories >( "IsGetInventory", this._config, result );
+				var parsedResult = this.GetInventoryPageOrAllPages( 1 );
 				return true;
 			}
 			catch( Exception )
@@ -100,12 +100,14 @@ namespace ThreeDCartAccess
 			var result = new List< ThreeDCartInventory >();
 			for( var i = 1;; i += BatchSizeAdvanced )
 			{
-				var sql = ScriptsBuilder.GetInventory( BatchSizeAdvanced, i );
-				var portion = this._webRequestServices.Get< ThreeDCartInventories >( this._config,
-					() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) );
+				var portion = ActionPolicies.Get.Get( () => this.GetInventoryPageOrAllPages( i ) );
 				if( portion == null )
 					break;
-
+				if( portion.IsFullInventory )
+				{
+					result = portion.Inventory;
+					break;
+				}
 				result.AddRange( portion.Inventory );
 				if( portion.Inventory.Count != BatchSizeAdvanced )
 					break;
@@ -119,18 +121,64 @@ namespace ThreeDCartAccess
 			var result = new List< ThreeDCartInventory >();
 			for( var i = 1;; i += BatchSizeAdvanced )
 			{
-				var sql = ScriptsBuilder.GetInventory( BatchSizeAdvanced, i );
-				var portion = await this._webRequestServices.GetAsync< ThreeDCartInventories >( this._config,
-					async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
+				var portion = await ActionPolicies.GetAsync.Get( async () => await this.GetInventoryPageOrAllPagesAsync( i ) );
 				if( portion == null )
 					break;
-
+				if( portion.IsFullInventory )
+				{
+					result = portion.Inventory;
+					break;
+				}
 				result.AddRange( portion.Inventory );
 				if( portion.Inventory.Count != BatchSizeAdvanced )
 					break;
 			}
 
 			return result;
+		}
+
+		private ThreeDCartInventories GetInventoryPageOrAllPages( int page )
+		{
+			try
+			{
+				var sql = ScriptsBuilder.GetInventory( BatchSizeAdvanced, page );
+				var parsedResult = this._webRequestServices.Execute< ThreeDCartInventories >( "GetInventoryPage", this._config,
+					() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) );
+				return parsedResult;
+			}
+			catch( Exception ex )
+			{
+				// will try to get all data if it doesn't not support ROW_NUMBER() 
+				if( !ex.Message.Contains( "ROW_NUMBER()" ) )
+					throw;
+			}
+			var sql2 = ScriptsBuilder.GetInventory();
+			var parsedResult2 = this._webRequestServices.Execute< ThreeDCartInventories >( "GetInventoryAllPages", this._config,
+				() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql2, "" ) );
+			parsedResult2.IsFullInventory = true;
+			return parsedResult2;
+		}
+
+		private async Task< ThreeDCartInventories > GetInventoryPageOrAllPagesAsync( int page )
+		{
+			try
+			{
+				var sql = ScriptsBuilder.GetInventory( BatchSizeAdvanced, page );
+				var parsedResult = await this._webRequestServices.ExecuteAsync< ThreeDCartInventories >( "GetInventoryPageAsync", this._config,
+					async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
+				return parsedResult;
+			}
+			catch( Exception ex )
+			{
+				// will try to get all data if it doesn't not support ROW_NUMBER() 
+				if( !ex.Message.Contains( "ROW_NUMBER()" ) )
+					throw;
+			}
+			var sql2 = ScriptsBuilder.GetInventory();
+			var parsedResult2 = await this._webRequestServices.ExecuteAsync< ThreeDCartInventories >( "GetInventoryAllPagesAsync", this._config,
+				async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql2, "" ) ).Body.runQueryResult );
+			parsedResult2.IsFullInventory = true;
+			return parsedResult2;
 		}
 
 		public IEnumerable< ThreeDCartUpdateInventory > UpdateInventory( IEnumerable< ThreeDCartUpdateInventory > inventory, bool updateProductTotalStock = false )
@@ -203,37 +251,36 @@ namespace ThreeDCartAccess
 
 		private ThreeDCartUpdateInventory UpdateProductInventory( ThreeDCartUpdateInventory inventory )
 		{
-			var result = this._webRequestServices.Submit< ThreeDCartUpdateInventory >( this._config,
-				() => this._service.updateProductInventory( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.NewQuantity, true, "" ) );
+			var result = ActionPolicies.Submit.Get(
+				() => this._webRequestServices.Execute< ThreeDCartUpdateInventory >( "UpdateProductInventory", this._config,
+					() => this._service.updateProductInventory( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.NewQuantity, true, "" ) ) );
 			return result;
 		}
 
 		private async Task< ThreeDCartUpdateInventory > UpdateProductInventoryAsync( ThreeDCartUpdateInventory inventory )
 		{
-			var result = await this._webRequestServices.SubmitAsync< ThreeDCartUpdateInventory >( this._config,
-				async () => ( await this._service.updateProductInventoryAsync( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.NewQuantity, true, "" ) )
-					.Body.updateProductInventoryResult );
+			var result = await ActionPolicies.SubmitAsync.Get(
+				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartUpdateInventory >( "UpdateProductInventoryAsync", this._config,
+					async () => ( await this._service.updateProductInventoryAsync( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.NewQuantity, true, "" ) )
+						.Body.updateProductInventoryResult ) );
 			return result;
-		}
-
-		private string GetSqlForUpdateProductOptionInventory( ThreeDCartUpdateInventory inventory )
-		{
-			return string.Format( "UPDATE options_Advanced SET AO_Stock = {0} WHERE AO_Sufix = '{1}'", inventory.NewQuantity, inventory.OptionCode );
 		}
 
 		private ThreeDCartUpdateInventory UpdateProductOptionInventory( ThreeDCartUpdateInventory inventory )
 		{
-			var sql = this.GetSqlForUpdateProductOptionInventory( inventory );
-			var result = this._webRequestServices.Submit< ThreeDCartUpdatedOptionInventory >( this._config,
-				() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) );
+			var sql = ScriptsBuilder.UpdateProductOptionInventory( inventory.NewQuantity, inventory.OptionCode );
+			var result = ActionPolicies.Submit.Get(
+				() => this._webRequestServices.Execute< ThreeDCartUpdatedOptionInventory >( "UpdateProductOptionInventory", this._config,
+					() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) ) );
 			return inventory;
 		}
 
 		private async Task< ThreeDCartUpdateInventory > UpdateProductOptionInventoryAsync( ThreeDCartUpdateInventory inventory )
 		{
-			var sql = this.GetSqlForUpdateProductOptionInventory( inventory );
-			var result = await this._webRequestServices.SubmitAsync< ThreeDCartUpdatedOptionInventory >( this._config,
-				async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult );
+			var sql = ScriptsBuilder.UpdateProductOptionInventory( inventory.NewQuantity, inventory.OptionCode );
+			var result = await ActionPolicies.SubmitAsync.Get(
+				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartUpdatedOptionInventory >( "UpdateProductOptionInventoryAsync", this._config,
+					async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult ) );
 			return inventory;
 		}
 	}

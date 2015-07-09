@@ -8,79 +8,70 @@ namespace ThreeDCartAccess.Misc
 {
 	internal class WebRequestServices
 	{
-		public TResponse Get< TResponse >( ThreeDCartConfig config, Func< XElement > func )
+		public TResponse Execute< TResponse >( string methodName, ThreeDCartConfig config, Func< XElement > func )
 		{
-			this.LogRequest( func.Method.Name, config );
-			var result = ActionPolicies.Get.Get( () =>
-			{
-				var funkResult = func();
-				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
-			} );
+			if( methodName == null )
+				methodName = func.Method.Name;
+
+			this.LogRequest( methodName, config );
+			var funkResult = func();
+			var funkResultStr = funkResult.ToString();
+			this.LogResponse( methodName, config, funkResultStr );
+			var result = this.ParseResult< TResponse >( funkResult, funkResultStr );
 
 			return result;
 		}
 
-		public async Task< TResponse > GetAsync< TResponse >( ThreeDCartConfig config, Func< Task< XElement > > func )
+		public async Task< TResponse > ExecuteAsync< TResponse >( string methodName, ThreeDCartConfig config, Func< Task< XElement > > func )
 		{
-			this.LogRequest( func.Method.Name, config );
-			var result = await ActionPolicies.GetAsync.Get( async () =>
-			{
-				var funkResult = await func();
-				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
-			} );
+			if( methodName == null )
+				methodName = func.Method.Name;
+
+			this.LogRequest( methodName, config );
+			var funkResult = await func();
+			var funkResultStr = funkResult.ToString();
+			this.LogResponse( methodName, config, funkResultStr );
+			var result = this.ParseResult< TResponse >( funkResult, funkResultStr );
 
 			return result;
 		}
 
-		public TResponse Submit< TResponse >( ThreeDCartConfig config, Func< XElement > func )
+		public T ParseResult< T >( XElement xElement, string xElementStr )
 		{
-			this.LogRequest( func.Method.Name, config );
-			var result = ActionPolicies.Submit.Get( () =>
-			{
-				var funkResult = func();
-				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
-			} );
-
-			return result;
-		}
-
-		public async Task< TResponse > SubmitAsync< TResponse >( ThreeDCartConfig config, Func< Task< XElement > > func )
-		{
-			this.LogRequest( func.Method.Name, config );
-			var result = await ActionPolicies.SubmitAsync.Get( async () =>
-			{
-				var funkResult = await func();
-				return this.ParseResult< TResponse >( func.Method.Name, config, funkResult );
-			} );
-
-			return result;
-		}
-
-		public T ParseResult< T >( string methodName, ThreeDCartConfig config, XElement xElement )
-		{
-			var xElementStr = xElement.ToString();
-			var logStr = string.Format( " response for {0}\tStoreUrl:{1}\tData:\n {2}", methodName, config.StoreUrl, xElementStr );
-
 			if( xElement.Name.LocalName == "Error" )
 			{
 				var error = xElementStr.Deserialize< ThreeDCartError >();
-				if( error.Id == 46 || error.Id == 47 || error.Id == 48 || error.Id == 49 )
-				{
-					ThreeDCartLogger.Log.Trace( "Success" + logStr );
-					return default( T );
-				}
-				ThreeDCartLogger.Log.Error( "Failed" + logStr );
-				throw new Exception( error.Message ?? error.Description );
+				return this.ProcessError< T >( error );
 			}
 
-			ThreeDCartLogger.Log.Trace( "Success" + logStr );
 			var result = xElementStr.Deserialize< T >();
+
+			if( xElement.Name.LocalName == "runQueryResponse" )
+			{
+				var queryResult = result as RunQueryResponse;
+				if( queryResult != null && queryResult.Error != null )
+					return this.ProcessError< T >( queryResult.Error );
+			}
+
 			return result;
+		}
+
+		private T ProcessError< T >( ThreeDCartError error )
+		{
+			if( error.Id >= 46 && error.Id <= 49 )
+				return default( T );
+			throw new Exception( error.Message ?? error.Description );
 		}
 
 		private void LogRequest( string methodName, ThreeDCartConfig config )
 		{
 			var logstr = string.Format( "Request for {0}\tStoreUrl:{1}", methodName, config.StoreUrl );
+			ThreeDCartLogger.Log.Trace( logstr );
+		}
+
+		private void LogResponse( string methodName, ThreeDCartConfig config, string response )
+		{
+			var logstr = string.Format( "Response for {0}\tStoreUrl:{1}\tData:\n {2}", methodName, config.StoreUrl, response );
 			ThreeDCartLogger.Log.Trace( logstr );
 		}
 	}
