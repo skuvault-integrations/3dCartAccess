@@ -149,7 +149,7 @@ namespace ThreeDCartAccess
 			catch( Exception ex )
 			{
 				// will try to get all data if it doesn't not support ROW_NUMBER() 
-				if( !ex.Message.Contains( "ROW_NUMBER()" ) )
+				if( !ex.Message.Contains( "Syntax error (missing operator) in query expression 'ROW_NUMBER() OVER(ORDER BY p.catalogid)'" ) )
 					throw;
 			}
 			var sql2 = ScriptsBuilder.GetInventory();
@@ -171,7 +171,7 @@ namespace ThreeDCartAccess
 			catch( Exception ex )
 			{
 				// will try to get all data if it doesn't not support ROW_NUMBER() 
-				if( !ex.Message.Contains( "ROW_NUMBER()" ) )
+				if( !ex.Message.Contains( "Syntax error (missing operator) in query expression 'ROW_NUMBER() OVER(ORDER BY p.catalogid)'" ) )
 					throw;
 			}
 			var sql2 = ScriptsBuilder.GetInventory();
