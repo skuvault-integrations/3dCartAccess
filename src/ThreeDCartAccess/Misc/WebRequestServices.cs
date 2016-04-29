@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using ThreeDCartAccess.Models;
-using ThreeDCartAccess.Models.Configuration;
+using ThreeDCartAccess.V1.Models;
+using ThreeDCartAccess.V1.Models.Configuration;
 
 namespace ThreeDCartAccess.Misc
 {

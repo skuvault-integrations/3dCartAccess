@@ -6,8 +6,9 @@ using LINQtoCSV;
 using Netco.Logging;
 using NUnit.Framework;
 using ThreeDCartAccess;
-using ThreeDCartAccess.Models.Configuration;
-using ThreeDCartAccess.Models.Product;
+using ThreeDCartAccess.V1;
+using ThreeDCartAccess.V1.Models.Configuration;
+using ThreeDCartAccess.V1.Models.Product;
 
 namespace ThreeDCartAccessTests.Products
 {
