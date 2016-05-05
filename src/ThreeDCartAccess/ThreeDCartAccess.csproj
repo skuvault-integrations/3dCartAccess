@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Netco.1.5.1\lib\net45\Netco.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.0.56.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.56\lib\net40\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -50,13 +54,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RestApi\Models\ThreeDCartError.cs" />
+    <Compile Include="RestApi\ThreeDCartServiceBase.cs" />
     <Compile Include="V1\IThreeDCartOrdersService.cs" />
     <Compile Include="V1\IThreeDCartProductsService.cs" />
     <Compile Include="Misc\ActionPolicies.cs" />
     <Compile Include="Misc\Extensions.cs" />
     <Compile Include="Misc\ScriptsBuilder.cs" />
     <Compile Include="Misc\ThreeDCartLogger.cs" />
-    <Compile Include="Misc\WebRequestServices.cs" />
+    <Compile Include="RestApi\Misc\EndpointsBuilder.cs" />
+    <Compile Include="V1\Misc\WebRequestServices.cs" />
     <Compile Include="Misc\XmlSerializeHelpers.cs" />
     <Compile Include="V1\Models\Configuration\ThreeDCartConfig.cs" />
     <Compile Include="V1\Models\Order\ThreeDCartBillingAddress.cs" />
@@ -94,6 +101,12 @@
     <Compile Include="V1\ThreeDCartFactory.cs" />
     <Compile Include="V1\ThreeDCartOrdersService.cs" />
     <Compile Include="V1\ThreeDCartProductsService.cs" />
+    <Compile Include="RestApi\IThreeDCartProductsService.cs" />
+    <Compile Include="RestApi\Misc\WebRequestServices.cs" />
+    <Compile Include="RestApi\Models\Configuration\ThreeDCartConfig.cs" />
+    <Compile Include="RestApi\Models\Product\ThreeDCartProduct.cs" />
+    <Compile Include="RestApi\ThreeDCartFactory.cs" />
+    <Compile Include="RestApi\ThreeDCartProductsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -181,9 +194,7 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="V2\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
