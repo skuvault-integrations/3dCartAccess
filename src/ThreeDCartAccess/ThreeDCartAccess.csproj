@@ -56,34 +56,34 @@
   <ItemGroup>
     <Compile Include="RestApi\Models\ThreeDCartError.cs" />
     <Compile Include="RestApi\ThreeDCartServiceBase.cs" />
-    <Compile Include="V1\IThreeDCartOrdersService.cs" />
-    <Compile Include="V1\IThreeDCartProductsService.cs" />
+    <Compile Include="SoapApi\IThreeDCartOrdersService.cs" />
+    <Compile Include="SoapApi\IThreeDCartProductsService.cs" />
     <Compile Include="Misc\ActionPolicies.cs" />
     <Compile Include="Misc\Extensions.cs" />
-    <Compile Include="Misc\ScriptsBuilder.cs" />
+    <Compile Include="SoapApi\Misc\ScriptsBuilder.cs" />
     <Compile Include="Misc\ThreeDCartLogger.cs" />
     <Compile Include="RestApi\Misc\EndpointsBuilder.cs" />
-    <Compile Include="V1\Misc\WebRequestServices.cs" />
-    <Compile Include="Misc\XmlSerializeHelpers.cs" />
-    <Compile Include="V1\Models\Configuration\ThreeDCartConfig.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartBillingAddress.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartOrder.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartOrderItem.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartOrders.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartOrdersCount.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartOrderStatus.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartOrderStatuses.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartShipment.cs" />
-    <Compile Include="V1\Models\Order\ThreeDCartShippingInformation.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartInventories.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartInventory.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartProductsCount.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartProduct.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartProducts.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartUpdatedInventory.cs" />
-    <Compile Include="V1\Models\Product\ThreeDCartUpdatedOptionInventory.cs" />
-    <Compile Include="V1\Models\RunQueryResponse.cs" />
-    <Compile Include="V1\Models\ThreeDCartError.cs" />
+    <Compile Include="SoapApi\Misc\WebRequestServices.cs" />
+    <Compile Include="SoapApi\Misc\XmlSerializeHelpers.cs" />
+    <Compile Include="SoapApi\Models\Configuration\ThreeDCartConfig.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartBillingAddress.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartOrder.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartOrderItem.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartOrders.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartOrdersCount.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartOrderStatus.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartOrderStatuses.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartShipment.cs" />
+    <Compile Include="SoapApi\Models\Order\ThreeDCartShippingInformation.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartInventories.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartInventory.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartProductsCount.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartProduct.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartProducts.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartUpdatedInventory.cs" />
+    <Compile Include="SoapApi\Models\Product\ThreeDCartUpdatedOptionInventory.cs" />
+    <Compile Include="SoapApi\Models\RunQueryResponse.cs" />
+    <Compile Include="SoapApi\Models\ThreeDCartError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Global\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
@@ -98,9 +98,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="V1\ThreeDCartFactory.cs" />
-    <Compile Include="V1\ThreeDCartOrdersService.cs" />
-    <Compile Include="V1\ThreeDCartProductsService.cs" />
+    <Compile Include="SoapApi\ThreeDCartFactory.cs" />
+    <Compile Include="SoapApi\ThreeDCartOrdersService.cs" />
+    <Compile Include="SoapApi\ThreeDCartProductsService.cs" />
     <Compile Include="RestApi\IThreeDCartProductsService.cs" />
     <Compile Include="RestApi\Misc\WebRequestServices.cs" />
     <Compile Include="RestApi\Models\Configuration\ThreeDCartConfig.cs" />
