@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CuttingEdge.Conditions;
+using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
@@ -9,7 +12,7 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected readonly ThreeDCartConfig Config;
 		internal readonly WebRequestServices WebRequestServices;
-		protected const int BatchSize = 600;
+		protected const int BatchSize = 300;
 
 		protected ThreeDCartServiceBase( ThreeDCartConfig config )
 		{
@@ -22,6 +25,36 @@ namespace ThreeDCartAccess.RestApi
 		protected string GetMarker()
 		{
 			return Guid.NewGuid().ToString();
+		}
+
+		protected void GetCollection< T >( string marker, Func< int, string > endpointFunc, Action< List< T > > processAction )
+		{
+			for( var i = 1;; i += BatchSize )
+			{
+				var endpoint = endpointFunc( i );
+				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
+				if( portion == null )
+					break;
+
+				processAction( portion );
+				if( portion.Count != BatchSize )
+					break;
+			}
+		}
+
+		protected async Task GetCollectionAsync< T >( string marker, Func< int, string > endpointFunc, Action< List< T > > processAction )
+		{
+			for( var i = 1;; i += BatchSize )
+			{
+				var endpoint = endpointFunc( i );
+				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
+				if( portion == null )
+					break;
+
+				processAction( portion );
+				if( portion.Count != BatchSize )
+					break;
+			}
 		}
 	}
 }

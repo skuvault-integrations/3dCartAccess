@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Orders\RestApiOrderTests.cs" />
     <Compile Include="Orders\SoapApiOrderTests.cs" />
     <Compile Include="Products\RestApiProductTests.cs" />
     <Compile Include="Products\SoapApiProductTests.cs" />

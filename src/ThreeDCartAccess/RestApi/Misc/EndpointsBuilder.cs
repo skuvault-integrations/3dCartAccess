@@ -8,5 +8,12 @@
 			return string.Format( "/Products/{0}?offset={1}&limit={2}", catalogId, offset, limit );
 		}
 		#endregion
+
+		#region orders	
+		public static string GetAllOrdersEnpoint( int offset, int limit, string catalogId = "" )
+		{
+			return string.Format( "/Orders/{0}?offset={1}&limit={2}", catalogId, offset, limit );
+		}
+		#endregion
 	}
 }
