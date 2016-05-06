@@ -18,14 +18,14 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartProduct >();
-			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetAllProductsEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
+			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
 			return result;
 		}
 
 		public void GetAllProducts( Action< ThreeDCartProduct > processAction )
 		{
 			var marker = this.GetMarker();
-			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetAllProductsEnpoint( offset, BatchSize ), portion =>
+			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion =>
 			{
 				foreach( var product in portion )
 				{
@@ -38,14 +38,14 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartProduct >();
-			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetAllProductsEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
+			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
 			return result;
 		}
 
 		public async Task GetAllProductsAsync( Action< ThreeDCartProduct > processAction )
 		{
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetAllProductsEnpoint( offset, BatchSize ), portion =>
+			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion =>
 			{
 				foreach( var product in portion )
 				{

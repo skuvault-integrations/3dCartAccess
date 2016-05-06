@@ -7,15 +7,53 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 	{
 		#region General Info
 		public string InvoiceNumberPrefix{ get; set; }
-		public int? InvoiceNumber{ get; set; }
+		public int InvoiceNumber{ get; set; }
+
+		public string FullInvoiceNumber
+		{
+			get { return this.InvoiceNumberPrefix + this.InvoiceNumber; }
+		}
+
 		public long? OrderID{ get; set; }
 		public long? CustomerID{ get; set; }
 		public DateTime? OrderDate{ get; set; }
-		public int? OrderStatusID{ get; set; }
+		public DateTime OrderDateUtc{ get; private set; }
 		public DateTime? LastUpdate{ get; set; }
+		public DateTime LastUpdateUtc{ get; private set; }
 		public string UserID{ get; set; }
 		public string SalesPerson{ get; set; }
 		public string ContinueURL{ get; set; }
+
+		public ThreeDCartOrderStatusEnum OrderStatus{ get; private set; }
+
+		public int OrderStatusID
+		{
+			get { return this._orderStatusID; }
+			set
+			{
+				this._orderStatusID = value;
+				this.OrderStatus = Enum.IsDefined( typeof( ThreeDCartOrderStatusEnum ), this.OrderStatusID ) ? ( ThreeDCartOrderStatusEnum )this.OrderStatusID : ThreeDCartOrderStatusEnum.Undefined;
+			}
+		}
+
+		private int _orderStatusID = 0;
+
+		public int TimeZone
+		{
+			get { return this._timeZone; }
+			set
+			{
+				this._timeZone = value;
+
+				if( this.OrderDate != null && this.OrderDate.Value != DateTime.MinValue )
+					this.OrderDateUtc = this.OrderDate.Value.AddHours( -this._timeZone );
+
+				if( this.LastUpdate != null && this.LastUpdate.Value != DateTime.MinValue )
+					this.LastUpdateUtc = this.LastUpdate.Value.AddHours( -this._timeZone );
+			}
+		}
+
+		private int _timeZone = -5;
 		#endregion
 
 		#region Billing Information
@@ -172,4 +210,21 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 		public int? ShipmentAddressTypeID{ get; set; }
 	}
 	#endregion
+
+	public enum ThreeDCartOrderStatusEnum
+	{
+		Undefined = 0,
+		New = 1,
+		Processing = 2,
+		Partial = 3,
+		Shipped = 4,
+		Cancel = 5,
+		Hold = 6,
+		NotCompleted = 7,
+		Custom1 = 8,
+		Custom2 = 9,
+		Custom3 = 10,
+		Unpaid = 11,
+		Review = 12
+	}
 }

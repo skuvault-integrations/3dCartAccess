@@ -18,15 +18,46 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartOrder >();
-			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetAllOrdersEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
+			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetOrdersEnpoint( offset, BatchSize ), portion =>
+			{
+				this.SetTimeZone( portion );
+				result.AddRange( portion );
+			} );
 			return result;
 		}
 
-		public void GetAllOrders( Action< ThreeDCartOrder > processAction )
+		public async Task< List< ThreeDCartOrder > > GetAllOrdersAsync()
 		{
 			var marker = this.GetMarker();
-			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetAllOrdersEnpoint( offset, BatchSize ), portion =>
+			var result = new List< ThreeDCartOrder >();
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetOrdersEnpoint( offset, BatchSize ), portion =>
 			{
+				this.SetTimeZone( portion );
+				result.AddRange( portion );
+			} );
+			return result;
+		}
+		#endregion
+
+		#region Get New Orders
+		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateTime, DateTime endDateTime )
+		{
+			var marker = this.GetMarker();
+			var result = new List< ThreeDCartOrder >();
+			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			{
+				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
+				result.AddRange( portion );
+			} );
+			return result;
+		}
+
+		public void GetNewOrders( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction )
+		{
+			var marker = this.GetMarker();
+			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			{
+				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
 				foreach( var product in portion )
 				{
 					processAction( product );
@@ -34,19 +65,24 @@ namespace ThreeDCartAccess.RestApi
 			} );
 		}
 
-		public async Task< List< ThreeDCartOrder > > GetAllOrdersAsync()
+		public async Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime )
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartOrder >();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetAllOrdersEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			{
+				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
+				result.AddRange( portion );
+			} );
 			return result;
 		}
 
-		public async Task GetAllOrdersAsync( Action< ThreeDCartOrder > processAction )
+		public async Task GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetAllOrdersEnpoint( offset, BatchSize ), portion =>
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
 			{
+				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
 				foreach( var product in portion )
 				{
 					processAction( product );
@@ -54,5 +90,29 @@ namespace ThreeDCartAccess.RestApi
 			} );
 		}
 		#endregion
+
+		private void SetTimeZone( IEnumerable< ThreeDCartOrder > orders )
+		{
+			foreach( var order in orders )
+			{
+				order.TimeZone = this.Config.TimeZone;
+			}
+		}
+
+		private List< ThreeDCartOrder > SetTimeZoneAndFilter( IEnumerable< ThreeDCartOrder > orders, DateTime startDateUtc, DateTime endDateUtc )
+		{
+			var result = new List< ThreeDCartOrder >();
+			foreach( var order in orders )
+			{
+				if( order.OrderStatus == ThreeDCartOrderStatusEnum.NotCompleted )
+					continue;
+
+				order.TimeZone = this.Config.TimeZone;
+				if( order.OrderDateUtc >= startDateUtc && order.OrderDateUtc <= endDateUtc ||
+				    order.LastUpdateUtc >= startDateUtc && order.LastUpdateUtc <= endDateUtc )
+					result.Add( order );
+			}
+			return result;
+		}
 	}
 }

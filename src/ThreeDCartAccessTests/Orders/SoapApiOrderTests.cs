@@ -75,7 +75,7 @@ namespace ThreeDCartAccessTests.Orders
 		public async Task GetNewOrdersByDateAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
+			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -3 ), DateTime.UtcNow ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );

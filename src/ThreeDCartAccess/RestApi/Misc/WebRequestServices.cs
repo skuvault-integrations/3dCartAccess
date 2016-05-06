@@ -183,6 +183,14 @@ namespace ThreeDCartAccess.RestApi.Misc
 				throw ex;
 
 			var jsonError = ex.Response.ReadToEnd();
+
+			var httpWebResponse = ex.Response as HttpWebResponse;
+			if( httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.NotFound )
+			{
+				ThreeDCartLogger.Log.Trace( "Marker: '{0}'. Skip not found exception.\n{1}", marker, jsonError );
+				return default(T);
+			}
+
 			var errors = jsonError.FromJson< List< ThreeDCartError > >();
 			if( errors == null || errors.Count == 0 )
 				throw ex;
@@ -190,7 +198,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			var error = errors.First();
 			if( error.Message.Equals( "Offset amount exceeds the total number of records", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				ThreeDCartLogger.Log.Trace( "Marker: '{0}'. Skip exception.\n{1}", marker, jsonError );
+				ThreeDCartLogger.Log.Trace( "Marker: '{0}'. Skip exception for paging.\n{1}", marker, jsonError );
 				return default(T);
 			}
 

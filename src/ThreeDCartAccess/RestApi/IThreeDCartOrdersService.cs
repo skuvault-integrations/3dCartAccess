@@ -8,9 +8,12 @@ namespace ThreeDCartAccess.RestApi
 	public interface IThreeDCartOrdersService
 	{
 		List< ThreeDCartOrder > GetAllOrders();
-		void GetAllOrders( Action< ThreeDCartOrder > processAction );
-
 		Task< List< ThreeDCartOrder > > GetAllOrdersAsync();
-		Task GetAllOrdersAsync( Action< ThreeDCartOrder > processAction );
+
+		List< ThreeDCartOrder > GetNewOrders( DateTime startDateTime, DateTime endDateTime );
+		void GetNewOrders( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction );
+
+		Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime );
+		Task GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction );
 	}
 }

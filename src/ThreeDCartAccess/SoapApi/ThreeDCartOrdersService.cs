@@ -207,9 +207,9 @@ namespace ThreeDCartAccess.SoapApi
 			return result;
 		}
 
-		private string GetDate( DateTime? date )
+		private string GetDate( DateTime? dateInUtc )
 		{
-			return date == null ? string.Empty : string.Format( _culture, "{0:MM/dd/yyyy}", date );
+			return dateInUtc == null ? string.Empty : string.Format( _culture, "{0:MM/dd/yyyy}", dateInUtc.Value.AddHours( this._config.TimeZone ) );
 		}
 	}
 }
