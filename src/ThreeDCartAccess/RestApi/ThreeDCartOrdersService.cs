@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Order;
@@ -40,24 +41,24 @@ namespace ThreeDCartAccess.RestApi
 		#endregion
 
 		#region Get New Orders
-		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateTime, DateTime endDateTime )
+		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc )
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartOrder >();
-			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
 				result.AddRange( portion );
 			} );
 			return result;
 		}
 
-		public void GetNewOrders( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction )
+		public void GetNewOrders( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
 				foreach( var product in portion )
 				{
 					processAction( product );
@@ -65,29 +66,101 @@ namespace ThreeDCartAccess.RestApi
 			} );
 		}
 
-		public async Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime )
+		public async Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc )
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartOrder >();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
 				result.AddRange( portion );
 			} );
 			return result;
 		}
 
-		public async Task GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction )
+		public async Task GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateTime, endDateTime, this.Config.TimeZone ), portion =>
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateTime, endDateTime );
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
 				foreach( var product in portion )
 				{
 					processAction( product );
 				}
 			} );
+		}
+		#endregion
+
+		#region Get Orders By Number
+		public List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
+		{
+			var marker = this.GetMarker();
+			var result = new List< ThreeDCartOrder >();
+			foreach( var invoiceNumber in invoiceNumbers )
+			{
+				var endpoint = EndpointsBuilder.GetOrderEnpoint( invoiceNumber );
+				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
+				if( portion == null )
+					continue;
+
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+				result.AddRange( portion );
+			}
+			return result;
+		}
+
+		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
+		{
+			var marker = this.GetMarker();
+			var result = new List< ThreeDCartOrder >();
+			foreach( var invoiceNumber in invoiceNumbers )
+			{
+				var endpoint = EndpointsBuilder.GetOrderEnpoint( invoiceNumber );
+				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
+				if( portion == null )
+					continue;
+
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+				result.AddRange( portion );
+			}
+			return result;
+		}
+
+		public void GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
+		{
+			var marker = this.GetMarker();
+			foreach( var invoiceNumber in invoiceNumbers )
+			{
+				var endpoint = EndpointsBuilder.GetOrderEnpoint( invoiceNumber );
+				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
+				if( portion == null )
+					continue;
+
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+				foreach( var threeDCartOrder in portion )
+				{
+					processAction( threeDCartOrder );
+				}
+			}
+		}
+
+		public async Task GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
+		{
+			var marker = this.GetMarker();
+			foreach( var invoiceNumber in invoiceNumbers )
+			{
+				var endpoint = EndpointsBuilder.GetOrderEnpoint( invoiceNumber );
+				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
+				if( portion == null )
+					continue;
+
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+				foreach( var threeDCartOrder in portion )
+				{
+					processAction( threeDCartOrder );
+				}
+			}
 		}
 		#endregion
 

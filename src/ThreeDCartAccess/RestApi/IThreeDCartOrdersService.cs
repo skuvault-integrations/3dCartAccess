@@ -10,10 +10,16 @@ namespace ThreeDCartAccess.RestApi
 		List< ThreeDCartOrder > GetAllOrders();
 		Task< List< ThreeDCartOrder > > GetAllOrdersAsync();
 
-		List< ThreeDCartOrder > GetNewOrders( DateTime startDateTime, DateTime endDateTime );
-		void GetNewOrders( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction );
+		List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc );
+		Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );
 
-		Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime );
-		Task GetNewOrdersAsync( DateTime startDateTime, DateTime endDateTime, Action< ThreeDCartOrder > processAction );
+		void GetNewOrders( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction );
+		Task GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction );
+
+		List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc );
+		Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc );
+
+		void GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction );
+		Task GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction );
 	}
 }

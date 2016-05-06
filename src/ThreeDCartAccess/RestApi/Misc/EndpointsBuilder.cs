@@ -22,6 +22,13 @@ namespace ThreeDCartAccess.RestApi.Misc
 			return string.Format( "/Orders/{0}?offset={1}&limit={2}&datestart={3:MM/dd/yyyy}&dateend={4:MM/dd/yyyy}",
 				orderId, offset, limit, dateStartUtc.AddHours( timeZone ), dateEndUtc.AddHours( timeZone ) );
 		}
+
+		public static string GetOrderEnpoint( string invoiceNumber, string orderId = "" )
+		{
+			var groups = invoiceNumber.Split( '-' );
+			var number = groups.Length == 2 ? groups[ 1 ] : invoiceNumber;
+			return string.Format( "/Orders/{0}?invoicenumber={1}", orderId, number.Trim() );
+		}
 		#endregion
 	}
 }
