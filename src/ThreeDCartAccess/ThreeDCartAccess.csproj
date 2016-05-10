@@ -101,15 +101,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="SoapApi\ThreeDCartFactory.cs" />
     <Compile Include="SoapApi\ThreeDCartOrdersService.cs" />
     <Compile Include="SoapApi\ThreeDCartProductsService.cs" />
     <Compile Include="RestApi\IThreeDCartProductsService.cs" />
     <Compile Include="RestApi\Misc\WebRequestServices.cs" />
     <Compile Include="RestApi\Models\Configuration\ThreeDCartConfig.cs" />
     <Compile Include="RestApi\Models\Product\ThreeDCartProduct.cs" />
-    <Compile Include="RestApi\ThreeDCartFactory.cs" />
     <Compile Include="RestApi\ThreeDCartProductsService.cs" />
+    <Compile Include="ThreeDCartFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

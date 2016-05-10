@@ -37,8 +37,8 @@ namespace ThreeDCartAccess.SoapApi
 		{
 			try
 			{
-				var startDate = this.GetDate( startDateUtc );
-				var endDate = this.GetDate( endDateUtc );
+				var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
+				var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
 				var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
 					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
 				return true;
@@ -49,7 +49,7 @@ namespace ThreeDCartAccess.SoapApi
 			}
 		}
 
-		public IEnumerable< ThreeDCartOrder > GetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc )
 		{
 			var startDate = this.GetDate( startDateUtc );
 			var endDate = this.GetDate( endDateUtc );
@@ -62,17 +62,16 @@ namespace ThreeDCartAccess.SoapApi
 				if( portion == null )
 					break;
 
-				var filtered = this.FilterNotCompletedOrdersIfNeeded( portion.Orders, includeNotCompleted );
+				var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
 				result.AddRange( filtered );
 				if( portion.Orders.Count != _batchSize )
 					break;
 			}
 
-			result = this.SetTimeZoneAndFilterByDate( result, startDateUtc, endDateUtc );
 			return result;
 		}
 
-		public async Task< IEnumerable< ThreeDCartOrder > > GetNewOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		public async Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc )
 		{
 			var startDate = this.GetDate( startDateUtc );
 			var endDate = this.GetDate( endDateUtc );
@@ -85,38 +84,35 @@ namespace ThreeDCartAccess.SoapApi
 				if( portion == null )
 					break;
 
-				var filtered = this.FilterNotCompletedOrdersIfNeeded( portion.Orders, includeNotCompleted );
+				var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
 				result.AddRange( filtered );
 				if( portion.Orders.Count != _batchSize )
 					break;
 			}
 
-			result = this.SetTimeZoneAndFilterByDate( result, startDateUtc, endDateUtc );
 			return result;
 		}
 
-		public IEnumerable< ThreeDCartOrder > GetOrders( IEnumerable< string > invoiceNumbers, DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		public List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
-			var orders = invoiceNumbers.Select( this.GetOrder ).Where( order => order != null );
-			var filtered = this.FilterNotCompletedOrdersIfNeeded( orders, includeNotCompleted );
-			var result = this.SetTimeZoneAndFilterByDate( filtered, startDateUtc, endDateUtc );
+			var orders = invoiceNumbers.Select( this.GetOrderByNumber ).Where( order => order != null );
+			var result = this.SetTimeZoneAndFilter( orders, startDateUtc, endDateUtc );
 			return result;
 		}
 
-		public async Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( IEnumerable< string > invoiceNumbers, DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false )
+		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
 			var orders = await invoiceNumbers.ProcessInBatchAsync( 50, invoiceNumber =>
 			{
-				var order = this.GetOrderAsync( invoiceNumber );
+				var order = this.GetOrderByNumberAsync( invoiceNumber );
 				return order;
 			} );
 
-			var filtered = this.FilterNotCompletedOrdersIfNeeded( orders, includeNotCompleted );
-			var result = this.SetTimeZoneAndFilterByDate( filtered, startDateUtc, endDateUtc );
+			var result = this.SetTimeZoneAndFilter( orders, startDateUtc, endDateUtc );
 			return result;
 		}
 
-		public ThreeDCartOrder GetOrder( string invoiceNumber )
+		public ThreeDCartOrder GetOrderByNumber( string invoiceNumber )
 		{
 			var portion = ActionPolicies.Get.Get(
 				() => this._webRequestServices.Execute< ThreeDCartOrders >( "GetOrder", this._config,
@@ -125,7 +121,7 @@ namespace ThreeDCartAccess.SoapApi
 			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
 		}
 
-		public async Task< ThreeDCartOrder > GetOrderAsync( string invoiceNumber )
+		public async Task< ThreeDCartOrder > GetOrderByNumberAsync( string invoiceNumber )
 		{
 			var portion = await ActionPolicies.GetAsync.Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
@@ -166,7 +162,7 @@ namespace ThreeDCartAccess.SoapApi
 			return result.Quantity;
 		}
 
-		public IEnumerable< ThreeDCartOrderStatus > GetOrderStatuses()
+		public List< ThreeDCartOrderStatus > GetOrderStatuses()
 		{
 			var sql = ScriptsBuilder.GetOrderStatuses();
 			var result = ActionPolicies.Get.Get(
@@ -175,7 +171,7 @@ namespace ThreeDCartAccess.SoapApi
 			return result.Statuses;
 		}
 
-		public async Task< IEnumerable< ThreeDCartOrderStatus > > GetOrderStatusesAsync()
+		public async Task< List< ThreeDCartOrderStatus > > GetOrderStatusesAsync()
 		{
 			var sql = ScriptsBuilder.GetOrderStatuses();
 			var result = await ActionPolicies.GetAsync.Get(
@@ -184,21 +180,14 @@ namespace ThreeDCartAccess.SoapApi
 			return result.Statuses;
 		}
 
-		private IEnumerable< ThreeDCartOrder > FilterNotCompletedOrdersIfNeeded( IEnumerable< ThreeDCartOrder > orders, bool includeNotCompleted )
+		private List< ThreeDCartOrder > SetTimeZoneAndFilter( IEnumerable< ThreeDCartOrder > orders, DateTime startDateUtc, DateTime endDateUtc )
 		{
-			return includeNotCompleted ? orders : orders.Where( x => x.OrderStatus != ThreeDCartOrderStatusEnum.NotCompleted );
-		}
-
-		private List< ThreeDCartOrder > SetTimeZoneAndFilterByDate( IEnumerable< ThreeDCartOrder > orders, DateTime? startDateUtc, DateTime? endDateUtc )
-		{
-			if( startDateUtc == null )
-				startDateUtc = DateTime.MinValue;
-			if( endDateUtc == null )
-				endDateUtc = DateTime.MaxValue;
-
 			var result = new List< ThreeDCartOrder >();
 			foreach( var order in orders )
 			{
+				if( order.OrderStatus == ThreeDCartOrderStatusEnum.NotCompleted )
+					continue;
+
 				order.TimeZone = this._config.TimeZone;
 				if( order.DateTimeCreatedUtc >= startDateUtc && order.DateTimeCreatedUtc <= endDateUtc ||
 				    order.DateTimeUpdatedUtc >= startDateUtc && order.DateTimeUpdatedUtc <= endDateUtc )

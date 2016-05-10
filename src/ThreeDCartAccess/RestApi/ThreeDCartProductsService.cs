@@ -14,6 +14,21 @@ namespace ThreeDCartAccess.RestApi
 		}
 
 		#region Get All Products
+		public bool IsGetProducts()
+		{
+			try
+			{
+				var marker = this.GetMarker();
+				var endpoint = EndpointsBuilder.GetProductsEnpoint( 1, BatchSize );
+				this.WebRequestServices.GetResponse< List< ThreeDCartProduct > >( endpoint, marker );
+				return true;
+			}
+			catch( Exception )
+			{
+				return false;
+			}
+		}
+
 		public List< ThreeDCartProduct > GetAllProducts()
 		{
 			var marker = this.GetMarker();

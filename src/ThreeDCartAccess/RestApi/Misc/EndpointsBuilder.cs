@@ -12,7 +12,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 		#endregion
 
 		#region orders	
-		public static string GetOrdersEnpoint( int offset, int limit, string orderId = "" )
+		public static string GetAllOrdersEnpoint( int offset, int limit, string orderId = "" )
 		{
 			return string.Format( "/Orders/{0}?offset={1}&limit={2}", orderId, offset, limit );
 		}

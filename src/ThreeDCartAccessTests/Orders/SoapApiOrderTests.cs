@@ -6,7 +6,7 @@ using FluentAssertions;
 using LINQtoCSV;
 using Netco.Logging;
 using NUnit.Framework;
-using ThreeDCartAccess.SoapApi;
+using ThreeDCartAccess;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
 namespace ThreeDCartAccessTests.Orders
@@ -35,7 +35,7 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public void IsGetNewOrders()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var result = service.IsGetNewOrders( null, null );
 
 			result.Should().Be( true );
@@ -44,8 +44,8 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public void GetNewOrders()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetNewOrders( null, null, true ).ToList();
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
+			var result = service.GetNewOrders( new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -54,72 +54,30 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public async Task GetNewOrdersAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetNewOrdersAsync() ).ToList();
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
+			var result = ( await service.GetNewOrdersAsync( new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
-		public void GetNewOrdersByDate()
+		public void GetOrdersByNumber()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetNewOrders( new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
-
-			result.Should().NotBeNull();
-			result.Count().Should().BeGreaterThan( 0 );
-		}
-
-		[ Test ]
-		public async Task GetNewOrdersByDateAsync()
-		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -3 ), DateTime.UtcNow ) ).ToList();
-
-			result.Should().NotBeNull();
-			result.Count().Should().BeGreaterThan( 0 );
-		}
-
-		[ Test ]
-		public void GetOrders()
-		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var numbers = new List< string > { "AB-1014" };
-			var result = service.GetOrders( numbers, null, null, true ).ToList();
+			var result = service.GetOrdersByNumber( numbers, new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
-		public async Task GetOrdersAsync()
+		public async Task GetOrdersByNumberAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var numbers = new List< string > { "AB-1014" };
-			var result = ( await service.GetOrdersAsync( numbers ) ).ToList();
-
-			result.Should().NotBeNull();
-			result.Count().Should().BeGreaterThan( 0 );
-		}
-
-		[ Test ]
-		public void GetOrdersByDate()
-		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var numbers = new List< string > { "AB-1014" };
-			var result = service.GetOrders( numbers, new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
-
-			result.Should().NotBeNull();
-			result.Count().Should().BeGreaterThan( 0 );
-		}
-
-		[ Test ]
-		public async Task GetOrdersByDateAsync()
-		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var numbers = new List< string > { "AB-1014" };
-			var result = ( await service.GetOrdersAsync( numbers, DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
+			var result = ( await service.GetOrdersByNumberAsync( numbers, DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -128,8 +86,8 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public void GetOrder()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = service.GetOrder( "AB-1014" );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
+			var result = service.GetOrderByNumber( "AB-1014" );
 
 			result.Should().NotBeNull();
 		}
@@ -137,8 +95,8 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public async Task GetOrderAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
-			var result = ( await service.GetOrderAsync( "AB-1014" ) );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
+			var result = ( await service.GetOrderByNumberAsync( "AB-1014" ) );
 
 			result.Should().NotBeNull();
 		}
@@ -146,7 +104,7 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public void GetOrdersCount()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var result = service.GetOrdersCount();
 
 			result.Should().BeGreaterThan( 0 );
@@ -155,7 +113,7 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public async Task GetOrdersCountAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var result = ( await service.GetOrdersCountAsync() );
 
 			result.Should().BeGreaterThan( 0 );
@@ -164,7 +122,7 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public void GetOrderStatuses()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var result = service.GetOrderStatuses().ToList();
 
 			result.Should().NotBeNull();
@@ -174,7 +132,7 @@ namespace ThreeDCartAccessTests.Orders
 		[ Test ]
 		public async Task GetOrderStatusesAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateOrdersService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var result = ( await service.GetOrderStatusesAsync() ).ToList();
 
 			result.Should().NotBeNull();

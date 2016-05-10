@@ -5,7 +5,7 @@ using FluentAssertions;
 using LINQtoCSV;
 using Netco.Logging;
 using NUnit.Framework;
-using ThreeDCartAccess.SoapApi;
+using ThreeDCartAccess;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Product;
 
@@ -35,7 +35,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void IsGetProducts()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var result = service.IsGetProducts();
 
 			result.Should().Be( true );
@@ -44,7 +44,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void GetProducts()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var result = service.GetProducts().ToList();
 
 			result.Should().NotBeNull();
@@ -54,7 +54,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public async Task GetProductsAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var result = ( await service.GetProductsAsync() ).ToList();
 
 			result.Should().NotBeNull();
@@ -64,7 +64,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void IsGetInventory()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var result = service.IsGetInventory();
 
 			result.Should().Be( true );
@@ -73,7 +73,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void GetInventory()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var result = service.GetInventory().ToList();
 
 			result.Should().NotBeNull();
@@ -83,7 +83,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public async Task GetInventoryAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var result = ( await service.GetInventoryAsync() ).ToList();
 
 			result.Should().NotBeNull();
@@ -93,7 +93,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void UpdateInventory()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var inventory = new List< ThreeDCartUpdateInventory >
 			{
 				new ThreeDCartUpdateInventory { ProductId = "testBundle2", OptionCode = "testBundle2-red", NewQuantity = 1 }
@@ -107,7 +107,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public async Task UpdateInventoryAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
 			var inventory = new List< ThreeDCartUpdateInventory >
 			{
 				new ThreeDCartUpdateInventory { ProductId = "testBundle2", NewQuantity = 2 }

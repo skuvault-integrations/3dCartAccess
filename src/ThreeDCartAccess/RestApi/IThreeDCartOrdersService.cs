@@ -7,8 +7,7 @@ namespace ThreeDCartAccess.RestApi
 {
 	public interface IThreeDCartOrdersService
 	{
-		List< ThreeDCartOrder > GetAllOrders();
-		Task< List< ThreeDCartOrder > > GetAllOrdersAsync();
+		bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null );
 
 		List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc );
 		Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );

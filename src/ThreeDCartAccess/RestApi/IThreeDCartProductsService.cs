@@ -7,6 +7,8 @@ namespace ThreeDCartAccess.RestApi
 {
 	public interface IThreeDCartProductsService
 	{
+		bool IsGetProducts();
+
 		List< ThreeDCartProduct > GetAllProducts();
 		void GetAllProducts( Action< ThreeDCartProduct > processAction );
 

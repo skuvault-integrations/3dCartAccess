@@ -12,7 +12,7 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected readonly ThreeDCartConfig Config;
 		internal readonly WebRequestServices WebRequestServices;
-		protected const int BatchSize = 300;
+		protected const int BatchSize = 100;
 
 		protected ThreeDCartServiceBase( ThreeDCartConfig config )
 		{

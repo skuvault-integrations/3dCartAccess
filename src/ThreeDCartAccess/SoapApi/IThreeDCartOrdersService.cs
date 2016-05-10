@@ -8,17 +8,17 @@ namespace ThreeDCartAccess.SoapApi
 	public interface IThreeDCartOrdersService
 	{
 		bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null );
-		IEnumerable< ThreeDCartOrder > GetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
-		Task< IEnumerable< ThreeDCartOrder > > GetNewOrdersAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
+		List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc );
+		Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );
 
-		IEnumerable< ThreeDCartOrder > GetOrders( IEnumerable< string > invoiceNumbers, DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
-		Task< IEnumerable< ThreeDCartOrder > > GetOrdersAsync( IEnumerable< string > invoiceNumbers, DateTime? startDateUtc = null, DateTime? endDateUtc = null, bool includeNotCompleted = false );
+		List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc );
+		Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc );
 
-		ThreeDCartOrder GetOrder( string invoiceNumber );
-		Task< ThreeDCartOrder > GetOrderAsync( string invoiceNumber );
+		ThreeDCartOrder GetOrderByNumber( string invoiceNumber );
+		Task< ThreeDCartOrder > GetOrderByNumberAsync( string invoiceNumber );
 
-		IEnumerable< ThreeDCartOrderStatus > GetOrderStatuses();
-		Task< IEnumerable< ThreeDCartOrderStatus > > GetOrderStatusesAsync();
+		List< ThreeDCartOrderStatus > GetOrderStatuses();
+		Task< List< ThreeDCartOrderStatus > > GetOrderStatusesAsync();
 
 		int GetOrdersCount( DateTime? startDateUtc = null, DateTime? endDateUtc = null );
 		Task< int > GetOrdersCountAsync( DateTime? startDateUtc = null, DateTime? endDateUtc = null );

@@ -5,7 +5,7 @@ using FluentAssertions;
 using LINQtoCSV;
 using Netco.Logging;
 using NUnit.Framework;
-using ThreeDCartAccess.RestApi;
+using ThreeDCartAccess;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product;
 
@@ -33,9 +33,18 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		public void IsGetProducts()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var result = service.IsGetProducts();
+
+			result.Should().BeTrue();
+		}
+
+		[ Test ]
 		public void GetAllProducts()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = service.GetAllProducts();
 
 			result.Should().NotBeNull();
@@ -45,7 +54,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public void GetAllProducts2()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = new List< ThreeDCartProduct >();
 			service.GetAllProducts( x => result.Add( x ) );
 
@@ -56,7 +65,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public async Task GetAllProductsAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = await service.GetAllProductsAsync();
 
 			result.Should().NotBeNull();
@@ -66,7 +75,7 @@ namespace ThreeDCartAccessTests.Products
 		[ Test ]
 		public async Task GetAllProductsAsync2()
 		{
-			var service = this.ThreeDCartFactory.CreateProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = new List< ThreeDCartProduct >();
 			await service.GetAllProductsAsync( x => result.Add( x ) );
 
