@@ -4,23 +4,6 @@ using System.Runtime.Serialization;
 
 namespace ThreeDCartAccess.RestApi.Models.Product
 {
-	public class ThreeDCartUpdateProduct
-	{
-		public ThreeDCartProductSKU SKUInfo{ get; set; }
-		//TODO: Can not support until bug not fixed in 3DCart
-		//public List< ThreeDCartAdvancedOption > AdvancedOptionList{ get; set; }
-
-		public ThreeDCartUpdateProduct()
-		{
-		}
-
-		public ThreeDCartUpdateProduct( ThreeDCartProduct product )
-		{
-			this.SKUInfo = product.SKUInfo;
-			//this.AdvancedOptionList = product.AdvancedOptionList;
-		}
-	}
-
 	public class ThreeDCartProduct
 	{
 		#region Pannel 1 - Product Information

@@ -89,9 +89,9 @@ namespace ThreeDCartAccessTests.Products
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var allProducts = service.GetAllProducts();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
-			var productForUpdate = new ThreeDCartUpdateProduct( product );
+			var productForUpdate = new ThreeDCartProductForUpdatingInventory( product );
 
-			productForUpdate.SKUInfo.Stock = 5;
+			productForUpdate.SKUInfo.Stock = 3;
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
 			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
 			//productForUpdate.AdvancedOptionList[ 2 ].AdvancedOptionStock = 3;
@@ -101,7 +101,7 @@ namespace ThreeDCartAccessTests.Products
 			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
 			//};
 
-			service.UpdateInventory( new List< ThreeDCartUpdateProduct > { productForUpdate } );
+			service.UpdateInventory( new List< ThreeDCartProductForUpdatingInventory > { productForUpdate } );
 		}
 
 		[ Test ]
@@ -110,7 +110,7 @@ namespace ThreeDCartAccessTests.Products
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var allProducts = await service.GetAllProductsAsync();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
-			var productForUpdate = new ThreeDCartUpdateProduct( product );
+			var productForUpdate = new ThreeDCartProductForUpdatingInventory( product );
 
 			productForUpdate.SKUInfo.Stock = 5;
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
@@ -122,7 +122,7 @@ namespace ThreeDCartAccessTests.Products
 			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
 			//};
 
-			await service.UpdateInventoryAsync( new List< ThreeDCartUpdateProduct > { productForUpdate } );
+			await service.UpdateInventoryAsync( new List< ThreeDCartProductForUpdatingInventory > { productForUpdate } );
 		}
 	}
 }

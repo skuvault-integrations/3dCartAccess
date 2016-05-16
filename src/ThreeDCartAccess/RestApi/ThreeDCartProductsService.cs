@@ -71,7 +71,7 @@ namespace ThreeDCartAccess.RestApi
 			} );
 		}
 
-		public void UpdateInventory( List< ThreeDCartUpdateProduct > inventory )
+		public void UpdateInventory( List< ThreeDCartProductForUpdatingInventory > inventory )
 		{
 			var marker = this.GetMarker();
 			foreach( var product in inventory )
@@ -81,7 +81,7 @@ namespace ThreeDCartAccess.RestApi
 			}
 		}
 
-		public async Task UpdateInventoryAsync( List< ThreeDCartUpdateProduct > inventory )
+		public async Task UpdateInventoryAsync( List< ThreeDCartProductForUpdatingInventory > inventory )
 		{
 			var marker = this.GetMarker();
 			foreach( var product in inventory )
