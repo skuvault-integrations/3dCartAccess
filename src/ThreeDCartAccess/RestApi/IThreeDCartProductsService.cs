@@ -14,5 +14,8 @@ namespace ThreeDCartAccess.RestApi
 
 		Task< List< ThreeDCartProduct > > GetAllProductsAsync();
 		Task GetAllProductsAsync( Action< ThreeDCartProduct > processAction );
+
+		void UpdateInventory( List< ThreeDCartUpdateProduct > inventory );
+		Task UpdateInventoryAsync( List< ThreeDCartUpdateProduct > inventory );
 	}
 }

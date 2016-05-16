@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ServiceStack;
+using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product;
@@ -67,6 +69,26 @@ namespace ThreeDCartAccess.RestApi
 					processAction( product );
 				}
 			} );
+		}
+
+		public void UpdateInventory( List< ThreeDCartUpdateProduct > inventory )
+		{
+			var marker = this.GetMarker();
+			foreach( var product in inventory )
+			{
+				var endpoint = EndpointsBuilder.UpdateProductsEnpoint( product.SKUInfo.CatalogID );
+				ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, product.ToJson(), marker ) );
+			}
+		}
+
+		public async Task UpdateInventoryAsync( List< ThreeDCartUpdateProduct > inventory )
+		{
+			var marker = this.GetMarker();
+			foreach( var product in inventory )
+			{
+				var endpoint = EndpointsBuilder.UpdateProductsEnpoint( product.SKUInfo.CatalogID );
+				await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, product.ToJson(), marker ) );
+			}
 		}
 		#endregion
 	}

@@ -82,5 +82,47 @@ namespace ThreeDCartAccessTests.Products
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
+
+		[ Test ]
+		public void UpdateInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var allProducts = service.GetAllProducts();
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var productForUpdate = new ThreeDCartUpdateProduct( product );
+
+			productForUpdate.SKUInfo.Stock = 5;
+			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
+			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
+			//productForUpdate.AdvancedOptionList[ 2 ].AdvancedOptionStock = 3;
+			//productForUpdate.AdvancedOptionList = new List<ThreeDCartAdvancedOption>
+			//{
+			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 1 },
+			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
+			//};
+
+			service.UpdateInventory( new List< ThreeDCartUpdateProduct > { productForUpdate } );
+		}
+
+		[ Test ]
+		public async Task UpdateInventoryAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var allProducts = await service.GetAllProductsAsync();
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var productForUpdate = new ThreeDCartUpdateProduct( product );
+
+			productForUpdate.SKUInfo.Stock = 5;
+			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
+			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
+			//productForUpdate.AdvancedOptionList[ 2 ].AdvancedOptionStock = 3;
+			//productForUpdate.AdvancedOptionList = new List<ThreeDCartAdvancedOption>
+			//{
+			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 1 },
+			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
+			//};
+
+			await service.UpdateInventoryAsync( new List< ThreeDCartUpdateProduct > { productForUpdate } );
+		}
 	}
 }

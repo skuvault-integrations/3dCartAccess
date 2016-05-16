@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace ThreeDCartAccess.RestApi.Models.Product
 {
-	public class ProductSKU
+	public class ThreeDCartUpdateProduct
 	{
-		public long? CatalogID{ get; set; }
-		public string SKU{ get; set; }
-		public string Name{ get; set; }
-		public double? Cost{ get; set; }
-		public double? Price{ get; set; }
-		public double? RetailPrice{ get; set; }
-		public double? SalePrice{ get; set; }
-		public bool? OnSale{ get; set; }
-		public double? Stock{ get; set; }
+		public ThreeDCartProductSKU SKUInfo{ get; set; }
+		//TODO: Can not support until bug not fixed in 3DCart
+		//public List< ThreeDCartAdvancedOption > AdvancedOptionList{ get; set; }
+
+		public ThreeDCartUpdateProduct()
+		{
+		}
+
+		public ThreeDCartUpdateProduct( ThreeDCartProduct product )
+		{
+			this.SKUInfo = product.SKUInfo;
+			//this.AdvancedOptionList = product.AdvancedOptionList;
+		}
 	}
 
 	public class ThreeDCartProduct
@@ -21,15 +26,15 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		#region Pannel 1 - Product Information
 
 		#region General Info
-		public ProductSKU SKUInfo{ get; set; }
+		public ThreeDCartProductSKU SKUInfo{ get; set; }
 		public string MFGID{ get; set; }
 		public string ShortDescription{ get; set; }
 		public long? ManufacturerID{ get; set; }
-		public List< ProductDistributor > DistributorList{ get; set; }
+		public List< ThreeDCartProductDistributor > DistributorList{ get; set; }
 		public DateTime? LastUpdate{ get; set; }
 		public string UserID{ get; set; }
 		public string GTIN{ get; set; }
-		public List< ProductCategory > CategoryList{ get; set; }
+		public List< ThreeDCartProductCategory > CategoryList{ get; set; }
 		#endregion
 
 		#region Pricing
@@ -63,11 +68,18 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		#endregion
 
 		#region Inventory Options
+		public int InventoryControl{ get; set; }
 		public int? StockAlert{ get; set; }
 		public int? ReorderQuantity{ get; set; }
 		public string InStockMessage{ get; set; }
 		public string OutOfStockMessage{ get; set; }
 		public string BackOrderMessage{ get; set; }
+
+		[ IgnoreDataMember ]
+		public ThreeDCartInventoryControlEnum InventoryControlEnum
+		{
+			get { return ( ThreeDCartInventoryControlEnum )this.InventoryControl; }
+		}
 		#endregion
 
 		#region Warehouse Information
@@ -102,7 +114,7 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		#endregion
 
 		#region Product Features
-		public List< Feature > FeatureList{ get; set; }
+		public List< ThreeDCartFeature > FeatureList{ get; set; }
 		#endregion
 
 		#region Plugins
@@ -132,21 +144,21 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public string AdditionalImageCaption3{ get; set; }
 		public string AdditionalImageFile4{ get; set; }
 		public string AdditionalImageCaption4{ get; set; }
-		public List< ImageGallery > ImageGalleryList{ get; set; }
+		public List< ThreeDCartImageGallery > ImageGalleryList{ get; set; }
 		#endregion
 
 		#region Pannel 3 - Options
-		public List< OptionSet > OptionSetList{ get; set; }
-		public List< AdvancedOption > AdvancedOptionList{ get; set; }
+		public List< ThreeDCartOptionSet > OptionSetList{ get; set; }
+		public List< ThreeDCartAdvancedOption > AdvancedOptionList{ get; set; }
 		#endregion
 
 		#region Pannel 4 - Related
-		public List< RelatedProduct > RelatedProductList{ get; set; }
-		public List< UpSellingItem > UpSellingItemList{ get; set; }
+		public List< ThreeDCartRelatedProduct > RelatedProductList{ get; set; }
+		public List< ThreeDCartUpSellingItem > UpSellingItemList{ get; set; }
 		#endregion
 
 		#region Pannel 5 - Discount
-		public List< Discount > DiscountList{ get; set; }
+		public List< ThreeDCartDiscount > DiscountList{ get; set; }
 		#endregion
 
 		#region Pannel 6 Advanced
@@ -227,19 +239,32 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public string SpecialInstructions{ get; set; }
 		public bool? AssignKey{ get; set; }
 		public bool? ReUseKeys{ get; set; }
-		public List< Serial > SerialList{ get; set; }
-		public List< EProduct > EProductList{ get; set; }
+		public List< ThreeDCartSerial > SerialList{ get; set; }
+		public List< ThreeDCartEProduct > EProductList{ get; set; }
 		#endregion
 	}
 
+	public class ThreeDCartProductSKU
+	{
+		public long CatalogID{ get; set; }
+		public string SKU{ get; set; }
+		public string Name{ get; set; }
+		public double? Cost{ get; set; }
+		public double? Price{ get; set; }
+		public double? RetailPrice{ get; set; }
+		public double? SalePrice{ get; set; }
+		public bool? OnSale{ get; set; }
+		public double? Stock{ get; set; }
+	}
+
 	#region Lists
-	public class ProductCategory
+	public class ThreeDCartProductCategory
 	{
 		public int CategoryID{ get; set; }
 		public string CategoryName{ get; set; }
 	}
 
-	public class ProductDistributor
+	public class ThreeDCartProductDistributor
 	{
 		public int DistributorID{ get; set; }
 
@@ -252,7 +277,7 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public string DistributorStockID{ get; set; }
 	}
 
-	public class OptionSet
+	public class ThreeDCartOptionSet
 	{
 		public int? OptionSetID{ get; set; }
 		public string OptionSetName{ get; set; }
@@ -262,10 +287,10 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public string OptionURL{ get; set; }
 		public string OptionAdditionalInformation{ get; set; }
 		public int? OptionSizeLimit{ get; set; }
-		public List< Options > OptionList{ get; set; }
+		public List< ThreeDCartOptions > OptionList{ get; set; }
 	}
 
-	public class Options
+	public class ThreeDCartOptions
 	{
 		public int? OptionID{ get; set; }
 		public string OptionName{ get; set; }
@@ -279,7 +304,7 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public int? OptionBundleQuantity{ get; set; }
 	}
 
-	public class AdvancedOption
+	public class ThreeDCartAdvancedOption
 	{
 		public string AdvancedOptionCode{ get; set; }
 		public string AdvancedOptionSufix{ get; set; }
@@ -291,7 +316,7 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public string AdvancedOptionGTIN{ get; set; }
 	}
 
-	public class ImageGallery
+	public class ThreeDCartImageGallery
 	{
 		public int? ImageGalleryID{ get; set; }
 		public string ImageGalleryFile{ get; set; }
@@ -299,21 +324,21 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public int ImageGallerySorting{ get; set; }
 	}
 
-	public class RelatedProduct
+	public class ThreeDCartRelatedProduct
 	{
 		public int? RelatedIndexID{ get; set; }
 		public int RelatedProductID{ get; set; }
 		public int RelatedProductSorting{ get; set; }
 	}
 
-	public class UpSellingItem
+	public class ThreeDCartUpSellingItem
 	{
 		public int? UpSellingIndexID{ get; set; }
 		public int UpSellingItemID{ get; set; }
 		public int UpSellingItemSorting{ get; set; }
 	}
 
-	public class Discount
+	public class ThreeDCartDiscount
 	{
 		public int? DiscountID{ get; set; }
 		public int DiscountPriceLevel{ get; set; }
@@ -323,24 +348,33 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		public bool DiscountPercentage{ get; set; }
 	}
 
-	public class Serial
+	public class ThreeDCartSerial
 	{
 		public int? SerialID{ get; set; }
 		public int SerialUses{ get; set; }
 		public string SerialCode{ get; set; }
 	}
 
-	public class EProduct
+	public class ThreeDCartEProduct
 	{
 		public int? FileNumber{ get; set; }
 		public string FilePath{ get; set; }
 	}
 
-	public class Feature
+	public class ThreeDCartFeature
 	{
 		public int? FeatureID{ get; set; }
 		public string FeatureTitle{ get; set; }
 		public string FeatureDescription{ get; set; }
+	}
+
+	public enum ThreeDCartInventoryControlEnum
+	{
+		Undefined = 0,
+		Default = -1,
+		OutOfStock = 1,
+		BackOrder = 2,
+		WaitingList = 3
 	}
 	#endregion
 }
