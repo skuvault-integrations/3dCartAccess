@@ -79,12 +79,12 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 
 		#region Order Items
 		public List< OrderItem > OrderItemList{ get; set; }
-		public double? OrderDiscount{ get; set; }
-		public double? SalesTax{ get; set; }
-		public double? SalesTax2{ get; set; }
-		public double? SalesTax3{ get; set; }
-		public double? OrderAmount{ get; set; }
-		public double? AffiliateCommission{ get; set; }
+		public decimal? OrderDiscount{ get; set; }
+		public decimal? SalesTax{ get; set; }
+		public decimal? SalesTax2{ get; set; }
+		public decimal? SalesTax3{ get; set; }
+		public decimal? OrderAmount{ get; set; }
+		public decimal? AffiliateCommission{ get; set; }
 		#endregion
 
 		#region Transactions
@@ -131,18 +131,18 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 		public int? ItemIndexID{ get; set; }
 		public string ItemID{ get; set; }
 		public int? ItemShipmentID{ get; set; }
-		public double? ItemQuantity{ get; set; }
+		public decimal? ItemQuantity{ get; set; }
 		public int? ItemWarehouseID{ get; set; }
 		public string ItemDescription{ get; set; }
-		public double? ItemUnitPrice{ get; set; }
-		public double? ItemWeight{ get; set; }
-		public double? ItemOptionPrice{ get; set; }
+		public decimal? ItemUnitPrice{ get; set; }
+		public decimal? ItemWeight{ get; set; }
+		public decimal? ItemOptionPrice{ get; set; }
 		public string ItemAdditionalField1{ get; set; }
 		public string ItemAdditionalField2{ get; set; }
 		public string ItemAdditionalField3{ get; set; }
 		public string ItemPageAdded{ get; set; }
 		public DateTime? ItemDateAdded{ get; set; }
-		public double? ItemUnitCost{ get; set; }
+		public decimal? ItemUnitCost{ get; set; }
 		public int? ItemUnitStock{ get; set; }
 		public string ItemOptions{ get; set; }
 		public string ItemCatalogIDOptions{ get; set; }
@@ -156,7 +156,7 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 		public DateTime TransactionDateTime{ get; set; }
 		public string TransactionType{ get; set; }
 		public string TransactionMethod{ get; set; }
-		public double? TransactionAmount{ get; set; }
+		public decimal? TransactionAmount{ get; set; }
 		public string TransactionApproval{ get; set; }
 		public string TransactionReference{ get; set; }
 		public int? TransactionGatewayID{ get; set; }
@@ -191,7 +191,7 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 		public string ShipmentAlias{ get; set; }
 		public string ShipmentCity{ get; set; }
 		public string ShipmentCompany{ get; set; }
-		public double? ShipmentCost{ get; set; }
+		public decimal? ShipmentCost{ get; set; }
 		public string ShipmentCountry{ get; set; }
 		public string ShipmentEmail{ get; set; }
 		public string ShipmentFirstName{ get; set; }
@@ -202,8 +202,8 @@ namespace ThreeDCartAccess.RestApi.Models.Order
 		public string ShipmentPhone{ get; set; }
 		public string ShipmentState{ get; set; }
 		public string ShipmentZipCode{ get; set; }
-		public double? ShipmentTax{ get; set; }
-		public double? ShipmentWeight{ get; set; }
+		public decimal? ShipmentTax{ get; set; }
+		public decimal? ShipmentWeight{ get; set; }
 		public string ShipmentTrackingCode{ get; set; }
 		public string ShipmentUserID{ get; set; }
 		public int? ShipmentNumber{ get; set; }
