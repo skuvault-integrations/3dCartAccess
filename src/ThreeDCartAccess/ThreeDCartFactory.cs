@@ -14,7 +14,7 @@ namespace ThreeDCartAccess
 
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
-		public string RestApiPrivateKey{ get; }
+		public string RestApiPrivateKey{ get; private set; }
 
 		public ThreeDCartFactory( string restApiPrivateKey = null )
 		{
