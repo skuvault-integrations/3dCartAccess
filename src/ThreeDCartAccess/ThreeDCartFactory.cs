@@ -14,6 +14,13 @@ namespace ThreeDCartAccess
 
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
+		public string RestApiPrivateKey{ get; }
+
+		public ThreeDCartFactory( string restApiPrivateKey = null )
+		{
+			this.RestApiPrivateKey = restApiPrivateKey;
+		}
+
 		public IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config )
 		{
 			return new ThreeDCartProductsService( config );
@@ -26,11 +33,13 @@ namespace ThreeDCartAccess
 
 		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestApi.Models.Configuration.ThreeDCartConfig config )
 		{
+			config.SetPrivateKey( this.RestApiPrivateKey );
 			return new RestApi.ThreeDCartProductsService( config );
 		}
 
 		public RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestApi.Models.Configuration.ThreeDCartConfig config )
 		{
+			config.SetPrivateKey( this.RestApiPrivateKey );
 			return new RestApi.ThreeDCartOrdersService( config );
 		}
 	}
