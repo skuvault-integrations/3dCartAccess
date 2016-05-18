@@ -55,7 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
+    <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrder.cs" />
+    <Compile Include="RestApi\Models\Order\ThreeDCartQuestion.cs" />
+    <Compile Include="RestApi\Models\Order\ThreeDCartShipment.cs" />
+    <Compile Include="RestApi\Models\Order\ThreeDCartTransaction.cs" />
     <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartAdvancedOption.cs" />
     <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartProduct.cs" />
     <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartProductSKU.cs" />
