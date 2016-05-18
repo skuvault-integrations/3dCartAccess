@@ -108,7 +108,7 @@ namespace ThreeDCartAccessTests.Products
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var allProducts = service.GetInventory();
-			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1001" );
 			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product );
 
 			productForUpdate.SKUInfo.Stock = 3;

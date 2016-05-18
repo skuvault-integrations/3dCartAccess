@@ -60,7 +60,6 @@
     <Compile Include="RestApi\Models\Order\ThreeDCartQuestion.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartShipment.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartTransaction.cs" />
-    <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartAdvancedOption.cs" />
     <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartProduct.cs" />
     <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartProductSKU.cs" />
     <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartAdvancedOption.cs" />

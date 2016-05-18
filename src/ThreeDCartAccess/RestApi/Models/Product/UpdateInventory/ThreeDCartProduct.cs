@@ -1,4 +1,8 @@
-﻿namespace ThreeDCartAccess.RestApi.Models.Product.UpdateInventory
+﻿using System.Collections.Generic;
+using System.Linq;
+using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
+
+namespace ThreeDCartAccess.RestApi.Models.Product.UpdateInventory
 {
 	public class ThreeDCartProduct
 	{
@@ -13,7 +17,7 @@
 		public ThreeDCartProduct( GetInventory.ThreeDCartProduct product )
 		{
 			this.SKUInfo = new ThreeDCartProductSKU( product.SKUInfo );
-			//this.AdvancedOptionList = product.AdvancedOptionList;
+			//this.AdvancedOptionList = product.AdvancedOptionList.Select( x => x.Clone() ).ToList();
 		}
 	}
 }

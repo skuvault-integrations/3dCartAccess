@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
 namespace ThreeDCartAccess.RestApi.Models.Product.GetInventory
 {
