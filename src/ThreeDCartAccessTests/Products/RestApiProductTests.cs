@@ -7,7 +7,7 @@ using Netco.Logging;
 using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.RestApi.Models.Configuration;
-using ThreeDCartAccess.RestApi.Models.Product;
+using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
 namespace ThreeDCartAccessTests.Products
 {
@@ -42,42 +42,62 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
-		public void GetAllProducts()
+		public void GetProducts()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
-			var result = service.GetAllProducts();
+			var result = service.GetProducts();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
-		public void GetAllProducts2()
+		public void GetProducts2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = new List< ThreeDCartProduct >();
-			service.GetAllProducts( x => result.Add( x ) );
+			service.GetProducts( x => result.Add( x ) );
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
-		public async Task GetAllProductsAsync()
+		public async Task GetProductsAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
-			var result = await service.GetAllProductsAsync();
+			var result = await service.GetProductsAsync();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
 		[ Test ]
-		public async Task GetAllProductsAsync2()
+		public async Task GetProductsAsync2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = new List< ThreeDCartProduct >();
-			await service.GetAllProductsAsync( x => result.Add( x ) );
+			await service.GetProductsAsync( x => result.Add( x ) );
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public void GetInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var result = service.GetInventory();
+
+			result.Should().NotBeNull();
+			result.Count().Should().BeGreaterThan( 0 );
+		}
+
+		[ Test ]
+		public async Task GetInventoryAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var result = await service.GetInventoryAsync();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -87,9 +107,9 @@ namespace ThreeDCartAccessTests.Products
 		public void UpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
-			var allProducts = service.GetAllProducts();
+			var allProducts = service.GetInventory();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
-			var productForUpdate = new ThreeDCartProductForUpdatingInventory( product );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product );
 
 			productForUpdate.SKUInfo.Stock = 3;
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
@@ -101,16 +121,16 @@ namespace ThreeDCartAccessTests.Products
 			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
 			//};
 
-			service.UpdateInventory( new List< ThreeDCartProductForUpdatingInventory > { productForUpdate } );
+			service.UpdateInventory( new List< ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct > { productForUpdate } );
 		}
 
 		[ Test ]
 		public async Task UpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
-			var allProducts = await service.GetAllProductsAsync();
+			var allProducts = await service.GetInventoryAsync();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
-			var productForUpdate = new ThreeDCartProductForUpdatingInventory( product );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product );
 
 			productForUpdate.SKUInfo.Stock = 5;
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
@@ -122,7 +142,7 @@ namespace ThreeDCartAccessTests.Products
 			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
 			//};
 
-			await service.UpdateInventoryAsync( new List< ThreeDCartProductForUpdatingInventory > { productForUpdate } );
+			await service.UpdateInventoryAsync( new List< ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct > { productForUpdate } );
 		}
 	}
 }

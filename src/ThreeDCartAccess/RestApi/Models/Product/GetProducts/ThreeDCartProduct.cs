@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace ThreeDCartAccess.RestApi.Models.Product
+namespace ThreeDCartAccess.RestApi.Models.Product.GetProducts
 {
 	public class ThreeDCartProduct
 	{
@@ -227,130 +227,6 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		#endregion
 	}
 
-	public class ThreeDCartProductSKU
-	{
-		public long CatalogID{ get; set; }
-		public string SKU{ get; set; }
-		public string Name{ get; set; }
-		public double? Cost{ get; set; }
-		public double? Price{ get; set; }
-		public double? RetailPrice{ get; set; }
-		public double? SalePrice{ get; set; }
-		public bool? OnSale{ get; set; }
-		public double? Stock{ get; set; }
-	}
-
-	#region Lists
-	public class ThreeDCartProductCategory
-	{
-		public int CategoryID{ get; set; }
-		public string CategoryName{ get; set; }
-	}
-
-	public class ThreeDCartProductDistributor
-	{
-		public int DistributorID{ get; set; }
-
-		public string DistributorName{ get; set; }
-
-		public double DistributorItemCost{ get; set; }
-
-		public string DistributorItemID{ get; set; }
-
-		public string DistributorStockID{ get; set; }
-	}
-
-	public class ThreeDCartOptionSet
-	{
-		public int? OptionSetID{ get; set; }
-		public string OptionSetName{ get; set; }
-		public int? OptionSorting{ get; set; }
-		public bool? OptionRequired{ get; set; }
-		public string OptionType{ get; set; }
-		public string OptionURL{ get; set; }
-		public string OptionAdditionalInformation{ get; set; }
-		public int? OptionSizeLimit{ get; set; }
-		public List< ThreeDCartOptions > OptionList{ get; set; }
-	}
-
-	public class ThreeDCartOptions
-	{
-		public int? OptionID{ get; set; }
-		public string OptionName{ get; set; }
-		public bool? OptionSelected{ get; set; }
-		public bool? OptionHide{ get; set; }
-		public double? OptionValue{ get; set; }
-		public string OptionPartNumber{ get; set; }
-		public int? OptionSorting{ get; set; }
-		public string OptionImagePath{ get; set; }
-		public int? OptionBundleCatalogId{ get; set; }
-		public int? OptionBundleQuantity{ get; set; }
-	}
-
-	public class ThreeDCartAdvancedOption
-	{
-		public string AdvancedOptionCode{ get; set; }
-		public string AdvancedOptionSufix{ get; set; }
-		public string AdvancedOptionName{ get; set; }
-		public double AdvancedOptionCost{ get; set; }
-		public int AdvancedOptionStock{ get; set; }
-		public double AdvancedOptionWeight{ get; set; }
-		public double AdvancedOptionPrice{ get; set; }
-		public string AdvancedOptionGTIN{ get; set; }
-	}
-
-	public class ThreeDCartImageGallery
-	{
-		public int? ImageGalleryID{ get; set; }
-		public string ImageGalleryFile{ get; set; }
-		public string ImageGalleryCaption{ get; set; }
-		public int ImageGallerySorting{ get; set; }
-	}
-
-	public class ThreeDCartRelatedProduct
-	{
-		public int? RelatedIndexID{ get; set; }
-		public int RelatedProductID{ get; set; }
-		public int RelatedProductSorting{ get; set; }
-	}
-
-	public class ThreeDCartUpSellingItem
-	{
-		public int? UpSellingIndexID{ get; set; }
-		public int UpSellingItemID{ get; set; }
-		public int UpSellingItemSorting{ get; set; }
-	}
-
-	public class ThreeDCartDiscount
-	{
-		public int? DiscountID{ get; set; }
-		public int DiscountPriceLevel{ get; set; }
-		public int DiscountLowbound{ get; set; }
-		public int DiscountUpbound{ get; set; }
-		public double DiscountPrice{ get; set; }
-		public bool DiscountPercentage{ get; set; }
-	}
-
-	public class ThreeDCartSerial
-	{
-		public int? SerialID{ get; set; }
-		public int SerialUses{ get; set; }
-		public string SerialCode{ get; set; }
-	}
-
-	public class ThreeDCartEProduct
-	{
-		public int? FileNumber{ get; set; }
-		public string FilePath{ get; set; }
-	}
-
-	public class ThreeDCartFeature
-	{
-		public int? FeatureID{ get; set; }
-		public string FeatureTitle{ get; set; }
-		public string FeatureDescription{ get; set; }
-	}
-
 	public enum ThreeDCartInventoryControlEnum
 	{
 		Undefined = 0,
@@ -359,5 +235,4 @@ namespace ThreeDCartAccess.RestApi.Models.Product
 		BackOrder = 2,
 		WaitingList = 3
 	}
-	#endregion
 }

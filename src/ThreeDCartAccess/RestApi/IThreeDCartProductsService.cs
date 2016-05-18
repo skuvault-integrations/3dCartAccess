@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ThreeDCartAccess.RestApi.Models.Product;
+using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
 namespace ThreeDCartAccess.RestApi
 {
@@ -9,13 +9,16 @@ namespace ThreeDCartAccess.RestApi
 	{
 		bool IsGetProducts();
 
-		List< ThreeDCartProduct > GetAllProducts();
-		void GetAllProducts( Action< ThreeDCartProduct > processAction );
+		List< ThreeDCartProduct > GetProducts();
+		void GetProducts( Action< ThreeDCartProduct > processAction );
 
-		Task< List< ThreeDCartProduct > > GetAllProductsAsync();
-		Task GetAllProductsAsync( Action< ThreeDCartProduct > processAction );
+		Task< List< ThreeDCartProduct > > GetProductsAsync();
+		Task GetProductsAsync( Action< ThreeDCartProduct > processAction );
 
-		void UpdateInventory( List< ThreeDCartProductForUpdatingInventory > inventory );
-		Task UpdateInventoryAsync( List< ThreeDCartProductForUpdatingInventory > inventory );
+		List< Models.Product.GetInventory.ThreeDCartProduct > GetInventory();
+		Task< List< Models.Product.GetInventory.ThreeDCartProduct > > GetInventoryAsync();
+
+		void UpdateInventory( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory );
+		Task UpdateInventoryAsync( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory );
 	}
 }

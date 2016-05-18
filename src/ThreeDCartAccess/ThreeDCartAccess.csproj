@@ -39,8 +39,8 @@
       <HintPath>..\packages\Netco.1.5.2\lib\net45\Netco.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.56.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.Text.4.0.56\lib\net40\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.46\lib\net40\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,7 +56,24 @@
   <ItemGroup>
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrder.cs" />
-    <Compile Include="RestApi\Models\Product\ThreeDCartProductUpdateInventory.cs" />
+    <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartAdvancedOption.cs" />
+    <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartProduct.cs" />
+    <Compile Include="RestApi\Models\Product\GetInventory\ThreeDCartProductSKU.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartAdvancedOption.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartDiscount.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartEProduct.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartFeature.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartImageGallery.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartOptions.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartOptionSet.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProductCategory.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProductDistributor.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProductSKU.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartRelatedProduct.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartSerial.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartUpSellingItem.cs" />
+    <Compile Include="RestApi\Models\Product\UpdateInventory\ThreeDCartProduct.cs" />
+    <Compile Include="RestApi\Models\Product\UpdateInventory\ThreeDCartProductSKU.cs" />
     <Compile Include="RestApi\Models\ThreeDCartError.cs" />
     <Compile Include="RestApi\ThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\ThreeDCartServiceBase.cs" />
@@ -107,7 +124,7 @@
     <Compile Include="RestApi\IThreeDCartProductsService.cs" />
     <Compile Include="RestApi\Misc\WebRequestServices.cs" />
     <Compile Include="RestApi\Models\Configuration\ThreeDCartConfig.cs" />
-    <Compile Include="RestApi\Models\Product\ThreeDCartProduct.cs" />
+    <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProduct.cs" />
     <Compile Include="RestApi\ThreeDCartProductsService.cs" />
     <Compile Include="ThreeDCartFactory.cs" />
   </ItemGroup>

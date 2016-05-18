@@ -5,7 +5,7 @@ using ServiceStack;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
-using ThreeDCartAccess.RestApi.Models.Product;
+using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
 namespace ThreeDCartAccess.RestApi
 {
@@ -31,7 +31,7 @@ namespace ThreeDCartAccess.RestApi
 			}
 		}
 
-		public List< ThreeDCartProduct > GetAllProducts()
+		public List< ThreeDCartProduct > GetProducts()
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartProduct >();
@@ -39,7 +39,7 @@ namespace ThreeDCartAccess.RestApi
 			return result;
 		}
 
-		public void GetAllProducts( Action< ThreeDCartProduct > processAction )
+		public void GetProducts( Action< ThreeDCartProduct > processAction )
 		{
 			var marker = this.GetMarker();
 			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion =>
@@ -51,7 +51,7 @@ namespace ThreeDCartAccess.RestApi
 			} );
 		}
 
-		public async Task< List< ThreeDCartProduct > > GetAllProductsAsync()
+		public async Task< List< ThreeDCartProduct > > GetProductsAsync()
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartProduct >();
@@ -59,7 +59,7 @@ namespace ThreeDCartAccess.RestApi
 			return result;
 		}
 
-		public async Task GetAllProductsAsync( Action< ThreeDCartProduct > processAction )
+		public async Task GetProductsAsync( Action< ThreeDCartProduct > processAction )
 		{
 			var marker = this.GetMarker();
 			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion =>
@@ -71,7 +71,23 @@ namespace ThreeDCartAccess.RestApi
 			} );
 		}
 
-		public void UpdateInventory( List< ThreeDCartProductForUpdatingInventory > inventory )
+		public List< Models.Product.GetInventory.ThreeDCartProduct > GetInventory()
+		{
+			var marker = this.GetMarker();
+			var result = new List< Models.Product.GetInventory.ThreeDCartProduct >();
+			this.GetCollection< Models.Product.GetInventory.ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
+			return result;
+		}
+
+		public async Task< List< Models.Product.GetInventory.ThreeDCartProduct > > GetInventoryAsync()
+		{
+			var marker = this.GetMarker();
+			var result = new List< Models.Product.GetInventory.ThreeDCartProduct >();
+			await this.GetCollectionAsync< Models.Product.GetInventory.ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, BatchSize ), portion => result.AddRange( portion ) );
+			return result;
+		}
+
+		public void UpdateInventory( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory )
 		{
 			var marker = this.GetMarker();
 			foreach( var product in inventory )
@@ -81,7 +97,7 @@ namespace ThreeDCartAccess.RestApi
 			}
 		}
 
-		public async Task UpdateInventoryAsync( List< ThreeDCartProductForUpdatingInventory > inventory )
+		public async Task UpdateInventoryAsync( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory )
 		{
 			var marker = this.GetMarker();
 			foreach( var product in inventory )
