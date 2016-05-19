@@ -10,9 +10,14 @@ namespace ThreeDCartAccess.RestApi.Misc
 			return string.Format( "/Products/{0}?offset={1}&limit={2}", catalogId, offset, limit );
 		}
 
-		public static string UpdateProductsEnpoint( long catalogId )
+		public static string UpdateProductEnpoint( long catalogId )
 		{
 			return string.Format( "/Products/{0}", catalogId );
+		}
+
+		public static string UpdateProductsEnpoint()
+		{
+			return string.Format( "/Products/" );
 		}
 		#endregion
 

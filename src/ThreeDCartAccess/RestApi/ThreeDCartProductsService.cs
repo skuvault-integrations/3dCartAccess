@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Netco.Extensions;
 using ServiceStack;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
@@ -11,6 +13,8 @@ namespace ThreeDCartAccess.RestApi
 {
 	public class ThreeDCartProductsService: ThreeDCartServiceBase, IThreeDCartProductsService
 	{
+		protected const int UpdateInventoryLimit = 100;
+
 		public ThreeDCartProductsService( ThreeDCartConfig config ): base( config )
 		{
 		}
@@ -87,23 +91,39 @@ namespace ThreeDCartAccess.RestApi
 			return result;
 		}
 
+		public void UpdateInventory( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
+		{
+			var marker = this.GetMarker();
+			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
+			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, inventory.ToJson(), marker ) );
+		}
+
+		public async Task UpdateInventoryAsync( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
+		{
+			var marker = this.GetMarker();
+			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
+			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, inventory.ToJson(), marker ) );
+		}
+
 		public void UpdateInventory( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory )
 		{
 			var marker = this.GetMarker();
-			foreach( var product in inventory )
+			var endpoint = EndpointsBuilder.UpdateProductsEnpoint();
+			var parts = inventory.Slice( UpdateInventoryLimit );
+			foreach( var part in parts )
 			{
-				var endpoint = EndpointsBuilder.UpdateProductsEnpoint( product.SKUInfo.CatalogID );
-				ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, product.ToJson(), marker ) );
+				ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, part.ToList().ToJson(), marker ) );
 			}
 		}
 
 		public async Task UpdateInventoryAsync( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory )
 		{
 			var marker = this.GetMarker();
-			foreach( var product in inventory )
+			var endpoint = EndpointsBuilder.UpdateProductsEnpoint();
+			var parts = inventory.Slice( UpdateInventoryLimit );
+			foreach( var part in parts )
 			{
-				var endpoint = EndpointsBuilder.UpdateProductsEnpoint( product.SKUInfo.CatalogID );
-				await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, product.ToJson(), marker ) );
+				await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, part.ToList().ToJson(), marker ) );
 			}
 		}
 		#endregion

@@ -109,19 +109,11 @@ namespace ThreeDCartAccessTests.Products
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var allProducts = service.GetInventory();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1001" );
-			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product );
-
-			productForUpdate.SKUInfo.Stock = 3;
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 3 } };
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
 			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
-			//productForUpdate.AdvancedOptionList[ 2 ].AdvancedOptionStock = 3;
-			//productForUpdate.AdvancedOptionList = new List<ThreeDCartAdvancedOption>
-			//{
-			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 1 },
-			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
-			//};
-
-			service.UpdateInventory( new List< ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct > { productForUpdate } );
+			
+			service.UpdateInventory( productForUpdate );
 		}
 
 		[ Test ]
@@ -130,9 +122,44 @@ namespace ThreeDCartAccessTests.Products
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var allProducts = await service.GetInventoryAsync();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
-			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 5 } };
+			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
+			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
+			
+			await service.UpdateInventoryAsync( productForUpdate );
+		}
 
-			productForUpdate.SKUInfo.Stock = 5;
+		[ Test ]
+		public void BulkUpdateInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var allProducts = service.GetInventory();
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1001" );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 7 } };
+			//productForUpdate.AdvancedOptionList[0].AdvancedOptionStock = 1;
+			//productForUpdate.AdvancedOptionList[1].AdvancedOptionStock = 2;
+			//productForUpdate.AdvancedOptionList[2].AdvancedOptionStock = 3;
+			//productForUpdate.AdvancedOptionList = new List<ThreeDCartAdvancedOption>
+			//{
+			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 1 },
+			//	new ThreeDCartAdvancedOption { AdvancedOptionStock = 2 }
+			//};
+
+			var product2 = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var productForUpdate2 = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product2 ) { SKUInfo = { Stock = 7 } };
+			//productForUpdate2.AdvancedOptionList[0].AdvancedOptionStock = 1;
+			//productForUpdate2.AdvancedOptionList[1].AdvancedOptionStock = 2;
+
+			service.UpdateInventory( new List< ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct > { productForUpdate, productForUpdate2 } );
+		}
+
+		[ Test ]
+		public async Task BulkUpdateInventoryAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var allProducts = await service.GetInventoryAsync();
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 5 } };
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
 			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
 			//productForUpdate.AdvancedOptionList[ 2 ].AdvancedOptionStock = 3;

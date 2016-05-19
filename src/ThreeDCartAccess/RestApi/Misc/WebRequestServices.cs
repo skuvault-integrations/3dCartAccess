@@ -31,7 +31,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 				var result = this.TryHandleException( marker, () =>
 				{
 					using( var response = request.GetResponse() )
-						return this.ParseResponse< T >( response, marker );
+						return this.ParseGetResponse< T >( response, marker );
 				} );
 
 				return result;
@@ -53,7 +53,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 				var result = await this.TryHandleExceptionAsync( marker, async () =>
 				{
 					using( var response = await request.GetResponseAsync() )
-						return this.ParseResponse< T >( response, marker );
+						return this.ParseGetResponse< T >( response, marker );
 				} );
 
 				return result;
@@ -73,7 +73,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			{
 				var request = this.CreateServicePutRequest( url, jsonContent );
 				using( var response = ( HttpWebResponse )request.GetResponse() )
-					this.LogPutInfoResult( url, response.StatusCode, jsonContent, marker );
+					this.ParsePutResponse( response, marker );
 			}
 			catch( Exception ex )
 			{
@@ -90,7 +90,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			{
 				var request = this.CreateServicePutRequest( url, jsonContent );
 				using( var response = await request.GetResponseAsync() )
-					this.LogPutInfoResult( url, ( ( HttpWebResponse )response ).StatusCode, jsonContent, marker );
+					this.ParsePutResponse( response, marker );
 			}
 			catch( Exception ex )
 			{
@@ -134,7 +134,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			return request;
 		}
 
-		private T ParseResponse< T >( WebResponse response, string marker )
+		private T ParseGetResponse< T >( WebResponse response, string marker )
 		{
 			var result = default(T);
 
@@ -150,6 +150,17 @@ namespace ThreeDCartAccess.RestApi.Misc
 			}
 
 			return result;
+		}
+
+		private void ParsePutResponse( WebResponse response, string marker )
+		{
+			using( var stream = response.GetResponseStream() )
+			using( var reader = new StreamReader( stream ) )
+			{
+				var jsonResponse = reader.ReadToEnd();
+
+				this.LogPutInfoResult( response.ResponseUri.OriginalString, ( ( HttpWebResponse )response ).StatusCode, jsonResponse, marker );
+			}
 		}
 
 		private T TryHandleException< T >( string marker, Func< T > body )

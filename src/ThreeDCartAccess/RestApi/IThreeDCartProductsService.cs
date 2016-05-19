@@ -18,6 +18,9 @@ namespace ThreeDCartAccess.RestApi
 		List< Models.Product.GetInventory.ThreeDCartProduct > GetInventory();
 		Task< List< Models.Product.GetInventory.ThreeDCartProduct > > GetInventoryAsync();
 
+		void UpdateInventory( Models.Product.UpdateInventory.ThreeDCartProduct inventory );
+		Task UpdateInventoryAsync( Models.Product.UpdateInventory.ThreeDCartProduct inventory );
+
 		void UpdateInventory( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory );
 		Task UpdateInventoryAsync( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory );
 	}
