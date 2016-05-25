@@ -95,14 +95,14 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( inventory.SKUInfo.CatalogID );
-			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, inventory.AdvancedOptionList.ToJson(), marker ) );
+			//ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, inventory.AdvancedOptionList.ToJson(), marker ) );
 		}
 
 		public async Task UpdateOptionsInventoryAsync( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
 		{
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( inventory.SKUInfo.CatalogID );
-			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, inventory.AdvancedOptionList.ToJson(), marker ) );
+			//await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, inventory.AdvancedOptionList.ToJson(), marker ) );
 		}
 
 		public void UpdateInventory( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
