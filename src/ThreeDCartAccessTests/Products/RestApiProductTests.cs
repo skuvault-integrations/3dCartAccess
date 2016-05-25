@@ -46,6 +46,7 @@ namespace ThreeDCartAccessTests.Products
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var result = service.GetProducts();
+			var product = result.FirstOrDefault( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -108,7 +109,7 @@ namespace ThreeDCartAccessTests.Products
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
 			var allProducts = service.GetInventory();
-			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1001" );
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 3 } };
 			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
 			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
@@ -127,6 +128,32 @@ namespace ThreeDCartAccessTests.Products
 			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
 			
 			await service.UpdateInventoryAsync( productForUpdate );
+		}
+
+		[ Test ]
+		public void UpdateOptionsInventory()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var allProducts = service.GetInventory();
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 3 } };
+			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
+			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
+			
+			service.UpdateOptionsInventory( productForUpdate );
+		}
+
+		[ Test ]
+		public async Task UpdateOptionsInventoryAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var allProducts = await service.GetInventoryAsync();
+			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
+			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 5 } };
+			//productForUpdate.AdvancedOptionList[ 0 ].AdvancedOptionStock = 1;
+			//productForUpdate.AdvancedOptionList[ 1 ].AdvancedOptionStock = 2;
+			
+			await service.UpdateOptionsInventoryAsync( productForUpdate );
 		}
 
 		[ Test ]

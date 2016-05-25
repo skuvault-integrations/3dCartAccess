@@ -15,6 +15,11 @@ namespace ThreeDCartAccess.RestApi.Misc
 			return string.Format( "/Products/{0}", catalogId );
 		}
 
+		public static string UpdateProductOptionsEnpoint( long catalogId )
+		{
+			return string.Format( "/Products/{0}/AdvancedOptions", catalogId );
+		}
+
 		public static string UpdateProductsEnpoint()
 		{
 			return string.Format( "/Products/" );
