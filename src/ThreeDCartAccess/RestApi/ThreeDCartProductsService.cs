@@ -8,6 +8,8 @@ using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
+using ThreeDCartAccess.RestApi.Models.Product.UpdateInventory;
+using ThreeDCartProduct = ThreeDCartAccess.RestApi.Models.Product.GetProducts.ThreeDCartProduct;
 
 namespace ThreeDCartAccess.RestApi
 {
@@ -91,32 +93,22 @@ namespace ThreeDCartAccess.RestApi
 			return result;
 		}
 
-		public void UpdateOptionsInventory( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
-		{
-			var marker = this.GetMarker();
-			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( inventory.SKUInfo.CatalogID );
-			//ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, inventory.AdvancedOptionList.ToJson(), marker ) );
-		}
-
-		public async Task UpdateOptionsInventoryAsync( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
-		{
-			var marker = this.GetMarker();
-			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( inventory.SKUInfo.CatalogID );
-			//await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, inventory.AdvancedOptionList.ToJson(), marker ) );
-		}
-
 		public void UpdateInventory( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
 		{
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
-			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, inventory.ToJson(), marker ) );
+			var parentProduct = new ThreeDCartProductWithoutOptions( inventory );
+			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, parentProduct.ToJson(), marker ) );
+			this.UpdateOptionsInventory( inventory.SKUInfo.CatalogID, inventory.AdvancedOptionList, marker );
 		}
 
 		public async Task UpdateInventoryAsync( Models.Product.UpdateInventory.ThreeDCartProduct inventory )
 		{
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
-			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, inventory.ToJson(), marker ) );
+			var parentProduct = new ThreeDCartProductWithoutOptions( inventory );
+			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProduct.ToJson(), marker ) );
+			await this.UpdateOptionsInventoryAsync( inventory.SKUInfo.CatalogID, inventory.AdvancedOptionList, marker );
 		}
 
 		public void UpdateInventory( List< Models.Product.UpdateInventory.ThreeDCartProduct > inventory )
@@ -126,7 +118,12 @@ namespace ThreeDCartAccess.RestApi
 			var parts = inventory.Slice( UpdateInventoryLimit );
 			foreach( var part in parts )
 			{
-				ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, part.ToList().ToJson(), marker ) );
+				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
+				ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, parentProducts.ToJson(), marker ) );
+				foreach( var threeDCartProduct in part )
+				{
+					this.UpdateOptionsInventory( threeDCartProduct.SKUInfo.CatalogID, threeDCartProduct.AdvancedOptionList, marker );
+				}
 			}
 		}
 
@@ -137,8 +134,31 @@ namespace ThreeDCartAccess.RestApi
 			var parts = inventory.Slice( UpdateInventoryLimit );
 			foreach( var part in parts )
 			{
-				await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, part.ToList().ToJson(), marker ) );
+				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
+				await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProducts.ToJson(), marker ) );
+				foreach( var threeDCartProduct in part )
+				{
+					await this.UpdateOptionsInventoryAsync( threeDCartProduct.SKUInfo.CatalogID, threeDCartProduct.AdvancedOptionList, marker );
+				}
 			}
+		}
+
+		private void UpdateOptionsInventory( long catalogId, List< ThreeDCartAdvancedOption > optionList, string marker )
+		{
+			if( optionList == null || optionList.Count == 0 )
+				return;
+
+			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( catalogId );
+			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, optionList.ToJson(), marker ) );
+		}
+
+		private async Task UpdateOptionsInventoryAsync( long catalogId, List< ThreeDCartAdvancedOption > optionList, string marker )
+		{
+			if( optionList == null || optionList.Count == 0 )
+				return;
+
+			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( catalogId );
+			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, optionList.ToJson(), marker ) );
 		}
 		#endregion
 	}
