@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Xml.Serialization;
+using Netco.Extensions;
 using ThreeDCartAccess.Misc;
 
 namespace ThreeDCartAccess.SoapApi.Models.Order
@@ -80,7 +81,7 @@ namespace ThreeDCartAccess.SoapApi.Models.Order
 		[ XmlIgnore ]
 		public ThreeDCartOrderStatusEnum OrderStatus
 		{
-			get { return this.OrderStatusStr.ToEnum< ThreeDCartOrderStatusEnum >(); }
+			get { return this.OrderStatusStr.ToEnum( ThreeDCartOrderStatusEnum.Undefined ); }
 		}
 
 		[ XmlElement( ElementName = "Referer" ) ]

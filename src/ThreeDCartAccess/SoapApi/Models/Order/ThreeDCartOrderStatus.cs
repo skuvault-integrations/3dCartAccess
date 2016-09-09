@@ -1,5 +1,5 @@
 ﻿using System.Xml.Serialization;
-using ThreeDCartAccess.Misc;
+using Netco.Extensions;
 
 namespace ThreeDCartAccess.SoapApi.Models.Order
 {
@@ -14,7 +14,7 @@ namespace ThreeDCartAccess.SoapApi.Models.Order
 		[ XmlIgnore ]
 		public ThreeDCartOrderStatusEnum Definition
 		{
-			get { return this.DefinitionStr.ToEnum< ThreeDCartOrderStatusEnum >(); }
+			get { return this.DefinitionStr.ToEnum( ThreeDCartOrderStatusEnum.Undefined ); }
 		}
 
 		[ XmlElement( ElementName = "StatusText" ) ]
