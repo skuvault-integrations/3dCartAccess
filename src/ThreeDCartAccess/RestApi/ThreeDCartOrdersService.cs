@@ -13,6 +13,8 @@ namespace ThreeDCartAccess.RestApi
 {
 	public class ThreeDCartOrdersService: ThreeDCartServiceBase, IThreeDCartOrdersService
 	{
+		protected const int GetOrdersLimit = 300;
+
 		public ThreeDCartOrdersService( ThreeDCartConfig config ): base( config )
 		{
 		}
@@ -24,7 +26,7 @@ namespace ThreeDCartAccess.RestApi
 				var marker = this.GetMarker();
 				startDateUtc = startDateUtc ?? DateTime.UtcNow.AddDays( -30 );
 				endDateUtc = endDateUtc ?? DateTime.UtcNow.AddDays( 1 );
-				var endpoint = EndpointsBuilder.GetNewOrdersEnpoint( 1, BatchSize, startDateUtc.Value, endDateUtc.Value, this.Config.TimeZone );
+				var endpoint = EndpointsBuilder.GetNewOrdersEnpoint( 1, GetOrdersLimit, startDateUtc.Value, endDateUtc.Value, this.Config.TimeZone );
 				this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker );
 				return true;
 			}
@@ -45,7 +47,7 @@ namespace ThreeDCartAccess.RestApi
 		public void GetNewOrders( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
+			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
 				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
 				foreach( var product in portion )
@@ -65,7 +67,7 @@ namespace ThreeDCartAccess.RestApi
 		public async Task GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, BatchSize, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
 				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
 				foreach( var product in portion )

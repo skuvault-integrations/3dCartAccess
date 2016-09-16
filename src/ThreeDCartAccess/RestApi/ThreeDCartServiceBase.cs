@@ -12,7 +12,6 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected readonly ThreeDCartConfig Config;
 		internal readonly WebRequestServices WebRequestServices;
-		protected const int BatchSize = 200;
 
 		protected ThreeDCartServiceBase( ThreeDCartConfig config )
 		{
@@ -29,31 +28,31 @@ namespace ThreeDCartAccess.RestApi
 
 		protected void GetCollection< T >( string marker, Func< int, string > endpointFunc, Action< List< T > > processAction )
 		{
-			for( var i = 1;; i += BatchSize )
+			List< T > portion = null;
+			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i );
-				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
-				if( portion == null )
+				portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
+				if( portion == null || portion.Count == 0 )
 					break;
 
 				processAction( portion );
-				if( portion.Count != BatchSize )
-					break;
+				Task.Delay( 100 ).Wait();
 			}
 		}
 
 		protected async Task GetCollectionAsync< T >( string marker, Func< int, string > endpointFunc, Action< List< T > > processAction )
 		{
-			for( var i = 1;; i += BatchSize )
+			List< T > portion = null;
+			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i );
-				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
-				if( portion == null )
+				portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
+				if( portion == null || portion.Count == 0 )
 					break;
 
 				processAction( portion );
-				if( portion.Count != BatchSize )
-					break;
+				await Task.Delay( 100 );
 			}
 		}
 	}
