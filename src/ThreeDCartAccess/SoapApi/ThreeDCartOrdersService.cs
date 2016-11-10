@@ -102,9 +102,9 @@ namespace ThreeDCartAccess.SoapApi
 
 		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
-			var orders = await invoiceNumbers.ProcessInBatchAsync( 50, invoiceNumber =>
+			var orders = await invoiceNumbers.ProcessInBatchAsync( 50, async invoiceNumber =>
 			{
-				var order = this.GetOrderByNumberAsync( invoiceNumber );
+				var order = await this.GetOrderByNumberAsync( invoiceNumber.Trim() );
 				return order;
 			} );
 

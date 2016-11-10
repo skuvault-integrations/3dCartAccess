@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Xml.Serialization;
 using Netco.Extensions;
-using ThreeDCartAccess.Misc;
 
 namespace ThreeDCartAccess.SoapApi.Models.Order
 {
@@ -48,20 +47,10 @@ namespace ThreeDCartAccess.SoapApi.Models.Order
 		[ XmlIgnore ]
 		public DateTime DateTimeCreatedUtc
 		{
-			get
-			{
-				if( this._dateTimeCreatedUtc != DateTime.MinValue )
-					return this._dateTimeCreatedUtc;
-
-				var dateCreated = DateTime.Parse( this.DateCreatedStr, _culture );
-				var timeCreated = DateTime.Parse( this.TimeCreatedStr, _culture );
-				var tmp = dateCreated.Add( new TimeSpan( timeCreated.Hour, timeCreated.Minute, timeCreated.Second ) );
-				var result = tmp.AddHours( -this.TimeZone );
-				return result;
-			}
+			get { return this.GetDateInUtc( this.DateCreatedStr, this.TimeCreatedStr, ref this._dateTimeCreatedUtc ); }
 		}
 
-		private readonly DateTime _dateTimeCreatedUtc = DateTime.MinValue;
+		private DateTime _dateTimeCreatedUtc = DateTime.MinValue;
 
 		[ XmlElement( ElementName = "Total" ) ]
 		public decimal Total{ get; set; }
@@ -115,6 +104,20 @@ namespace ThreeDCartAccess.SoapApi.Models.Order
 
 			var tmp = DateTime.Parse( dateTime, _culture );
 			cachedDateTime = tmp.AddHours( -this.TimeZone );
+
+			return cachedDateTime;
+		}
+
+		private DateTime GetDateInUtc( string date, string time, ref DateTime cachedDateTime )
+		{
+			if( cachedDateTime != DateTime.MinValue )
+				return cachedDateTime;
+
+			var dateCreated = DateTime.Parse( date, _culture );
+			var timeCreated = DateTime.Parse( time, _culture );
+			var tmp = dateCreated.Add( new TimeSpan( timeCreated.Hour, timeCreated.Minute, timeCreated.Second ) );
+			cachedDateTime = tmp.AddHours( -this.TimeZone );
+
 			return cachedDateTime;
 		}
 		#endregion
