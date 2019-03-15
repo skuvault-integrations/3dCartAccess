@@ -70,11 +70,28 @@ namespace ThreeDCartAccess.RestApi
 			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
 			{
 				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
-				foreach( var product in portion )
+				foreach( var order in portion )
 				{
-					processAction( product );
+					processAction( order );
 				}
 			} );
+		}
+
+
+		public async Task< List< ThreeDCartOrder > > GetUpdatedOrdersAsync( DateTime startDateUtc, DateTime endDateUtc )
+		{
+			var result = new List< ThreeDCartOrder >();
+			var marker = this.GetMarker();
+			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetUpdatedOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
+			{
+				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+				foreach( var order in portion )
+				{
+					result.Add( order );
+				}
+			} );
+
+			return result;
 		}
 		#endregion
 
@@ -91,7 +108,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			foreach( var invoiceNumber in invoiceNumbers )
 			{
-				var endpoint = EndpointsBuilder.GetOrderEnpoint( invoiceNumber );
+				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
 				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
 				if( portion == null )
 					continue;
@@ -116,7 +133,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			await invoiceNumbers.DoInBatchAsync( 10, async invoiceNumber =>
 			{
-				var endpoint = EndpointsBuilder.GetOrderEnpoint( invoiceNumber );
+				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
 				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
 				if( portion == null )
 					return;

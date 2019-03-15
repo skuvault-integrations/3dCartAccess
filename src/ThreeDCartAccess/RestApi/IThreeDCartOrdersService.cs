@@ -14,6 +14,7 @@ namespace ThreeDCartAccess.RestApi
 
 		void GetNewOrders( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction );
 		Task GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction );
+		Task< List< ThreeDCartOrder > > GetUpdatedOrdersAsync( DateTime startDateUtc, DateTime endDateUtc );
 
 		List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc );
 		Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc );

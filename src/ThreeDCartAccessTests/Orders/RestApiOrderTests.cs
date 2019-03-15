@@ -86,6 +86,18 @@ namespace ThreeDCartAccessTests.Orders
 		}
 		#endregion
 
+		#region Get Updated Orders
+		[ Test ]
+		public async Task GetUpdatedOrdersAsync()
+		{
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.Config );
+			var result = await service.GetUpdatedOrdersAsync( DateTime.UtcNow.AddDays( -1 ), DateTime.UtcNow );
+
+			result.Should().NotBeNull();
+			result.Count.Should().BeGreaterThan( 0 );
+		}
+		#endregion
+
 		#region Get Orders By Number
 		[ Test ]
 		public void GetOrdersByNumber()
