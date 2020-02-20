@@ -30,11 +30,15 @@ namespace ThreeDCartAccess.SoapApi.Misc
 
 			this.LogRequest( methodName, config );
 			var funkResult = await func();
-			var funkResultStr = funkResult.ToString();
-			this.LogResponse( methodName, config, funkResultStr );
-			var result = this.ParseResult< TResponse >( funkResult, funkResultStr );
 
-			return result;
+			if ( funkResult.Name != null && funkResult.Name.LocalName != "Error" )
+			{
+				var funkResultStr = funkResult.ToString();
+				this.LogResponse( methodName, config, funkResultStr );
+				return this.ParseResult< TResponse >( funkResult, funkResultStr );
+			}
+
+			return default( TResponse );
 		}
 
 		public T ParseResult< T >( XElement xElement, string xElementStr )

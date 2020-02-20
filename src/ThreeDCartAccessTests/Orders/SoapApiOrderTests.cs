@@ -45,7 +45,7 @@ namespace ThreeDCartAccessTests.Orders
 		public void GetNewOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
-			var result = service.GetNewOrders( new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
+			var result = service.GetNewOrders( DateTime.UtcNow.AddDays( -4 ), DateTime.UtcNow ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -55,7 +55,7 @@ namespace ThreeDCartAccessTests.Orders
 		public async Task GetNewOrdersAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
-			var result = ( await service.GetNewOrdersAsync( new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ) ).ToList();
+			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
@@ -66,7 +66,7 @@ namespace ThreeDCartAccessTests.Orders
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
 			var numbers = new List< string > { "AB-1014" };
-			var result = service.GetOrdersByNumber( numbers, new DateTime( 2014, 11, 26, 6, 54, 29 ), new DateTime( 2014, 11, 26, 6, 57, 15 ) ).ToList();
+			var result = service.GetOrdersByNumber( numbers, DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );

@@ -78,16 +78,30 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
+				bool isResponseInvalid = false;
+
 				var portion = await ActionPolicies.GetAsync.Get(
 					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetNewOrdersAsync", this._config,
-						async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult ) );
-				if( portion == null )
+						async () => { 
+							var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
+							isResponseInvalid = ordersResponse.Name != null 
+											&& ordersResponse.Value != null
+											&& ordersResponse.Name.LocalName == "Error" 
+											&& ordersResponse.Value.ToLower().Contains( "error" );
+							
+							return ordersResponse;
+						} ) );
+				
+				if ( portion == null && !isResponseInvalid )
 					break;
 
-				var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
-				result.AddRange( filtered );
-				if( portion.Orders.Count != _batchSize )
-					break;
+				if ( portion != null )
+				{
+					var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
+					result.AddRange( filtered );
+					if( portion.Orders.Count != _batchSize )
+						break;
+				}
 			}
 
 			return result;
