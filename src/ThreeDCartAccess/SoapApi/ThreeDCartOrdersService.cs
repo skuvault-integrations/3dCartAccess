@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using CuttingEdge.Conditions;
 using Netco.Extensions;
 using ThreeDCartAccess.Misc;
@@ -34,13 +35,13 @@ namespace ThreeDCartAccess.SoapApi
 		}
 
 		public bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
-			{
-				var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
-				var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
-				var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
-					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
-				return true;
-			}
+		{
+			var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
+			var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
+			var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
+				() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
+			return true;
+		}
 
 		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc )
 		{
@@ -77,16 +78,14 @@ namespace ThreeDCartAccess.SoapApi
 					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetNewOrdersAsync", this._config,
 						async () => { 
 							var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
-							isResponseInvalid = ordersResponse.Name != null 
-											&& ordersResponse.Value != null
-											&& ordersResponse.Name.LocalName == "Error" 
-											&& ordersResponse.Value.ToLower().Contains( "error" );
+							
+							ThrowIfError( ordersResponse, out isResponseInvalid );
 							
 							return ordersResponse;
 						} ) );
 				
 				if ( portion == null && !isResponseInvalid )
-					break;
+					break;	
 
 				if ( portion != null )
 				{
@@ -98,6 +97,23 @@ namespace ThreeDCartAccess.SoapApi
 			}
 
 			return result;
+		}
+
+		//TODO GUARD-2159 Move to a helper class, add tests
+		/// <summary>Throw if the response indicates an error</summary>
+		/// <param name="isResponseInvalid">True if response contains an error</param>
+		private static void ThrowIfError( XElement ordersResponse, out bool isResponseInvalid )
+		{
+			isResponseInvalid = ordersResponse.Name != null
+						&& ordersResponse.Value != null
+						&& ordersResponse.Name.LocalName == "Error";
+
+			if( isResponseInvalid )
+			{
+				//Throw so that we retry
+				//TODO GUARD-2159 Will the final error get bubbled up to the app? Or do we need to rethrow below - if ( portion == null && isResponseInvalid )
+				throw new Exception( ordersResponse.Value );
+			}
 		}
 
 		public List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
@@ -129,7 +145,8 @@ namespace ThreeDCartAccess.SoapApi
 		}
 
 		public async Task< ThreeDCartOrder > GetOrderByNumberAsync( string invoiceNumber )
-		{
+		{									
+			//TODO GUARD-2159 Are we handling return errors correctly here?
 			var portion = await ActionPolicies.GetAsync.Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
 					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult ) );
