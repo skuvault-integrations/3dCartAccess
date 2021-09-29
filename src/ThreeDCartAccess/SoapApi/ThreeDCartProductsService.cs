@@ -33,16 +33,9 @@ namespace ThreeDCartAccess.SoapApi
 
 		public bool IsGetProducts()
 		{
-			try
-			{
-				var parsedResult = this._webRequestServices.Execute< ThreeDCartProducts >( "IsGetProducts", this._config,
-					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, 1, "", "" ) );
-				return true;
-			}
-			catch( Exception )
-			{
-				return false;
-			}
+			var parsedResult = this._webRequestServices.Execute< ThreeDCartProducts >( "IsGetProducts", this._config,
+				() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, 1, "", "" ) );
+			return true;
 		}
 
 		public IEnumerable< ThreeDCartProduct > GetProducts()
@@ -85,15 +78,8 @@ namespace ThreeDCartAccess.SoapApi
 
 		public bool IsGetInventory()
 		{
-			try
-			{
-				var parsedResult = this.GetInventoryPageOrAllPages( 1 );
-				return true;
-			}
-			catch( Exception )
-			{
-				return false;
-			}
+			var parsedResult = this.GetInventoryPageOrAllPages( 1 );
+			return true;
 		}
 
 		public IEnumerable< ThreeDCartInventory > GetInventory()

@@ -34,8 +34,6 @@ namespace ThreeDCartAccess.SoapApi
 		}
 
 		public bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
-		{
-			try
 			{
 				var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
 				var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
@@ -43,11 +41,6 @@ namespace ThreeDCartAccess.SoapApi
 					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
 				return true;
 			}
-			catch( Exception )
-			{
-				return false;
-			}
-		}
 
 		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc )
 		{
