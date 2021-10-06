@@ -72,48 +72,24 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
-				bool isResponseInvalid = false;
-
 				var portion = await ActionPolicies.GetAsync.Get(
 					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetNewOrdersAsync", this._config,
 						async () => { 
 							var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
 							
-							ThrowIfError( ordersResponse, out isResponseInvalid );
+							ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
 							
 							return ordersResponse;
 						} ) );
 				
-				if ( portion == null && !isResponseInvalid )
+				if ( portion == null )
 					break;	
 
-				if ( portion != null )
-				{
-					var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
-					result.AddRange( filtered );
-					if( portion.Orders.Count != _batchSize )
-						break;
-				}
+				var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
+				result.AddRange( filtered );
 			}
 
 			return result;
-		}
-
-		//TODO GUARD-2159 Move to a helper class, add tests
-		/// <summary>Throw if the response indicates an error</summary>
-		/// <param name="isResponseInvalid">True if response contains an error</param>
-		private static void ThrowIfError( XElement ordersResponse, out bool isResponseInvalid )
-		{
-			isResponseInvalid = ordersResponse.Name != null
-						&& ordersResponse.Value != null
-						&& ordersResponse.Name.LocalName == "Error";
-
-			if( isResponseInvalid )
-			{
-				//Throw so that we retry
-				//TODO GUARD-2159 Will the final error get bubbled up to the app? Or do we need to rethrow below - if ( portion == null && isResponseInvalid )
-				throw new Exception( ordersResponse.Value );
-			}
 		}
 
 		public List< ThreeDCartOrder > GetOrdersByNumber( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
@@ -146,7 +122,6 @@ namespace ThreeDCartAccess.SoapApi
 
 		public async Task< ThreeDCartOrder > GetOrderByNumberAsync( string invoiceNumber )
 		{									
-			//TODO GUARD-2159 Are we handling return errors correctly here?
 			var portion = await ActionPolicies.GetAsync.Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
 					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult ) );

@@ -30,6 +30,10 @@ namespace ThreeDCartAccessTests.Orders
 				this.ThreeDCartFactory = new ThreeDCartFactory();
 				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey, testConfig.TimeZone );
 			}
+
+			System.Net.ServicePointManager.SecurityProtocol |=  System.Net.SecurityProtocolType.Tls12;
+			//Otherwise, get the error
+			//	An error occurred while making the HTTP request to https://api.3dcart.com/cart.asmx. This could be due to the fact that the server certificate is not configured properly with HTTP.SYS in the HTTPS case. This could also be caused by a mismatch of the security binding between the client and the server.
 		}
 
 		[ Test ]
