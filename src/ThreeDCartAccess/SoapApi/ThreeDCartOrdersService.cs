@@ -87,6 +87,8 @@ namespace ThreeDCartAccess.SoapApi
 
 				var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
 				result.AddRange( filtered );
+				if( portion.Orders.Count != _batchSize )
+					break;
 			}
 
 			return result;
