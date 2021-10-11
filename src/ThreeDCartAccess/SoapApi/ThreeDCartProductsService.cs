@@ -31,6 +31,7 @@ namespace ThreeDCartAccess.SoapApi
 			this._webRequestServices = new WebRequestServices();
 		}
 
+		/// <summary>Verify that can get products. Will return true on success and throw on failure.</summary>
 		public bool IsGetProducts()
 		{
 			var parsedResult = this._webRequestServices.Execute< ThreeDCartProducts >( "IsGetProducts", this._config,
@@ -76,6 +77,7 @@ namespace ThreeDCartAccess.SoapApi
 			return result;
 		}
 
+		/// <summary>Verify that can get inventory. Will return true on success and throw on failure.</summary>
 		public bool IsGetInventory()
 		{
 			var parsedResult = this.GetInventoryPageOrAllPages( 1 );

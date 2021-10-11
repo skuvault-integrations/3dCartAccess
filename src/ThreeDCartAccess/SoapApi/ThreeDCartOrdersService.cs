@@ -34,12 +34,18 @@ namespace ThreeDCartAccess.SoapApi
 			this._webRequestServices = new WebRequestServices();
 		}
 
+		/// <summary>Verify that can get new orders. Will return true on success and throw on failure.</summary>
 		public bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
 		{
 			var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
 			var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
 			var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
-				() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
+				() =>
+				{
+					var ordersResponse = this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" );
+					ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+					return ordersResponse;
+				} );
 			return true;
 		}
 
@@ -126,7 +132,14 @@ namespace ThreeDCartAccess.SoapApi
 		{									
 			var portion = await ActionPolicies.GetAsync.Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
-					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult ) );
+					async () =>
+					{
+						var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult;
+						ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+						return ordersResponse;
+					}
+					)
+				);
 
 			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
 		}
