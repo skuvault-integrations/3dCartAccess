@@ -107,4 +107,6 @@ task NuGet Package, Version, {
 	}
 }
 
-task . Init, Build, Package, Zip, NuGet
+task . Init, Build, Package, NuGet
+# Disabled Zip since it's not needed, but crashes
+# task . Init, Build, Package, Zip, NuGet

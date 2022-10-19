@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using CuttingEdge.Conditions;
 using Netco.Extensions;
 using ThreeDCartAccess.Misc;
@@ -33,20 +34,19 @@ namespace ThreeDCartAccess.SoapApi
 			this._webRequestServices = new WebRequestServices();
 		}
 
+		/// <summary>Verify that can get new orders. Will return true on success and throw on failure.</summary>
 		public bool IsGetNewOrders( DateTime? startDateUtc = null, DateTime? endDateUtc = null )
 		{
-			try
-			{
-				var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
-				var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
-				var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
-					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" ) );
-				return true;
-			}
-			catch( Exception )
-			{
-				return false;
-			}
+			var startDate = this.GetDate( startDateUtc ?? DateTime.UtcNow.AddDays( -30 ) );
+			var endDate = this.GetDate( endDateUtc ?? DateTime.UtcNow );
+			var parsedResult = this._webRequestServices.Execute< ThreeDCartOrders >( "IsGetNewOrders", this._config,
+				() =>
+				{
+					var ordersResponse = this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" );
+					ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+					return ordersResponse;
+				} );
+			return true;
 		}
 
 		public List< ThreeDCartOrder > GetNewOrders( DateTime startDateUtc, DateTime endDateUtc )
@@ -78,30 +78,23 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
-				bool isResponseInvalid = false;
-
 				var portion = await ActionPolicies.GetAsync.Get(
 					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetNewOrdersAsync", this._config,
 						async () => { 
 							var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
-							isResponseInvalid = ordersResponse.Name != null 
-											&& ordersResponse.Value != null
-											&& ordersResponse.Name.LocalName == "Error" 
-											&& ordersResponse.Value.ToLower().Contains( "error" );
+							
+							ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
 							
 							return ordersResponse;
 						} ) );
 				
-				if ( portion == null && !isResponseInvalid )
-					break;
+				if ( portion == null )
+					break;	
 
-				if ( portion != null )
-				{
-					var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
-					result.AddRange( filtered );
-					if( portion.Orders.Count != _batchSize )
-						break;
-				}
+				var filtered = this.SetTimeZoneAndFilter( portion.Orders, startDateUtc, endDateUtc );
+				result.AddRange( filtered );
+				if( portion.Orders.Count != _batchSize )
+					break;
 			}
 
 			return result;
@@ -136,10 +129,17 @@ namespace ThreeDCartAccess.SoapApi
 		}
 
 		public async Task< ThreeDCartOrder > GetOrderByNumberAsync( string invoiceNumber )
-		{
+		{									
 			var portion = await ActionPolicies.GetAsync.Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
-					async () => ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult ) );
+					async () =>
+					{
+						var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult;
+						ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+						return ordersResponse;
+					}
+					)
+				);
 
 			return portion == null || portion.Orders.Count == 0 || portion.Orders[ 0 ].InvoiceNumber != invoiceNumber ? null : portion.Orders[ 0 ];
 		}

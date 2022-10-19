@@ -31,18 +31,12 @@ namespace ThreeDCartAccess.SoapApi
 			this._webRequestServices = new WebRequestServices();
 		}
 
+		/// <summary>Verify that can get products. Will return true on success and throw on failure.</summary>
 		public bool IsGetProducts()
 		{
-			try
-			{
-				var parsedResult = this._webRequestServices.Execute< ThreeDCartProducts >( "IsGetProducts", this._config,
-					() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, 1, "", "" ) );
-				return true;
-			}
-			catch( Exception )
-			{
-				return false;
-			}
+			var parsedResult = this._webRequestServices.Execute< ThreeDCartProducts >( "IsGetProducts", this._config,
+				() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, 1, "", "" ) );
+			return true;
 		}
 
 		public IEnumerable< ThreeDCartProduct > GetProducts()
@@ -83,17 +77,11 @@ namespace ThreeDCartAccess.SoapApi
 			return result;
 		}
 
+		/// <summary>Verify that can get inventory. Will return true on success and throw on failure.</summary>
 		public bool IsGetInventory()
 		{
-			try
-			{
-				var parsedResult = this.GetInventoryPageOrAllPages( 1 );
-				return true;
-			}
-			catch( Exception )
-			{
-				return false;
-			}
+			var parsedResult = this.GetInventoryPageOrAllPages( 1 );
+			return true;
 		}
 
 		public IEnumerable< ThreeDCartInventory > GetInventory()
