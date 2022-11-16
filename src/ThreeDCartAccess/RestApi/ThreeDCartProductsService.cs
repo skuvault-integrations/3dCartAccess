@@ -42,47 +42,63 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartProduct >();
-			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, GetProductsLimit ), portion => result.AddRange( portion ) );
+			this.GetCollection< ThreeDCartProduct >(
+				marker,
+				GetProductsLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetProductsEnpoint( offset, pageSize ),
+				portion => result.AddRange( portion ) );
 			return result;
 		}
 
 		public void GetProducts( Action< ThreeDCartProduct > processAction )
 		{
 			var marker = this.GetMarker();
-			this.GetCollection< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, GetProductsLimit ), portion =>
-			{
-				foreach( var product in portion )
+			this.GetCollection< ThreeDCartProduct >(
+				marker,
+				GetProductsLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetProductsEnpoint( offset, pageSize ),
+				portion =>
 				{
-					processAction( product );
-				}
-			} );
+					foreach( var product in portion )
+						processAction( product );
+				} );
 		}
 
 		public async Task< List< ThreeDCartProduct > > GetProductsAsync()
 		{
 			var marker = this.GetMarker();
 			var result = new List< ThreeDCartProduct >();
-			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, GetProductsLimit ), portion => result.AddRange( portion ) );
+			await this.GetCollectionAsync< ThreeDCartProduct >(
+				marker,
+				GetProductsLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetProductsEnpoint( offset, pageSize ),
+				portion => result.AddRange( portion ) );
 			return result;
 		}
 
 		public async Task GetProductsAsync( Action< ThreeDCartProduct > processAction )
 		{
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, GetProductsLimit ), portion =>
-			{
-				foreach( var product in portion )
+			await this.GetCollectionAsync< ThreeDCartProduct >(
+				marker,
+				GetProductsLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetProductsEnpoint( offset, pageSize ),
+				portion =>
 				{
-					processAction( product );
-				}
-			} );
+					foreach( var product in portion )
+						processAction( product );
+				} );
 		}
 
 		public List< Models.Product.GetInventory.ThreeDCartProduct > GetInventory()
 		{
 			var marker = this.GetMarker();
 			var result = new List< Models.Product.GetInventory.ThreeDCartProduct >();
-			this.GetCollection< Models.Product.GetInventory.ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, GetProductsLimit ), portion => result.AddRange( portion ) );
+			this.GetCollection< Models.Product.GetInventory.ThreeDCartProduct >(
+				marker,
+				GetProductsLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetProductsEnpoint( offset, pageSize ),
+				portion => result.AddRange( portion ) );
 			return result;
 		}
 
@@ -90,7 +106,11 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var result = new List< Models.Product.GetInventory.ThreeDCartProduct >();
-			await this.GetCollectionAsync< Models.Product.GetInventory.ThreeDCartProduct >( marker, offset => EndpointsBuilder.GetProductsEnpoint( offset, GetProductsLimit ), portion => result.AddRange( portion ) );
+			await this.GetCollectionAsync< Models.Product.GetInventory.ThreeDCartProduct >(
+				marker,
+				GetProductsLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetProductsEnpoint( offset, pageSize ),
+				portion => result.AddRange( portion ) );
 			return result;
 		}
 
