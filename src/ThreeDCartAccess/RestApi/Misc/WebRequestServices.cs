@@ -13,9 +13,9 @@ namespace ThreeDCartAccess.RestApi.Misc
 {
 	internal class WebRequestServices
 	{
-		private readonly ThreeDCartConfig _config;
+		private readonly IRestThreeDCartConfig _config;
 
-		public WebRequestServices( ThreeDCartConfig config )
+		public WebRequestServices( IRestThreeDCartConfig config )
 		{
 			this._config = config;
 		}

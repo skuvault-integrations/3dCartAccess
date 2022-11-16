@@ -10,10 +10,10 @@ namespace ThreeDCartAccess.RestApi
 {
 	public abstract class ThreeDCartServiceBase
 	{
-		protected readonly ThreeDCartConfig Config;
+		protected readonly IRestThreeDCartConfig Config;
 		internal readonly WebRequestServices WebRequestServices;
 
-		protected ThreeDCartServiceBase( ThreeDCartConfig config )
+		protected ThreeDCartServiceBase( IRestThreeDCartConfig config )
 		{
 			Condition.Requires( config, "config" ).IsNotNull();
 

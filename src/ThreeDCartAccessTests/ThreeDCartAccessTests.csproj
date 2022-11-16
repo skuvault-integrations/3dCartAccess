@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseRestApiTests.cs" />
     <Compile Include="Orders\RestApiOrderTests.cs" />
     <Compile Include="Orders\SoapApiOrderTests.cs" />
     <Compile Include="Products\RestApiProductTests.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="RestApiTestConfig.cs" />
     <Compile Include="SoapApiTestConfig.cs" />
     <Compile Include="SoapApi\Misc\ErrorHelpersTests.cs" />
+    <Compile Include="ThreeDCartConfigVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
