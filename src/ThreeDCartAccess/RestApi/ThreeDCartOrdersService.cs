@@ -15,7 +15,7 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected const int GetOrdersLimit = 300;
 
-		public ThreeDCartOrdersService( IRestThreeDCartConfig config ): base( config )
+		public ThreeDCartOrdersService( RestThreeDCartConfigBase config ): base( config )
 		{
 		}
 

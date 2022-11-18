@@ -4,6 +4,8 @@ namespace ThreeDCartAccess.RestApi.Models.Configuration
 {
 	public abstract class RestThreeDCartConfigBase
 	{
+		public abstract string BaseUrl { get; }
+		
 		public string StoreUrl{ get; }
 		public string PrivateKey{ get; private set; }
 		public string Token{ get; }
@@ -21,7 +23,7 @@ namespace ThreeDCartAccess.RestApi.Models.Configuration
 			this.TimeZone = timeZone;
 		}
 
-		public void SetPrivateKey( string privateKey )
+		internal void SetPrivateKey( string privateKey )
 		{
 			Condition.Requires( privateKey, "privateKey" ).IsNotNullOrWhiteSpace();
 			this.PrivateKey = privateKey;

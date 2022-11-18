@@ -8,9 +8,9 @@ namespace ThreeDCartAccessTests
 		protected string Token { get; set; }
 		protected int TimeZone { get; set; }
 
-		protected IRestThreeDCartConfig GetConfig( ThreeDCartConfigVersion configVersion ) =>
+		protected RestThreeDCartConfigBase GetConfig( ThreeDCartConfigVersion configVersion ) =>
 			configVersion == ThreeDCartConfigVersion.V1
-				? ( IRestThreeDCartConfig )new RestThreeDCartConfigV1( this.StoreUrl, this.Token, this.TimeZone )
+				? (RestThreeDCartConfigBase)new RestThreeDCartConfigV1( this.StoreUrl, this.Token, this.TimeZone )
 				: new RestThreeDCartConfigV2( this.StoreUrl, this.Token, this.TimeZone );
 	}
 }

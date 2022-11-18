@@ -8,8 +8,8 @@ namespace ThreeDCartAccess
 		IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config );
 		IThreeDCartOrdersService CreateSoapOrdersService( ThreeDCartConfig config );
 
-		RestApi.IThreeDCartProductsService CreateRestProductsService( RestApi.Models.Configuration.IRestThreeDCartConfig config );
-		RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestApi.Models.Configuration.IRestThreeDCartConfig config );
+		RestApi.IThreeDCartProductsService CreateRestProductsService( RestApi.Models.Configuration.RestThreeDCartConfigBase config );
+		RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestApi.Models.Configuration.RestThreeDCartConfigBase config );
 	}
 
 	public class ThreeDCartFactory: IThreeDCartFactory
@@ -31,13 +31,13 @@ namespace ThreeDCartAccess
 			return new ThreeDCartOrdersService( config );
 		}
 
-		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestApi.Models.Configuration.IRestThreeDCartConfig config )
+		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestApi.Models.Configuration.RestThreeDCartConfigBase config )
 		{
 			config.SetPrivateKey( this.RestApiPrivateKey );
 			return new RestApi.ThreeDCartProductsService( config );
 		}
 
-		public RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestApi.Models.Configuration.IRestThreeDCartConfig config )
+		public RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestApi.Models.Configuration.RestThreeDCartConfigBase config )
 		{
 			config.SetPrivateKey( this.RestApiPrivateKey );
 			return new RestApi.ThreeDCartOrdersService( config );
