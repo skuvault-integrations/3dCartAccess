@@ -6,16 +6,14 @@ using LINQtoCSV;
 using Netco.Logging;
 using NUnit.Framework;
 using ThreeDCartAccess;
-using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
 namespace ThreeDCartAccessTests.Products
 {
-	public class RestApiProductTests
+	public class RestApiProductTests : BaseRestApiTests
 	{
 		private IThreeDCartFactory ThreeDCartFactory;
-		private ThreeDCartConfig Config;
-
+		
 		[ SetUp ]
 		public void Init()
 		{
@@ -28,23 +26,27 @@ namespace ThreeDCartAccessTests.Products
 			if( testConfig != null )
 			{
 				this.ThreeDCartFactory = new ThreeDCartFactory( testConfig.PrivateKey );
-				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.Token, testConfig.TimeZone );
+				this.StoreUrl = testConfig.StoreUrl;
+				this.Token = testConfig.Token;
+				this.TimeZone = testConfig.TimeZone;
 			}
 		}
 
-		[ Test ]
-		public void IsGetProducts()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public void IsGetProducts( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = service.IsGetProducts();
 
 			result.Should().BeTrue();
 		}
 
-		[ Test ]
-		public void GetProducts()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public void GetProducts( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = service.GetProducts();
 			var product = result.FirstOrDefault( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 
@@ -52,10 +54,11 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
-		[ Test ]
-		public void GetProducts2()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public void GetProducts2( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = new List< ThreeDCartProduct >();
 			service.GetProducts( x => result.Add( x ) );
 
@@ -63,20 +66,22 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
-		[ Test ]
-		public async Task GetProductsAsync()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public async Task GetProductsAsync( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = await service.GetProductsAsync();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
-		[ Test ]
-		public async Task GetProductsAsync2()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public async Task GetProductsAsync2( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = new List< ThreeDCartProduct >();
 			await service.GetProductsAsync( x => result.Add( x ) );
 
@@ -84,30 +89,33 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
-		[ Test ]
-		public void GetInventory()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public void GetInventory( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = service.GetInventory();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
-		[ Test ]
-		public async Task GetInventoryAsync()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public async Task GetInventoryAsync( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var result = await service.GetInventoryAsync();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
-		[ Test ]
-		public void UpdateInventory()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public void UpdateInventory( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var allProducts = service.GetInventory();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 3 } };
@@ -117,10 +125,11 @@ namespace ThreeDCartAccessTests.Products
 			service.UpdateInventory( productForUpdate );
 		}
 
-		[ Test ]
-		public async Task UpdateInventoryAsync()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public async Task UpdateInventoryAsync( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var allProducts = await service.GetInventoryAsync();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 5 } };
@@ -130,10 +139,11 @@ namespace ThreeDCartAccessTests.Products
 			await service.UpdateInventoryAsync( productForUpdate );
 		}
 
-		[ Test ]
-		public void BulkUpdateInventory()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public void BulkUpdateInventory( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var allProducts = service.GetInventory();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 4 } };
@@ -154,10 +164,11 @@ namespace ThreeDCartAccessTests.Products
 			service.UpdateInventory( new List< ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct > { productForUpdate, productForUpdate2 } );
 		}
 
-		[ Test ]
-		public async Task BulkUpdateInventoryAsync()
+		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
+		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
+		public async Task BulkUpdateInventoryAsync( ThreeDCartConfigVersion configVersion )
 		{
-			var service = this.ThreeDCartFactory.CreateRestProductsService( this.Config );
+			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig( configVersion ) );
 			var allProducts = await service.GetInventoryAsync();
 			var product = allProducts.First( x => x.SKUInfo.SKU == "SAMPLE-1003" );
 			var productForUpdate = new ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct( product ) { SKUInfo = { Stock = 2 } };

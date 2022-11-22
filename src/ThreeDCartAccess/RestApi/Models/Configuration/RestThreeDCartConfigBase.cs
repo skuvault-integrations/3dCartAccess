@@ -2,15 +2,16 @@
 
 namespace ThreeDCartAccess.RestApi.Models.Configuration
 {
-	public sealed class ThreeDCartConfig
+	public abstract class RestThreeDCartConfigBase
 	{
-		public string BaseUrl = "http://apirest.3dcart.com/3dCartWebAPI/v1";
-		public string StoreUrl{ get; private set; }
+		public abstract string BaseUrl { get; }
+		
+		public string StoreUrl{ get; }
 		public string PrivateKey{ get; private set; }
-		public string Token{ get; private set; }
-		public int TimeZone{ get; private set; }
+		public string Token{ get; }
+		public int TimeZone{ get; }
 
-		public ThreeDCartConfig( string storeUrl, string token, int timeZone )
+		protected RestThreeDCartConfigBase( string storeUrl, string token, int timeZone )
 		{
 			Condition.Requires( storeUrl, "storeUrl" ).IsNotNullOrWhiteSpace();
 			Condition.Requires( token, "token" ).IsNotNullOrWhiteSpace();
