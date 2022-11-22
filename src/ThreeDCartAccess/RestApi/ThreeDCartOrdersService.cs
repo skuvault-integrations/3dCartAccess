@@ -15,7 +15,7 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected const int GetOrdersLimit = 300;
 
-		public ThreeDCartOrdersService( ThreeDCartConfig config ): base( config )
+		public ThreeDCartOrdersService( RestThreeDCartConfigBase config ): base( config )
 		{
 		}
 
@@ -47,14 +47,16 @@ namespace ThreeDCartAccess.RestApi
 		public void GetNewOrders( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			this.GetCollection< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
-			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
-				foreach( var product in portion )
+			this.GetCollection< ThreeDCartOrder >(
+				marker,
+				GetOrdersLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetNewOrdersEnpoint( offset, pageSize, startDateUtc, endDateUtc, this.Config.TimeZone ),
+				portion =>
 				{
-					processAction( product );
-				}
-			} );
+					portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+					foreach( var product in portion )
+						processAction( product );
+				} );
 		}
 
 		public async Task< List< ThreeDCartOrder > > GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc )
@@ -67,14 +69,16 @@ namespace ThreeDCartAccess.RestApi
 		public async Task GetNewOrdersAsync( DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetNewOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
-			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
-				foreach( var order in portion )
+			await this.GetCollectionAsync< ThreeDCartOrder >(
+				marker,
+				GetOrdersLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetNewOrdersEnpoint( offset, pageSize, startDateUtc, endDateUtc, this.Config.TimeZone ),
+				portion =>
 				{
-					processAction( order );
-				}
-			} );
+					portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+					foreach( var order in portion )
+						processAction( order );
+				} );
 		}
 
 
@@ -82,14 +86,16 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var result = new List< ThreeDCartOrder >();
 			var marker = this.GetMarker();
-			await this.GetCollectionAsync< ThreeDCartOrder >( marker, offset => EndpointsBuilder.GetUpdatedOrdersEnpoint( offset, GetOrdersLimit, startDateUtc, endDateUtc, this.Config.TimeZone ), portion =>
-			{
-				portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
-				foreach( var order in portion )
+			await this.GetCollectionAsync< ThreeDCartOrder >(
+				marker,
+				GetOrdersLimit,
+				( offset, pageSize ) => EndpointsBuilder.GetUpdatedOrdersEnpoint( offset, pageSize, startDateUtc, endDateUtc, this.Config.TimeZone ),
+				portion =>
 				{
-					result.Add( order );
-				}
-			} );
+					portion = this.SetTimeZoneAndFilter( portion, startDateUtc, endDateUtc );
+					foreach( var order in portion )
+						result.Add( order );
+				} );
 
 			return result;
 		}
