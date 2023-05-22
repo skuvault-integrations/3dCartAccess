@@ -34,3 +34,6 @@ build
 log
 packages
 *Credentials*.csv
+# JetBrains Rider
+.idea/
+*.sln.iml
