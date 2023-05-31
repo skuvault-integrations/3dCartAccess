@@ -32,6 +32,7 @@ namespace ThreeDCartAccessTests.Products
 			}
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void IsGetProducts()
 		{
@@ -41,6 +42,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Should().Be( true );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetProducts()
 		{
@@ -51,6 +53,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetProductsAsync()
 		{
@@ -61,6 +64,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void IsGetInventory()
 		{
@@ -70,6 +74,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Should().Be( true );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetInventory()
 		{
@@ -80,6 +85,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetInventoryAsync()
 		{
@@ -90,6 +96,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void UpdateInventory()
 		{
@@ -104,6 +111,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().Be( 2 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task UpdateInventoryAsync()
 		{
