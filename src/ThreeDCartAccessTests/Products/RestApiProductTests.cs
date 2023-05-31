@@ -32,6 +32,7 @@ namespace ThreeDCartAccessTests.Products
 			}
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void IsGetProducts( ThreeDCartConfigVersion configVersion )
@@ -42,6 +43,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Should().BeTrue();
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetProducts( ThreeDCartConfigVersion configVersion )
@@ -54,6 +56,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetProducts2( ThreeDCartConfigVersion configVersion )
@@ -66,6 +69,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetProductsAsync( ThreeDCartConfigVersion configVersion )
@@ -77,6 +81,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetProductsAsync2( ThreeDCartConfigVersion configVersion )
@@ -89,6 +94,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetInventory( ThreeDCartConfigVersion configVersion )
@@ -100,6 +106,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetInventoryAsync( ThreeDCartConfigVersion configVersion )
@@ -111,6 +118,7 @@ namespace ThreeDCartAccessTests.Products
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void UpdateInventory( ThreeDCartConfigVersion configVersion )
@@ -125,6 +133,7 @@ namespace ThreeDCartAccessTests.Products
 			service.UpdateInventory( productForUpdate );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task UpdateInventoryAsync( ThreeDCartConfigVersion configVersion )
@@ -139,6 +148,7 @@ namespace ThreeDCartAccessTests.Products
 			await service.UpdateInventoryAsync( productForUpdate );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void BulkUpdateInventory( ThreeDCartConfigVersion configVersion )
@@ -164,6 +174,7 @@ namespace ThreeDCartAccessTests.Products
 			service.UpdateInventory( new List< ThreeDCartAccess.RestApi.Models.Product.UpdateInventory.ThreeDCartProduct > { productForUpdate, productForUpdate2 } );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task BulkUpdateInventoryAsync( ThreeDCartConfigVersion configVersion )

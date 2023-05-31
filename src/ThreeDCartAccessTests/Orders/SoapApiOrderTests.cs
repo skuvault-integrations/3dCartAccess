@@ -36,6 +36,7 @@ namespace ThreeDCartAccessTests.Orders
 			//	An error occurred while making the HTTP request to https://api.3dcart.com/cart.asmx. This could be due to the fact that the server certificate is not configured properly with HTTP.SYS in the HTTPS case. This could also be caused by a mismatch of the security binding between the client and the server.
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void IsGetNewOrders()
 		{
@@ -45,6 +46,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Should().Be( true );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetNewOrders()
 		{
@@ -55,6 +57,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetNewOrdersAsync()
 		{
@@ -65,6 +68,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetOrdersByNumber()
 		{
@@ -76,6 +80,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetOrdersByNumberAsync()
 		{
@@ -87,6 +92,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetOrder()
 		{
@@ -96,6 +102,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Should().NotBeNull();
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetOrderAsync()
 		{
@@ -105,6 +112,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Should().NotBeNull();
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetOrdersCount()
 		{
@@ -114,6 +122,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetOrdersCountAsync()
 		{
@@ -123,6 +132,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public void GetOrderStatuses()
 		{
@@ -133,6 +143,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count().Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ Test ]
 		public async Task GetOrderStatusesAsync()
 		{

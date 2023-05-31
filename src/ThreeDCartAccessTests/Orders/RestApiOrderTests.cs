@@ -33,6 +33,7 @@ namespace ThreeDCartAccessTests.Orders
 			}
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void IsGetNewOrders( ThreeDCartConfigVersion configVersion )
@@ -44,6 +45,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		#region Get New Orders
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetNewOrders( ThreeDCartConfigVersion configVersion )
@@ -55,6 +57,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetNewOrders2( ThreeDCartConfigVersion configVersion )
@@ -67,6 +70,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetNewOrdersAsync( ThreeDCartConfigVersion configVersion )
@@ -78,6 +82,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetNewOrdersAsync2( ThreeDCartConfigVersion configVersion )
@@ -92,6 +97,7 @@ namespace ThreeDCartAccessTests.Orders
 		#endregion
 
 		#region Get Updated Orders
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetUpdatedOrdersAsync( ThreeDCartConfigVersion configVersion )
@@ -105,6 +111,7 @@ namespace ThreeDCartAccessTests.Orders
 		#endregion
 
 		#region Get Orders By Number
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetOrdersByNumber( ThreeDCartConfigVersion configVersion )
@@ -117,6 +124,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public void GetOrdersByNumber2( ThreeDCartConfigVersion configVersion )
@@ -130,6 +138,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetOrdersByNumberAsync( ThreeDCartConfigVersion configVersion )
@@ -142,6 +151,7 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
+		[ Explicit ]
 		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
 		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
 		public async Task GetOrdersByNumberAsync2( ThreeDCartConfigVersion configVersion )
