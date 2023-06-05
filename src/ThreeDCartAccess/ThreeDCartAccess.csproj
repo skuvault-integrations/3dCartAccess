@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
-    <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigBase.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigV2.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrder.cs" />

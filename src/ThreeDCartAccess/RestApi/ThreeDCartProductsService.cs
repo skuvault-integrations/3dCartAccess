@@ -18,7 +18,7 @@ namespace ThreeDCartAccess.RestApi
 		protected const int GetProductsLimit = 200;
 		protected const int UpdateInventoryLimit = 100;
 
-		public ThreeDCartProductsService( RestThreeDCartConfigBase config ): base( config )
+		public ThreeDCartProductsService( RestThreeDCartConfigV2 config ): base( config )
 		{
 		}
 
