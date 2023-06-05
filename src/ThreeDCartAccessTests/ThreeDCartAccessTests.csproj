@@ -72,7 +72,6 @@
     <Compile Include="RestApiTestConfig.cs" />
     <Compile Include="SoapApiTestConfig.cs" />
     <Compile Include="SoapApi\Misc\ErrorHelpersTests.cs" />
-    <Compile Include="ThreeDCartConfigVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
