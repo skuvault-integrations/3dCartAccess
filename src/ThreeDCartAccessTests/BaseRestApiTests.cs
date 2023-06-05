@@ -8,6 +8,6 @@ namespace ThreeDCartAccessTests
 		protected string Token { get; set; }
 		protected int TimeZone { get; set; }
 
-		protected RestThreeDCartConfigV2 GetConfig() => new RestThreeDCartConfigV2( this.StoreUrl, this.Token, this.TimeZone );
+		protected RestThreeDCartConfig GetConfig() => new RestThreeDCartConfig( this.StoreUrl, this.Token, this.TimeZone );
 	}
 }
