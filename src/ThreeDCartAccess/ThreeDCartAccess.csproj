@@ -12,10 +12,10 @@
     <PackageProjectUrl>https://github.com/skuvault-integrations/3dCartAccess</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skuvault-integrations/3dCartAccess</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/skuvault-integrations/3dCartAccess/blob/master/License.txt</PackageLicenseUrl>
-    <Version>2.2.0-alpha.0</Version>
+    <Version>2.2.0-alpha.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.2.0.1</AssemblyVersion>
+    <FileVersion>2.2.0.1</FileVersion>
     <Description>3dCart webservices API wrapper.</Description>
     <Copyright>Copyright (C) 2023 SkuVault Inc.</Copyright>
   </PropertyGroup>
@@ -48,8 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
-    <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigBase.cs" />
-    <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigV2.cs" />
+    <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrder.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartQuestion.cs" />
@@ -117,7 +116,6 @@
     <Compile Include="SoapApi\ThreeDCartProductsService.cs" />
     <Compile Include="RestApi\IThreeDCartProductsService.cs" />
     <Compile Include="RestApi\Misc\WebRequestServices.cs" />
-    <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigV1.cs" />
     <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProduct.cs" />
     <Compile Include="RestApi\ThreeDCartProductsService.cs" />
     <Compile Include="ThreeDCartFactory.cs" />

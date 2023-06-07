@@ -33,33 +33,30 @@ namespace ThreeDCartAccessTests.Orders
 			}
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public void IsGetNewOrders( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public void IsGetNewOrders()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var result = service.IsGetNewOrders();
 
 			result.Should().BeTrue();
 		}
 
 		#region Get New Orders
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public void GetNewOrders( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public void GetNewOrders()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var result = service.GetNewOrders( new DateTime( 2021, 11, 2 ), new DateTime( 2022, 11, 4 ) );
 
 			result.Should().NotBeNull();
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public void GetNewOrders2( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public void GetNewOrders2()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var result = new List< ThreeDCartOrder >();
 			service.GetNewOrders( DateTime.UtcNow.AddDays( -3 ), DateTime.UtcNow, x => result.Add( x ) );
 
@@ -67,22 +64,20 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public async Task GetNewOrdersAsync( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public async Task GetNewOrdersAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var result = await service.GetNewOrdersAsync( DateTime.UtcNow.AddDays( -1 ), DateTime.UtcNow );
 
 			result.Should().NotBeNull();
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public async Task GetNewOrdersAsync2( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public async Task GetNewOrdersAsync2()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var result = new List< ThreeDCartOrder >();
 			await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -3 ), DateTime.UtcNow, x => result.Add( x ) );
 
@@ -92,11 +87,10 @@ namespace ThreeDCartAccessTests.Orders
 		#endregion
 
 		#region Get Updated Orders
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public async Task GetUpdatedOrdersAsync( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public async Task GetUpdatedOrdersAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var result = await service.GetUpdatedOrdersAsync( DateTime.UtcNow.AddDays( -1 ), DateTime.UtcNow );
 
 			result.Should().NotBeNull();
@@ -105,11 +99,10 @@ namespace ThreeDCartAccessTests.Orders
 		#endregion
 
 		#region Get Orders By Number
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public void GetOrdersByNumber( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public void GetOrdersByNumber()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var numbers = new List< string > { "AB-1043" };
 			var result = service.GetOrdersByNumber( numbers, new DateTime( 2014, 12, 2 ), new DateTime( 2014, 12, 4 ) );
 
@@ -117,11 +110,10 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public void GetOrdersByNumber2( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public void GetOrdersByNumber2()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var numbers = new List< string > { "AB-1043", "AB-1042" };
 			var result = new List< ThreeDCartOrder >();
 			service.GetOrdersByNumber( numbers, DateTime.UtcNow.AddDays( -3 ), DateTime.UtcNow, x => result.Add( x ) );
@@ -130,11 +122,10 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public async Task GetOrdersByNumberAsync( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public async Task GetOrdersByNumberAsync()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var numbers = new List< string > { "AB-1043", "AB-1042" };
 			var result = await service.GetOrdersByNumberAsync( numbers, DateTime.UtcNow.AddDays( -100 ), DateTime.UtcNow );
 
@@ -142,11 +133,10 @@ namespace ThreeDCartAccessTests.Orders
 			result.Count.Should().BeGreaterThan( 0 );
 		}
 
-		[ TestCase( ThreeDCartConfigVersion.V1 ) ]
-		[ TestCase( ThreeDCartConfigVersion.V2 ) ]
-		public async Task GetOrdersByNumberAsync2( ThreeDCartConfigVersion configVersion )
+		[ Test ]
+		public async Task GetOrdersByNumberAsync2()
 		{
-			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig( configVersion ) );
+			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
 			var numbers = new List< string > { "AB-1043" };
 			var result = new List< ThreeDCartOrder >();
 			await service.GetOrdersByNumberAsync( numbers, DateTime.UtcNow.AddHours( -9 ), DateTime.UtcNow, x => result.Add( x ) );
