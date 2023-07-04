@@ -31,7 +31,7 @@ jobs:
         run: dotnet tool install JetBrains.dotCover.GlobalTool -g
 
       - name: Install dependencies
-        run: dotnet restore $SOLUTION_NAME
+        run: dotnet restore $env:SOLUTION_NAME
 
       - name: Get build version
         run: |
@@ -42,7 +42,7 @@ jobs:
         shell: pwsh
 
       - name: Build
-        run: dotnet build $SOLUTION_NAME --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
+        run: dotnet build $env:SOLUTION_NAME --configuration $env:BUILD_CONFIG -p:Version=$env:BUILD_VERSION --no-restore
 
       - name: Unit tests
         run: dotnet dotcover test --no-restore --verbosity normal --dcReportType=HTML --dcOutput="test-results/ThreeDCartAccessTests.html" ".\src\ThreeDCartAccessTests\ThreeDCartAccessTests.csproj"
@@ -59,4 +59,4 @@ jobs:
 
       - name: Publish to package repository
         if: startsWith(github.ref, 'refs/tags')
-        run: dotnet nuget push **\*.$BUILD_VERSION.nupkg --source "github"
+        run: dotnet nuget push **\*.$env:BUILD_VERSION.nupkg --source "github"
