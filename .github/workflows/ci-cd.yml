@@ -16,16 +16,17 @@ jobs:
       BUILD_CONFIG: 'Release'
       SOLUTION_NAME: '.\src\ThreeDCartAccess.sln'
 
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup .NET Core SDK 6.x
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 6.x
-
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+  
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5
+  
       - name: Setup DotCover
         run: dotnet tool install JetBrains.dotCover.GlobalTool -g
 
