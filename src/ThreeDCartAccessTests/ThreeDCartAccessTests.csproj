@@ -73,6 +73,9 @@
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigTests.cs" />
     <Compile Include="SoapApiTestConfig.cs" />
     <Compile Include="SoapApi\Misc\ErrorHelpersTests.cs" />
+    <Compile Include="SoapApi\Models\Configuration\ThreeDCartConfigTests.cs" />
+    <Compile Include="SoapApi\ThreeDCartOrdersServiceTests.cs" />
+    <Compile Include="SoapApi\ThreeDCartProductsServiceTests.cs" />
     <Compile Include="ThreeDCartFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,7 +88,6 @@
       <Name>ThreeDCartAccess</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
