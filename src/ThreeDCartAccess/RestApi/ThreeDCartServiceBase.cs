@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CuttingEdge.Conditions;
+using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
@@ -13,12 +13,23 @@ namespace ThreeDCartAccess.RestApi
 		protected readonly RestThreeDCartConfig Config;
 		internal readonly WebRequestServices WebRequestServices;
 
-		protected ThreeDCartServiceBase( RestThreeDCartConfig config )
+		internal ThreeDCartServiceBase( RestThreeDCartConfig config )
 		{
-			Condition.Requires( config, "config" ).IsNotNull();
-
 			this.Config = config;
 			this.WebRequestServices = new WebRequestServices( config );
+
+			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
+		}
+
+		private IEnumerable< string > GetValidationErrors()
+		{
+			var validationErrors = new List<string>();
+			if ( this.Config == null )
+			{
+				validationErrors.Add( $"{nameof( this.Config )} is null" );
+			}
+			
+			return validationErrors;
 		}
 
 		protected string GetMarker()

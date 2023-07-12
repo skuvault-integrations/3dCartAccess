@@ -196,7 +196,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CuttingEdge.Conditions" Version="1.2.0" />
     <PackageReference Include="Netco" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="ServiceStack.Text" Version="4.0.46" />
     <PackageReference Include="skuvault.integrations.core" Version="1.1.0" />
