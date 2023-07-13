@@ -7,11 +7,7 @@ namespace ThreeDCartAccess.Misc
 {
 	public static class ActionPolicies
 	{
-#if DEBUG
-		private const int RetryCount = 1;
-#else
 		private const int RetryCount = 10;
-#endif
 
 		public static readonly ActionPolicy Submit = ActionPolicy.Handle< Exception >().Retry( RetryCount, ( ex, i ) =>
 		{
