@@ -8,7 +8,7 @@ using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
-namespace ThreeDCartAccessTests.Products
+namespace ThreeDCartAccessTests.Integration.Products
 {
 	public class RestApiProductTests : BaseRestApiTests
 	{
@@ -33,6 +33,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void IsGetProducts()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -42,6 +43,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetProducts()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -53,6 +55,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetProducts2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -64,6 +67,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetProductsAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -74,6 +78,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetProductsAsync2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -85,6 +90,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -95,6 +101,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -105,6 +112,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void UpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -118,6 +126,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task UpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -131,6 +140,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void BulkUpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );
@@ -155,6 +165,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task BulkUpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestProductsService( this.GetConfig() );

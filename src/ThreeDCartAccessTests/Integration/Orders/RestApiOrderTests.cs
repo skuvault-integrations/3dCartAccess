@@ -9,7 +9,7 @@ using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.RestApi.Models.Order;
 
-namespace ThreeDCartAccessTests.Orders
+namespace ThreeDCartAccessTests.Integration.Orders
 {
 	public class RestApiOrderTests : BaseRestApiTests
 	{
@@ -34,6 +34,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void IsGetNewOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -44,6 +45,7 @@ namespace ThreeDCartAccessTests.Orders
 
 		#region Get New Orders
 		[ Test ]
+		[ Explicit ]
 		public void GetNewOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -54,6 +56,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetNewOrders2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -65,6 +68,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetNewOrdersAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -75,6 +79,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetNewOrdersAsync2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -88,6 +93,7 @@ namespace ThreeDCartAccessTests.Orders
 
 		#region Get Updated Orders
 		[ Test ]
+		[ Explicit ]
 		public async Task GetUpdatedOrdersAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -100,6 +106,7 @@ namespace ThreeDCartAccessTests.Orders
 
 		#region Get Orders By Number
 		[ Test ]
+		[ Explicit ]
 		public void GetOrdersByNumber()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -111,6 +118,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetOrdersByNumber2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -123,6 +131,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetOrdersByNumberAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
@@ -134,6 +143,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetOrdersByNumberAsync2()
 		{
 			var service = this.ThreeDCartFactory.CreateRestOrdersService( this.GetConfig() );
