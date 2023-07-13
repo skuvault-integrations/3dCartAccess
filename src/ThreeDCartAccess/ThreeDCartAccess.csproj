@@ -207,4 +207,9 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" PrivateAssets="All" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" PrivateAssets="All" />
   </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName)Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

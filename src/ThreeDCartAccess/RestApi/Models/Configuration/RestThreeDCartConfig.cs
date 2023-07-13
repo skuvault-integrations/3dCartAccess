@@ -45,6 +45,17 @@ namespace ThreeDCartAccess.RestApi.Models.Configuration
 		internal void SetPrivateKey( string privateKey )
 		{
 			this.PrivateKey = privateKey;
+			ValidationHelper.ThrowOnValidationErrors< ThreeDCartFactory >( GetValidationErrorsForSetPrivateKey() );
+		}
+
+		private IEnumerable< string > GetValidationErrorsForSetPrivateKey()
+		{
+			var validationErrors = new List<string>();
+			if ( string.IsNullOrWhiteSpace( this.PrivateKey ) )
+			{
+				validationErrors.Add( $"{nameof( this.PrivateKey )} is null or white space" );
+			}
+			return validationErrors;
 		}
 	}
 }

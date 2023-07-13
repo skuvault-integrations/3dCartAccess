@@ -74,7 +74,6 @@
     <Compile Include="SoapApi\Models\Configuration\ThreeDCartConfigTests.cs" />
     <Compile Include="SoapApi\ThreeDCartOrdersServiceTests.cs" />
     <Compile Include="SoapApi\ThreeDCartProductsServiceTests.cs" />
-    <Compile Include="ThreeDCartFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
