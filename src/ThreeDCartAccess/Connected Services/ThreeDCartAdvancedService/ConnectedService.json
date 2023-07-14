@@ -1,0 +1,46 @@
+{
+  "providerId": "Microsoft.Tools.ServiceModel.Svcutil",
+  "version": "2.0.3",
+  "ExtendedData": {
+    "inputs": [
+      "http://api.3dcart.com/cart_advanced.asmx"
+    ],
+    "internalTypeAccess": true,
+    "namespaceMappings": [
+      "*, ThreeDCartAccess.cartAPIAdvanced"
+    ],
+    "outputFile": "ThreeDCartAdvancedService.cs",
+    "references": [
+      "Microsoft.Bcl.AsyncInterfaces, {Microsoft.Bcl.AsyncInterfaces, 6.0.0}",
+      "Microsoft.CSharp, {Microsoft.CSharp, 4.7.0}",
+      "Microsoft.Extensions.Caching.Abstractions, {Microsoft.Extensions.Caching.Abstractions, 6.0.0}",
+      "Microsoft.Extensions.Caching.Memory, {Microsoft.Extensions.Caching.Memory, 6.0.1}",
+      "Microsoft.Extensions.DependencyInjection, {Microsoft.Extensions.DependencyInjection, 6.0.0}",
+      "Microsoft.Extensions.DependencyInjection.Abstractions, {Microsoft.Extensions.DependencyInjection.Abstractions, 6.0.0}",
+      "Microsoft.Extensions.Http, {Microsoft.Extensions.Http, 6.0.0}",
+      "Microsoft.Extensions.Http.Polly, {Microsoft.Extensions.Http.Polly, 6.0.5}",
+      "Microsoft.Extensions.Logging, {Microsoft.Extensions.Logging, 6.0.0}",
+      "Microsoft.Extensions.Logging.Abstractions, {Microsoft.Extensions.Logging.Abstractions, 6.0.0}",
+      "Microsoft.Extensions.Options, {Microsoft.Extensions.Options, 6.0.0}",
+      "Microsoft.Extensions.Primitives, {Microsoft.Extensions.Primitives, 6.0.0}",
+      "Netco, {Netco, 3.0.0}",
+      "Polly, {Polly, 7.2.3}",
+      "Polly.Contrib.WaitAndRetry, {Polly.Contrib.WaitAndRetry, 1.1.1}",
+      "Polly.Extensions.Http, {Polly.Extensions.Http, 3.0.0}",
+      "ServiceStack.Text, {ServiceStack.Text, 6.2.0}",
+      "SkuVault.Integrations.Core, {SkuVault.Integrations.Core, 1.1.0}",
+      "System.Buffers, {System.Buffers, 4.5.1}",
+      "System.ComponentModel.Annotations, {System.ComponentModel.Annotations, 5.0.0}",
+      "System.Diagnostics.DiagnosticSource, {System.Diagnostics.DiagnosticSource, 6.0.0}",
+      "System.Memory, {System.Memory, 4.5.4}",
+      "System.Numerics.Vectors, {System.Numerics.Vectors, 4.4.0}",
+      "System.Runtime, {System.Runtime, 4.3.1}",
+      "System.Runtime.CompilerServices.Unsafe, {System.Runtime.CompilerServices.Unsafe, 6.0.0}",
+      "System.Text.Encoding.CodePages, {System.Text.Encoding.CodePages, 6.0.0}",
+      "System.Threading.Tasks.Extensions, {System.Threading.Tasks.Extensions, 4.5.4}"
+    ],
+    "sync": true,
+    "targetFramework": "netstandard2.0",
+    "typeReuseMode": "All"
+  }
+}

@@ -7,8 +7,8 @@ using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Product;
-using ThreeDCartAccess.ThreeDCartAdvancedService;
-using ThreeDCartAccess.ThreeDCartService;
+using ThreeDCartAccess.cartAPIAdvanced;
+using ThreeDCartAccess.cartAPI;
 
 namespace ThreeDCartAccess.SoapApi
 {
@@ -24,8 +24,8 @@ namespace ThreeDCartAccess.SoapApi
 		public ThreeDCartProductsService( ThreeDCartConfig config )
 		{
 			this._config = config;
-			this._service = new cartAPISoapClient();
-			this._advancedService = new cartAPIAdvancedSoapClient();
+			this._service = new cartAPISoapClient( cartAPISoapClient.EndpointConfiguration.cartAPISoap12 );
+			this._advancedService = new cartAPIAdvancedSoapClient( cartAPIAdvancedSoapClient.EndpointConfiguration.cartAPIAdvancedSoap12 );
 			this._webRequestServices = new WebRequestServices();
 
 			ValidationHelper.ThrowOnValidationErrors< ThreeDCartProductsService >( GetValidationErrors() );

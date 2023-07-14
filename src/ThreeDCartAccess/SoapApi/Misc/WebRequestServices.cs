@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Xml;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.SoapApi.Models;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
@@ -9,7 +9,7 @@ namespace ThreeDCartAccess.SoapApi.Misc
 {
 	internal class WebRequestServices
 	{
-		public TResponse Execute< TResponse >( string methodName, ThreeDCartConfig config, Func< XElement > func )
+		public TResponse Execute< TResponse >( string methodName, ThreeDCartConfig config, Func< XmlElement > func )
 		{
 			if( methodName == null )
 				methodName = func.Method.Name;
@@ -23,7 +23,7 @@ namespace ThreeDCartAccess.SoapApi.Misc
 			return result;
 		}
 
-		public async Task< TResponse > ExecuteAsync< TResponse >( string methodName, ThreeDCartConfig config, Func< Task< XElement > > func )
+		public async Task< TResponse > ExecuteAsync< TResponse >( string methodName, ThreeDCartConfig config, Func< Task< XmlElement > > func )
 		{
 			if( methodName == null )
 				methodName = func.Method.Name;
@@ -31,7 +31,7 @@ namespace ThreeDCartAccess.SoapApi.Misc
 			this.LogRequest( methodName, config );
 			var funkResult = await func();
 
-			if ( funkResult.Name != null && funkResult.Name.LocalName != "Error" )
+			if ( funkResult.Name != null && funkResult.LocalName != "Error" )
 			{
 				var funkResultStr = funkResult.ToString();
 				this.LogResponse( methodName, config, funkResultStr );
@@ -41,9 +41,9 @@ namespace ThreeDCartAccess.SoapApi.Misc
 			return default( TResponse );
 		}
 
-		public T ParseResult< T >( XElement xElement, string xElementStr )
+		public T ParseResult< T >( XmlElement xElement, string xElementStr )
 		{
-			if( xElement.Name.LocalName == "Error" )
+			if( xElement.LocalName == "Error" )
 			{
 				var error = xElementStr.Deserialize< ThreeDCartError >();
 				return this.ProcessError< T >( error );
@@ -51,7 +51,7 @@ namespace ThreeDCartAccess.SoapApi.Misc
 
 			var result = xElementStr.Deserialize< T >();
 
-			if( xElement.Name.LocalName == "runQueryResponse" )
+			if( xElement.LocalName == "runQueryResponse" )
 			{
 				var queryResult = result as RunQueryResponse;
 				if( queryResult != null && queryResult.Error != null )
