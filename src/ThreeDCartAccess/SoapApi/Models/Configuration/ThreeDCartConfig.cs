@@ -5,26 +5,30 @@ namespace ThreeDCartAccess.SoapApi.Models.Configuration
 {
 	public sealed class ThreeDCartConfig
 	{
-		private readonly string storeUrlRaw;
-		public string StoreUrl => this.storeUrlRaw.ToLower().TrimEnd( '\\', '/' ).Replace( "https://", "" ).Replace( "http://", "" ).Replace( "www.", "" );
+		public string StoreUrl{ get; private set; }
 		public string UserKey{ get; private set; }
 		public int TimeZone{ get; private set; }
 
-		public ThreeDCartConfig( string storeUrl, string userKey, int timeZone )
+		public ThreeDCartConfig( string storeUrlRaw, string userKey, int timeZone )
 		{
-			this.storeUrlRaw = storeUrl;
+			this.StoreUrl = StandardizeStoreUrl( storeUrlRaw );
 			this.UserKey = userKey;
 			this.TimeZone = timeZone;
 
 			ValidationHelper.ThrowOnValidationErrors< ThreeDCartConfig >( GetValidationErrors() );
 		}
 
+		private static string StandardizeStoreUrl( string storeUrlRaw )
+		{
+			return storeUrlRaw?.ToLower().TrimEnd( '\\', '/' ).Replace( "https://", "" ).Replace( "http://", "" ).Replace( "www.", "" ) ?? string.Empty;
+		}
+
 		private IEnumerable< string > GetValidationErrors()
 		{
 			var validationErrors = new List<string>();
-			if ( string.IsNullOrWhiteSpace( this.storeUrlRaw ) )
+			if ( string.IsNullOrWhiteSpace( this.StoreUrl ) )
 			{
-				validationErrors.Add( $"{nameof( this.storeUrlRaw )} is null or white space" );
+				validationErrors.Add( $"{nameof( this.StoreUrl )} is null or white space" );
 			}
 			if ( string.IsNullOrWhiteSpace( this.UserKey ) )
 			{

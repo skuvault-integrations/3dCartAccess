@@ -15,6 +15,7 @@ namespace ThreeDCartAccessTests.RestApi.Models.Configuration
 		[ TestCase( " " ) ]
 		[ TestCase( "	" ) ]
 		[ TestCase( null ) ]
+		[ TestCase( "https://www.\\" ) ]
 		public void Constructor_ShouldThrow_WhenStoreUrlIsWhiteSpace_orNull( string storeUrl )
 		{
 			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( storeUrl: storeUrl, this.validToken ) );
