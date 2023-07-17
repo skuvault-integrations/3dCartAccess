@@ -9,7 +9,7 @@ using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
-namespace ThreeDCartAccessTests.Orders
+namespace ThreeDCartAccessTests.Integration.Orders
 {
 	public class SoapApiOrderTests
 	{
@@ -37,6 +37,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void IsGetNewOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -46,6 +47,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetNewOrders()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -56,6 +58,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetNewOrdersAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -66,6 +69,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetOrdersByNumber()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -77,6 +81,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetOrdersByNumberAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -88,6 +93,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetOrder()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -97,6 +103,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetOrderAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -106,6 +113,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetOrdersCount()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -115,6 +123,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetOrdersCountAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -124,6 +133,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetOrderStatuses()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
@@ -134,6 +144,7 @@ namespace ThreeDCartAccessTests.Orders
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetOrderStatusesAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );

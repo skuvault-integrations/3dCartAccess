@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using CuttingEdge.Conditions;
 using Netco.Extensions;
+using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
@@ -26,12 +25,22 @@ namespace ThreeDCartAccess.SoapApi
 
 		public ThreeDCartOrdersService( ThreeDCartConfig config )
 		{
-			Condition.Requires( config, "config" ).IsNotNull();
-
 			this._config = config;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
 			this._webRequestServices = new WebRequestServices();
+
+			ValidationHelper.ThrowOnValidationErrors< ThreeDCartOrdersService >( GetValidationErrors() );
+		}
+
+		private IEnumerable< string > GetValidationErrors()
+		{
+			var validationErrors = new List<string>();
+			if ( this._config == null )
+			{
+				validationErrors.Add( $"{nameof( this._config )} is null" );
+			}
+			return validationErrors;
 		}
 
 		/// <summary>Verify that can get new orders. Will return true on success and throw on failure.</summary>

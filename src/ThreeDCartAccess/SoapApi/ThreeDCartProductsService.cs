@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CuttingEdge.Conditions;
+using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
@@ -23,12 +23,23 @@ namespace ThreeDCartAccess.SoapApi
 
 		public ThreeDCartProductsService( ThreeDCartConfig config )
 		{
-			Condition.Requires( config, "config" ).IsNotNull();
-
 			this._config = config;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
 			this._webRequestServices = new WebRequestServices();
+
+			ValidationHelper.ThrowOnValidationErrors< ThreeDCartProductsService >( GetValidationErrors() );
+		}
+
+		private IEnumerable< string > GetValidationErrors()
+		{
+			var validationErrors = new List<string>();
+			if ( this._config == null )
+			{
+				validationErrors.Add( $"{nameof( this._config )} is null" );
+			}
+			
+			return validationErrors;
 		}
 
 		/// <summary>Verify that can get products. Will return true on success and throw on failure.</summary>

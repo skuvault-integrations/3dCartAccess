@@ -12,10 +12,10 @@
     <PackageProjectUrl>https://github.com/skuvault-integrations/3dCartAccess</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skuvault-integrations/3dCartAccess</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/skuvault-integrations/3dCartAccess/blob/master/License.txt</PackageLicenseUrl>
-    <Version>2.2.0</Version>
+    <Version>2.3.0-alpha.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.3.0.3</AssemblyVersion>
+    <FileVersion>2.3.0.3</FileVersion>
     <Description>3dCart webservices API wrapper.</Description>
     <Copyright>Copyright (C) 2023 SkuVault Inc.</Copyright>
   </PropertyGroup>
@@ -196,9 +196,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CuttingEdge.Conditions" Version="1.2.0" />
-    <PackageReference Include="Netco" Version="2.0.2" PrivateAssets="All" />
-    <PackageReference Include="ServiceStack.Text" Version="4.0.46" />
+    <PackageReference Include="Netco" Version="3.0.0" PrivateAssets="All" />
+    <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
+    <PackageReference Include="skuvault.integrations.core" Version="1.1.0" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
@@ -206,5 +206,10 @@
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" PrivateAssets="All" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" PrivateAssets="All" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.4.*" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName)Tests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ using ThreeDCartAccess;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Product;
 
-namespace ThreeDCartAccessTests.Products
+namespace ThreeDCartAccessTests.Integration.Products
 {
 	public class SoapApiProductTests
 	{
@@ -33,6 +33,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void IsGetProducts()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -42,6 +43,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetProducts()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -52,6 +54,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetProductsAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -62,6 +65,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void IsGetInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -71,6 +75,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void GetInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -81,6 +86,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task GetInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -91,6 +97,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public void UpdateInventory()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
@@ -105,6 +112,7 @@ namespace ThreeDCartAccessTests.Products
 		}
 
 		[ Test ]
+		[ Explicit ]
 		public async Task UpdateInventoryAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapProductsService( this.Config );
