@@ -196,7 +196,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Netco" Version="3.0.0" PrivateAssets="All" />
+    <PackageReference Include="Netco" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
     <PackageReference Include="skuvault.integrations.core" Version="1.1.0" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" PrivateAssets="All" />
