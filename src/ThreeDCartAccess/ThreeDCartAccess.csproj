@@ -3,9 +3,8 @@
   <PropertyGroup>
     <RootNamespace>ThreeDCartAccess</RootNamespace>
     <AssemblyName>ThreeDCartAccess</AssemblyName>
-    <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>11</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <Authors>SkuVault</Authors>
     <Company>SkuVault Inc.</Company>
@@ -18,6 +17,7 @@
     <FileVersion>2.3.0.3</FileVersion>
     <Description>3dCart webservices API wrapper.</Description>
     <Copyright>Copyright (C) 2023 SkuVault Inc.</Copyright>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
