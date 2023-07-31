@@ -12,10 +12,10 @@
     <PackageProjectUrl>https://github.com/skuvault-integrations/3dCartAccess</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skuvault-integrations/3dCartAccess</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/skuvault-integrations/3dCartAccess/blob/master/License.txt</PackageLicenseUrl>
-    <Version>2.3.0-alpha.3</Version>
+    <Version>2.3.0-alpha.5</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.3.0.3</AssemblyVersion>
-    <FileVersion>2.3.0.3</FileVersion>
+    <AssemblyVersion>2.3.0.5</AssemblyVersion>
+    <FileVersion>2.3.0.5</FileVersion>
     <Description>3dCart webservices API wrapper.</Description>
     <Copyright>Copyright (C) 2023 SkuVault Inc.</Copyright>
   </PropertyGroup>
@@ -196,7 +196,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Netco" Version="3.0.0" PrivateAssets="All" />
+    <PackageReference Include="CuttingEdge.Conditions" Version="1.2.0" />
+    <PackageReference Include="Netco" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
     <PackageReference Include="skuvault.integrations.core" Version="1.1.0" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" PrivateAssets="All" />
