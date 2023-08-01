@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SkuVault.Integrations.Core.Helpers;
-using ThreeDCartAccess.Misc;
+using ThreeDCartAccess.ResiliencePolicies;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
@@ -11,12 +13,14 @@ namespace ThreeDCartAccess.RestApi
 	public abstract class ThreeDCartServiceBase
 	{
 		protected readonly RestThreeDCartConfig Config;
-		internal readonly WebRequestServices WebRequestServices;
+		protected readonly ILogger Logger;
+		internal readonly RestWebRequestServices _restWebRequestServices;
 
-		internal ThreeDCartServiceBase( RestThreeDCartConfig config )
+		internal ThreeDCartServiceBase( RestThreeDCartConfig config, ILogger logger )
 		{
 			this.Config = config;
-			this.WebRequestServices = new WebRequestServices( config );
+			this.Logger = logger;
+			this._restWebRequestServices = new RestWebRequestServices( config, logger );
 
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}
@@ -43,7 +47,10 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
+				portion = PolicyRegistry.CreateGetPolicy().Execute(
+					( _, _ ) => this._restWebRequestServices.GetResponse< List< T > >( endpoint, marker ),
+					new PolicyContext( this.Logger ),
+					new CancellationToken() );
 				if( portion == null || portion.Count == 0 )
 					break;
 
@@ -62,7 +69,10 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
+				portion = await PolicyRegistry.CreateGetAsyncPolicy().ExecuteAsync(
+					async ( _, _ ) => await this._restWebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ),
+					new PolicyContext( this.Logger ),
+					new CancellationToken() );
 				if( portion == null || portion.Count == 0 )
 					break;
 

@@ -4,7 +4,7 @@
     <RootNamespace>ThreeDCartAccess</RootNamespace>
     <AssemblyName>ThreeDCartAccess</AssemblyName>
     <RestorePackages>true</RestorePackages>
-    <LangVersion>11</LangVersion>
+    <LangVersion>default</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <Authors>SkuVault</Authors>
     <Company>SkuVault Inc.</Company>
@@ -37,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ThreeDCartSettings.cs" />
+    <Compile Include="DependencyInjection\ServiceCollectionExtensions.cs" />
+    <Compile Include="ResiliencePolicies\PolicyContext.cs" />
+    <Compile Include="ResiliencePolicies\PolicyRegistry.cs" />
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />
@@ -66,12 +70,10 @@
     <Compile Include="RestApi\ThreeDCartServiceBase.cs" />
     <Compile Include="SoapApi\IThreeDCartOrdersService.cs" />
     <Compile Include="SoapApi\IThreeDCartProductsService.cs" />
-    <Compile Include="Misc\ActionPolicies.cs" />
     <Compile Include="SoapApi\Misc\ErrorHelpers.cs" />
     <Compile Include="SoapApi\Misc\ScriptsBuilder.cs" />
-    <Compile Include="Misc\ThreeDCartLogger.cs" />
     <Compile Include="RestApi\Misc\EndpointsBuilder.cs" />
-    <Compile Include="SoapApi\Misc\WebRequestServices.cs" />
+    <Compile Include="SoapApi\Misc\SoapWebRequestServices.cs" />
     <Compile Include="SoapApi\Misc\XmlSerializeHelpers.cs" />
     <Compile Include="SoapApi\Models\Configuration\ThreeDCartConfig.cs" />
     <Compile Include="SoapApi\Models\Order\ThreeDCartBillingAddress.cs" />
@@ -105,7 +107,7 @@
     <Compile Include="SoapApi\ThreeDCartOrdersService.cs" />
     <Compile Include="SoapApi\ThreeDCartProductsService.cs" />
     <Compile Include="RestApi\IThreeDCartProductsService.cs" />
-    <Compile Include="RestApi\Misc\WebRequestServices.cs" />
+    <Compile Include="RestApi\Misc\RestWebRequestServices.cs" />
     <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProduct.cs" />
     <Compile Include="RestApi\ThreeDCartProductsService.cs" />
     <Compile Include="ThreeDCartFactory.cs" />
@@ -197,6 +199,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Netco" Version="3.0.0" PrivateAssets="All" />
+    <PackageReference Include="Polly" Version="7.2.4" />
+    <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
     <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
     <PackageReference Include="skuvault.integrations.core" Version="1.1.0" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" PrivateAssets="All" />

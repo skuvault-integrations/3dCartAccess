@@ -1,14 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using ThreeDCartAccess.Misc;
+using Microsoft.Extensions.Logging;
 using ThreeDCartAccess.SoapApi.Models;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
 namespace ThreeDCartAccess.SoapApi.Misc
 {
-	internal class WebRequestServices
+	public interface ISoapWebRequestServices
 	{
+		TResponse Execute< TResponse >( string methodName, ThreeDCartConfig config, Func< XElement > func );
+		Task< TResponse > ExecuteAsync< TResponse >( string methodName, ThreeDCartConfig config, Func< Task< XElement > > func );
+		T ParseResult< T >( XElement xElement, string xElementStr );
+	}
+
+	internal class SoapWebRequestServices: ISoapWebRequestServices
+	{
+		private readonly ILogger _logger;
+
+		public SoapWebRequestServices(ILogger logger )
+		{
+			this._logger = logger;
+		}
+
 		public TResponse Execute< TResponse >( string methodName, ThreeDCartConfig config, Func< XElement > func )
 		{
 			if( methodName == null )
@@ -70,14 +84,12 @@ namespace ThreeDCartAccess.SoapApi.Misc
 
 		private void LogRequest( string methodName, ThreeDCartConfig config )
 		{
-			var logstr = string.Format( "Request for {0}\tStoreUrl:{1}", methodName, config.StoreUrl );
-			ThreeDCartLogger.Log.Trace( logstr );
+			this._logger.LogTrace( "Request for {MethodName}\tStoreUrl:{Url}", methodName, config.StoreUrl );
 		}
 
 		private void LogResponse( string methodName, ThreeDCartConfig config, string response )
 		{
-			var logstr = string.Format( "Response for {0}\tStoreUrl:{1}\tData:\n {2}", methodName, config.StoreUrl, response );
-			ThreeDCartLogger.Log.Trace( logstr );
+			this._logger.LogTrace( "Response for {MethodName}\tStoreUrl:{Url}\tData:\n {Response}", methodName, config.StoreUrl, response );
 		}
 	}
 }

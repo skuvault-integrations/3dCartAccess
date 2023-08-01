@@ -2,9 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Netco.Extensions;
-using ThreeDCartAccess.Misc;
+using ThreeDCartAccess.ResiliencePolicies;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Order;
@@ -15,7 +17,7 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected const int GetOrdersLimit = 300;
 
-		public ThreeDCartOrdersService( RestThreeDCartConfig config ): base( config )
+		public ThreeDCartOrdersService( RestThreeDCartConfig config, ILogger logger ): base( config, logger )
 		{
 		}
 
@@ -27,7 +29,7 @@ namespace ThreeDCartAccess.RestApi
 				startDateUtc = startDateUtc ?? DateTime.UtcNow.AddDays( -30 );
 				endDateUtc = endDateUtc ?? DateTime.UtcNow.AddDays( 1 );
 				var endpoint = EndpointsBuilder.GetNewOrdersEnpoint( 1, GetOrdersLimit, startDateUtc.Value, endDateUtc.Value, this.Config.TimeZone );
-				this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker );
+				this._restWebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker );
 				return true;
 			}
 			catch( Exception )
@@ -115,7 +117,10 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var invoiceNumber in invoiceNumbers )
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
-				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
+				var portion = PolicyRegistry.CreateGetPolicy().Execute(
+					( _, _ ) => this._restWebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ),
+					new PolicyContext( this.Logger ),
+					new CancellationToken(  ) );
 				if( portion == null )
 					continue;
 
@@ -140,7 +145,10 @@ namespace ThreeDCartAccess.RestApi
 			await invoiceNumbers.DoInBatchAsync( 10, async invoiceNumber =>
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
-				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
+				var portion = await PolicyRegistry.CreateGetAsyncPolicy().ExecuteAsync(
+					async ( _, _ ) => await this._restWebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ),
+					new PolicyContext( this.Logger ),
+					new CancellationToken() );
 				if( portion == null )
 					return;
 

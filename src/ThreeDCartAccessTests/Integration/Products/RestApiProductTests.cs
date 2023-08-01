@@ -3,32 +3,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LINQtoCSV;
-using Netco.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using ThreeDCartAccess;
+using ThreeDCartAccess.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
+using ThreeDCartAccess.SoapApi.Misc;
 
 namespace ThreeDCartAccessTests.Integration.Products
 {
 	public class RestApiProductTests : BaseRestApiTests
 	{
 		private IThreeDCartFactory ThreeDCartFactory;
-		
+		private ILogger _logger;
+
 		[ SetUp ]
 		public void Init()
 		{
-			NetcoLogger.LoggerFactory = new ConsoleLoggerFactory();
+			this._logger = TestHelper.CreateLogger();
 			const string credentialsFilePath = @"..\..\Files\RestApiThreeDCartCredentials.csv";
 
 			var cc = new CsvContext();
-			var testConfig = cc.Read< RestApiTestConfig >( credentialsFilePath, new CsvFileDescription { FirstLineHasColumnNames = true, IgnoreUnknownColumns = true } ).FirstOrDefault();
+			var rawTestConfig = cc.Read< RestApiTestConfig >( credentialsFilePath, new CsvFileDescription { FirstLineHasColumnNames = true, IgnoreUnknownColumns = true } ).FirstOrDefault();
+			var testConfig = Options.Create( new ThreeDCartSettings() );
 
 			if( testConfig != null )
 			{
-				this.ThreeDCartFactory = new ThreeDCartFactory( testConfig.PrivateKey );
-				this.StoreUrl = testConfig.StoreUrl;
-				this.Token = testConfig.Token;
-				this.TimeZone = testConfig.TimeZone;
+				this.ThreeDCartFactory = new ThreeDCartFactory( new SoapWebRequestServices( this._logger ), testConfig, this._logger );
+				this.StoreUrl = rawTestConfig.StoreUrl;
+				this.Token = rawTestConfig.Token;
+				this.TimeZone = rawTestConfig.TimeZone;
 			}
 		}
 

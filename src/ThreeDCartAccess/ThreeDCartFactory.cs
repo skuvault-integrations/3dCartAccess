@@ -1,5 +1,10 @@
-﻿using ThreeDCartAccess.RestApi.Models.Configuration;
+﻿using System;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ThreeDCartAccess.Configuration;
+using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi;
+using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
 namespace ThreeDCartAccess
@@ -13,35 +18,42 @@ namespace ThreeDCartAccess
 		RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestThreeDCartConfig config );
 	}
 
-	public class ThreeDCartFactory: IThreeDCartFactory
+	/// <summary>
+	/// This class represents the entry point of the ThreeDCartLibrary.
+	/// </summary>
+	public sealed class ThreeDCartFactory: IThreeDCartFactory
 	{
-		public string RestApiPrivateKey{ get; private set; }
+		private readonly ISoapWebRequestServices _soapWebRequestServices;
+		private string RestApiPrivateKey{ get; }
+		private readonly ILogger _logger;
 
-		public ThreeDCartFactory( string restApiPrivateKey = null )
+		public ThreeDCartFactory( ISoapWebRequestServices soapWebRequestServices, IOptions<ThreeDCartSettings> settings, ILogger logger )
 		{
-			this.RestApiPrivateKey = restApiPrivateKey;
+			this._soapWebRequestServices = soapWebRequestServices ?? throw new ArgumentNullException( nameof(soapWebRequestServices) );
+			this.RestApiPrivateKey = settings.Value?.PrivateApiKey ?? throw new ArgumentNullException(nameof(settings));
+			this._logger = logger;
 		}
 
 		public IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config )
 		{
-			return new ThreeDCartProductsService( config );
+			return new ThreeDCartProductsService( config, this._logger );
 		}
 
 		public IThreeDCartOrdersService CreateSoapOrdersService( ThreeDCartConfig config )
 		{
-			return new ThreeDCartOrdersService( config );
+			return new ThreeDCartOrdersService( this._soapWebRequestServices, config, this._logger );
 		}
 
 		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestThreeDCartConfig config )
 		{
 			config.SetPrivateKey( this.RestApiPrivateKey );
-			return new RestApi.ThreeDCartProductsService( config );
+			return new RestApi.ThreeDCartProductsService( config, this._logger );
 		}
 
 		public RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestThreeDCartConfig config )
 		{
 			config.SetPrivateKey( this.RestApiPrivateKey );
-			return new RestApi.ThreeDCartOrdersService( config );
+			return new RestApi.ThreeDCartOrdersService( config, this._logger );
 		}
 	}
 }
