@@ -58,17 +58,6 @@ namespace ThreeDCartAccessTests.RestApi.Models.Configuration
 			Assert.That( result.StoreUrl, Is.EqualTo( storeUrlStandardized ));
 		}
 
-		[ TestCase( "" ) ]
-		[ TestCase( " " ) ]
-		[ TestCase( "	" ) ]
-		[ TestCase( null ) ]
-		public void SetPrivateKey_ShouldThrow_WhenPrivateKeyIsWhiteSpace_orNull( string privateKey )
-		{
-			var config = CreateRestThreeDCartConfig( this.validStoreUrl, this.validToken );
-
-			Assert.Throws< ArgumentException >( () => config.SetPrivateKey( privateKey ) );
-		}
-
 		/// <summary>
 		/// Instantiate RestThreeDCartConfig
 		/// </summary>

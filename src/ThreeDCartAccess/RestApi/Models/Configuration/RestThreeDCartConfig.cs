@@ -8,7 +8,6 @@ namespace ThreeDCartAccess.RestApi.Models.Configuration
 		public string BaseUrl => "http://apirest.3dcart.com/3dCartWebAPI/v2";
 
 		public string StoreUrl{ get; private set; }
-		public string PrivateKey{ get; private set; }
 		public string Token{ get; }
 		public int TimeZone{ get; }
 
@@ -42,22 +41,6 @@ namespace ThreeDCartAccess.RestApi.Models.Configuration
 				validationErrors.Add( $"{nameof( this.TimeZone )} is less than -12 or greater than 12" );
 			}
 			
-			return validationErrors;
-		}
-
-		internal void SetPrivateKey( string privateKey )
-		{
-			this.PrivateKey = privateKey;
-			ValidationHelper.ThrowOnValidationErrors< ThreeDCartFactory >( GetValidationErrorsForSetPrivateKey() );
-		}
-
-		private IEnumerable< string > GetValidationErrorsForSetPrivateKey()
-		{
-			var validationErrors = new List<string>();
-			if ( string.IsNullOrWhiteSpace( this.PrivateKey ) )
-			{
-				validationErrors.Add( $"{nameof( this.PrivateKey )} is null or white space" );
-			}
 			return validationErrors;
 		}
 	}

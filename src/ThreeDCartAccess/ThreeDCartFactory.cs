@@ -1,4 +1,5 @@
-﻿using ThreeDCartAccess.RestApi.Models.Configuration;
+﻿using Microsoft.Extensions.Options;
+using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
@@ -15,11 +16,11 @@ namespace ThreeDCartAccess
 
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
-		public string RestApiPrivateKey{ get; private set; }
+		public string RestApiPrivateKey{ get; }
 
-		public ThreeDCartFactory( string restApiPrivateKey = null )
+		public ThreeDCartFactory( IOptions< SkuVaultDeveloperSettings > settings )
 		{
-			this.RestApiPrivateKey = restApiPrivateKey;
+			this.RestApiPrivateKey = settings?.Value?.PrivateApiKey;
 		}
 
 		public IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config )
@@ -34,14 +35,12 @@ namespace ThreeDCartAccess
 
 		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestThreeDCartConfig config )
 		{
-			config.SetPrivateKey( this.RestApiPrivateKey );
-			return new RestApi.ThreeDCartProductsService( config );
+			return new RestApi.ThreeDCartProductsService( config, this.RestApiPrivateKey );
 		}
 
 		public RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestThreeDCartConfig config )
 		{
-			config.SetPrivateKey( this.RestApiPrivateKey );
-			return new RestApi.ThreeDCartOrdersService( config );
+			return new RestApi.ThreeDCartOrdersService( config, this.RestApiPrivateKey );
 		}
 	}
 }

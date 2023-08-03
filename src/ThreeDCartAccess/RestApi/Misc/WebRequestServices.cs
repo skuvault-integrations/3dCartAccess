@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ServiceStack;
+using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Models;
 using ThreeDCartAccess.RestApi.Models.Configuration;
@@ -14,10 +15,26 @@ namespace ThreeDCartAccess.RestApi.Misc
 	internal class WebRequestServices
 	{
 		private readonly RestThreeDCartConfig _config;
+		private readonly string RestApiPrivateKey;
 
-		public WebRequestServices( RestThreeDCartConfig config )
+		public WebRequestServices( RestThreeDCartConfig config, string restApiPrivateKey )
 		{
 			this._config = config;
+			this.RestApiPrivateKey = restApiPrivateKey;
+
+			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
+		}
+
+		//TODO TD-257 Add tests
+		private IEnumerable< string > GetValidationErrors()
+		{
+			var validationErrors = new List<string>();
+			if ( string.IsNullOrWhiteSpace( this.RestApiPrivateKey ) )
+			{
+				validationErrors.Add( $"{nameof( this.RestApiPrivateKey )} is null or white space" );
+			}
+			
+			return validationErrors;
 		}
 
 		public T GetResponse< T >( string endpoint, string marker )
@@ -110,7 +127,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			var request = ( HttpWebRequest )WebRequest.Create( uri );
 
 			request.Method = WebRequestMethods.Http.Get;
-			request.Headers.Add( "privatekey", this._config.PrivateKey );
+			request.Headers.Add( "privatekey", this.RestApiPrivateKey );
 			request.Headers.Add( "token", this._config.Token );
 			request.Headers.Add( "secureUrl", this._config.StoreUrl );
 
@@ -124,7 +141,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 
 			request.Method = WebRequestMethods.Http.Put;
 			request.ContentType = "application/json";
-			request.Headers.Add( "privatekey", this._config.PrivateKey );
+			request.Headers.Add( "privatekey", this.RestApiPrivateKey );
 			request.Headers.Add( "token", this._config.Token );
 			request.Headers.Add( "secureUrl", this._config.StoreUrl );
 

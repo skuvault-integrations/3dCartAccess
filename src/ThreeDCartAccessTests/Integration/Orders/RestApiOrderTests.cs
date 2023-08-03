@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LINQtoCSV;
+using Microsoft.Extensions.Options;
 using Netco.Logging;
 using NUnit.Framework;
 using ThreeDCartAccess;
+using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Order;
 
 namespace ThreeDCartAccessTests.Integration.Orders
@@ -26,7 +28,8 @@ namespace ThreeDCartAccessTests.Integration.Orders
 
 			if( testConfig != null )
 			{
-				this.ThreeDCartFactory = new ThreeDCartFactory( testConfig.PrivateKey );
+				var testDevSettings = Options.Create( new SkuVaultDeveloperSettings{ PrivateApiKey = testConfig.PrivateKey } );
+				this.ThreeDCartFactory = new ThreeDCartFactory( testDevSettings );
 				this.StoreUrl = testConfig.StoreUrl;
 				this.Token = testConfig.Token;
 				this.TimeZone = testConfig.TimeZone;

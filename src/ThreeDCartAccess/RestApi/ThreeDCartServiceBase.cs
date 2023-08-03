@@ -13,10 +13,10 @@ namespace ThreeDCartAccess.RestApi
 		protected readonly RestThreeDCartConfig Config;
 		internal readonly WebRequestServices WebRequestServices;
 
-		internal ThreeDCartServiceBase( RestThreeDCartConfig config )
+		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey )
 		{
 			this.Config = config;
-			this.WebRequestServices = new WebRequestServices( config );
+			this.WebRequestServices = new WebRequestServices( config, restApiPrivateKey );
 
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}

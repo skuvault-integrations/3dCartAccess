@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />
+    <Compile Include="RestApi\Models\Configuration\SkuVaultDeveloperSettings.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrder.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartQuestion.cs" />
