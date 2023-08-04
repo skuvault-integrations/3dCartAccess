@@ -1,8 +1,9 @@
 ﻿namespace ThreeDCartAccess.RestApi.Models.Configuration;
 
 /// <summary>
-/// Contains general configuration for the ThreeDCart access library.
+/// General settings for the ThreeDCart access library.
 /// </summary>
+//TODO TD-257 Rename to ThreeDCartSettings
 public sealed class SkuVaultDeveloperSettings
 {
     public string PrivateApiKey { get; set; }

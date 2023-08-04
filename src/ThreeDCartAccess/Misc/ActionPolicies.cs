@@ -13,25 +13,25 @@ namespace ThreeDCartAccess.Misc
 
 		public static ActionPolicy Submit( ILogger logger ) => ActionPolicy.Handle< Exception >().Retry( RetryCount, ( ex, i ) =>
 		{
-			logger?.LogTrace( ex, "Retrying 3dCart API submit call for the {0} time", i );
+			logger.LogTrace( ex, "Retrying 3dCart API submit call for the {0} time", i );
 			SystemUtil.Sleep( TimeSpan.FromSeconds( 10 + 20 * i ) );
 		} );
 
 		public static ActionPolicyAsync SubmitAsync( ILogger logger ) => ActionPolicyAsync.Handle< Exception >().RetryAsync( RetryCount, async ( ex, i ) =>
 		{
-			logger?.LogTrace( ex, "Retrying 3dCart API submit call for the {0} time", i );
+			logger.LogTrace( ex, "Retrying 3dCart API submit call for the {0} time", i );
 			await Task.Delay( TimeSpan.FromSeconds( 10 + 20 * i ) );
 		} );
 
 		public static ActionPolicy Get( ILogger logger ) => ActionPolicy.Handle< Exception >().Retry( RetryCount, ( ex, i ) =>
 		{
-			logger?.LogTrace( ex, "Retrying 3dCart API get call for the {AttemptCount} time", i );
+			logger.LogTrace( ex, "Retrying 3dCart API get call for the {AttemptCount} time", i );
 			SystemUtil.Sleep( TimeSpan.FromSeconds( 10 + 20 * i ) );
 		} );
 
 		public static ActionPolicyAsync GetAsync( ILogger logger ) => ActionPolicyAsync.Handle< Exception >().RetryAsync( RetryCount, async ( ex, i ) =>
 		{
-			logger?.LogTrace( ex, "Retrying 3dCart API get call for the {AttemptCount} time", i );
+			logger.LogTrace( ex, "Retrying 3dCart API get call for the {AttemptCount} time", i );
 			await Task.Delay( TimeSpan.FromSeconds( 10 + 20 * i ) );
 		} );
 	}

@@ -218,7 +218,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			var httpWebResponse = ex.Response as HttpWebResponse;
 			if( httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.NotFound )
 			{
-				this._logger?.LogTrace( "Marker: '{Mark}'. Skip not found exception.\n{Error}", marker, jsonError );
+				this._logger.LogTrace( "Marker: '{Mark}'. Skip not found exception.\n{Error}", marker, jsonError );
 				return default(T);
 			}
 
@@ -229,7 +229,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			var error = errors.First();
 			if( error.Message.Equals( "Offset amount exceeds the total number of records", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				this._logger?.LogTrace( "Marker: '{Mark}'. Skip exception for paging.\n{Error}", marker, jsonError );
+				this._logger.LogTrace( "Marker: '{Mark}'. Skip exception for paging.\n{Error}", marker, jsonError );
 				return default(T);
 			}
 
@@ -238,12 +238,12 @@ namespace ThreeDCartAccess.RestApi.Misc
 
 		private void LogGetInfo( string url, string marker )
 		{
-			this._logger?.LogTrace( "Marker: '{Mark}'. GET call for url '{Url}'", marker, url );
+			this._logger.LogTrace( "Marker: '{Mark}'. GET call for url '{Url}'", marker, url );
 		}
 
 		private void LogGetInfoResult( string url, HttpStatusCode statusCode, string jsonContent, string marker )
 		{
-			this._logger?.LogTrace( "Marker: '{Mark}'. GET call for url '{Url}' has been completed with code '{StatusCode}'.\n{JsonContent}", 
+			this._logger.LogTrace( "Marker: '{Mark}'. GET call for url '{Url}' has been completed with code '{StatusCode}'.\n{JsonContent}", 
 				marker, url, statusCode, jsonContent );
 		}
 
@@ -254,12 +254,12 @@ namespace ThreeDCartAccess.RestApi.Misc
 
 		private void LogPutInfo( string url, string jsonContent, string marker )
 		{
-			this._logger?.LogTrace( "Marker: '{Mark}'. PUT/POST data for url '{Url}':\n{JsonContent}", marker, url, jsonContent );
+			this._logger.LogTrace( "Marker: '{Mark}'. PUT/POST data for url '{Url}':\n{JsonContent}", marker, url, jsonContent );
 		}
 
 		private void LogPutInfoResult( string url, HttpStatusCode statusCode, string jsonContent, string marker )
 		{
-			this._logger?.LogTrace( "Marker: '{Mark}'. PUT/POST data for url '{Url}' has been completed with code '{StatusCode}'.\n{JsonContent}", marker, url, statusCode, jsonContent );
+			this._logger.LogTrace( "Marker: '{Mark}'. PUT/POST data for url '{Url}' has been completed with code '{StatusCode}'.\n{JsonContent}", marker, url, statusCode, jsonContent );
 		}
 
 		private Exception ExceptionForPutInfo( string url, Exception ex, string marker )

@@ -2,35 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LINQtoCSV;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using ThreeDCartAccess;
-using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
 
 namespace ThreeDCartAccessTests.Integration.Products
 {
 	public class RestApiProductTests : BaseRestApiTests
 	{
-		private IThreeDCartFactory ThreeDCartFactory;
-		
 		[ SetUp ]
 		public void Init()
 		{
-			const string credentialsFilePath = @"..\..\Files\RestApiThreeDCartCredentials.csv";
-
-			var cc = new CsvContext();
-			var testConfig = cc.Read< RestApiTestConfig >( credentialsFilePath, new CsvFileDescription { FirstLineHasColumnNames = true, IgnoreUnknownColumns = true } ).FirstOrDefault();
-
-			if( testConfig != null )
-			{
-				var testDevSettings = Options.Create( new SkuVaultDeveloperSettings{ PrivateApiKey = testConfig.PrivateKey } );
-				this.ThreeDCartFactory = new ThreeDCartFactory( testDevSettings, logger: null );
-				this.StoreUrl = testConfig.StoreUrl;
-				this.Token = testConfig.Token;
-				this.TimeZone = testConfig.TimeZone;
-			}
+			base.GetCredentials();
 		}
 
 		[ Test ]

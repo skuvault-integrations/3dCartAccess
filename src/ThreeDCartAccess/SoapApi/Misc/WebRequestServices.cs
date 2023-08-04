@@ -77,12 +77,12 @@ namespace ThreeDCartAccess.SoapApi.Misc
 
 		private void LogRequest( string methodName, ThreeDCartConfig config )
 		{
-			this._logger?.LogTrace( "Request for {MethodName}\tStoreUrl:{StoreUrl}", methodName, config.StoreUrl );
+			this._logger.LogTrace( "Request for {MethodName}\tStoreUrl:{StoreUrl}", methodName, config.StoreUrl );
 		}
 
 		private void LogResponse( string methodName, ThreeDCartConfig config, string response )
 		{
-			this._logger?.LogTrace( "Response for {MethodName}\tStoreUrl:{StoreUrl}\tData:\n {Response}", methodName, config.StoreUrl, response );
+			this._logger.LogTrace( "Response for {MethodName}\tStoreUrl:{StoreUrl}\tData:\n {Response}", methodName, config.StoreUrl, response );
 		}
 	}
 }

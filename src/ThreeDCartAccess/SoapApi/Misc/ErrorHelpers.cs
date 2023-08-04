@@ -18,7 +18,7 @@ namespace ThreeDCartAccess.SoapApi.Misc
 			if( isResponseInvalid )
 			{
 				var exception = new Exception( ordersResponse.Value );
-				logger?.LogTrace( exception, "Error for {Error}\tStoreUrl:{Url}\tResponse:{Response}",
+				logger.LogTrace( exception, "Error for {Error}\tStoreUrl:{Url}\tResponse:{Response}",
 					callerMethodName, storeUrl, ordersResponse.Value );
 				throw exception;
 			}
