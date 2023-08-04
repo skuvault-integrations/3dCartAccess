@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Netco.Extensions;
 using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
@@ -18,17 +19,19 @@ namespace ThreeDCartAccess.SoapApi
 	{
 		private static readonly CultureInfo _culture = new CultureInfo( "en-US" );
 		private readonly ThreeDCartConfig _config;
+		private readonly ILogger _logger;
 		private readonly cartAPISoapClient _service;
 		private readonly cartAPIAdvancedSoapClient _advancedService;
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
 
-		public ThreeDCartOrdersService( ThreeDCartConfig config )
+		public ThreeDCartOrdersService( ThreeDCartConfig config, ILogger logger )
 		{
 			this._config = config;
+			this._logger = logger;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
-			this._webRequestServices = new WebRequestServices();
+			this._webRequestServices = new WebRequestServices( this._logger );
 
 			ValidationHelper.ThrowOnValidationErrors< ThreeDCartOrdersService >( GetValidationErrors() );
 		}
@@ -52,7 +55,7 @@ namespace ThreeDCartAccess.SoapApi
 				() =>
 				{
 					var ordersResponse = this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" );
-					ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+					ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl, this._logger );
 					return ordersResponse;
 				} );
 			return true;
@@ -92,7 +95,7 @@ namespace ThreeDCartAccess.SoapApi
 						async () => { 
 							var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
 							
-							ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+							ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl, this._logger );
 							
 							return ordersResponse;
 						} ) );
@@ -144,7 +147,7 @@ namespace ThreeDCartAccess.SoapApi
 					async () =>
 					{
 						var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult;
-						ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+						ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl, this._logger );
 						return ordersResponse;
 					}
 					)

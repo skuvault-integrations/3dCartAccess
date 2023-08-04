@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LINQtoCSV;
 using Microsoft.Extensions.Options;
-using Netco.Logging;
 using NUnit.Framework;
 using ThreeDCartAccess;
 using ThreeDCartAccess.RestApi.Models.Configuration;
@@ -21,7 +20,6 @@ namespace ThreeDCartAccessTests.Integration.Orders
 		[ SetUp ]
 		public void Init()
 		{
-			NetcoLogger.LoggerFactory = new ConsoleLoggerFactory();
 			const string credentialsFilePath = @"..\..\Files\ThreeDCartCredentials.csv";
 
 			var cc = new CsvContext();
@@ -30,7 +28,7 @@ namespace ThreeDCartAccessTests.Integration.Orders
 			if( testConfig != null )
 			{
 				var testDevSettings = Options.Create( new SkuVaultDeveloperSettings() );
-				this.ThreeDCartFactory = new ThreeDCartFactory( testDevSettings );
+				this.ThreeDCartFactory = new ThreeDCartFactory( testDevSettings, logger: null );
 				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey, testConfig.TimeZone );
 			}
 

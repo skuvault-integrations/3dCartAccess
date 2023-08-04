@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.SoapApi.Misc;
@@ -20,13 +21,15 @@ namespace ThreeDCartAccess.SoapApi
 		private readonly WebRequestServices _webRequestServices;
 		private const int BatchSize = 100;
 		private const int BatchSizeAdvanced = 500;
+		private ILogger _logger;
 
-		public ThreeDCartProductsService( ThreeDCartConfig config )
+		public ThreeDCartProductsService( ThreeDCartConfig config, ILogger logger )
 		{
 			this._config = config;
+			this._logger = logger;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
-			this._webRequestServices = new WebRequestServices();
+			this._webRequestServices = new WebRequestServices( this._logger );
 
 			ValidationHelper.ThrowOnValidationErrors< ThreeDCartProductsService >( GetValidationErrors() );
 		}

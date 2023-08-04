@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Netco.Extensions;
 using ServiceStack;
 using ThreeDCartAccess.Misc;
@@ -18,7 +19,7 @@ namespace ThreeDCartAccess.RestApi
 		protected const int GetProductsLimit = 200;
 		protected const int UpdateInventoryLimit = 100;
 
-		public ThreeDCartProductsService( RestThreeDCartConfig config, string restApiPrivateKey ): base( config, restApiPrivateKey )
+		public ThreeDCartProductsService( RestThreeDCartConfig config, string restApiPrivateKey, ILogger logger ): base( config, restApiPrivateKey, logger )
 		{
 		}
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
@@ -17,30 +18,32 @@ namespace ThreeDCartAccess
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
 		public string RestApiPrivateKey{ get; }
+		private readonly ILogger _logger;
 
-		public ThreeDCartFactory( IOptions< SkuVaultDeveloperSettings > settings )
+		public ThreeDCartFactory( IOptions< SkuVaultDeveloperSettings > settings, ILogger logger )
 		{
 			this.RestApiPrivateKey = settings?.Value?.PrivateApiKey;
+			this._logger = logger;
 		}
 
 		public IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config )
 		{
-			return new ThreeDCartProductsService( config );
+			return new ThreeDCartProductsService( config, this._logger );
 		}
 
 		public IThreeDCartOrdersService CreateSoapOrdersService( ThreeDCartConfig config )
 		{
-			return new ThreeDCartOrdersService( config );
+			return new ThreeDCartOrdersService( config, this._logger );
 		}
 
 		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestThreeDCartConfig config )
 		{
-			return new RestApi.ThreeDCartProductsService( config, this.RestApiPrivateKey );
+			return new RestApi.ThreeDCartProductsService( config, this.RestApiPrivateKey, this._logger );
 		}
 
 		public RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestThreeDCartConfig config )
 		{
-			return new RestApi.ThreeDCartOrdersService( config, this.RestApiPrivateKey );
+			return new RestApi.ThreeDCartOrdersService( config, this.RestApiPrivateKey, this._logger );
 		}
 	}
 }

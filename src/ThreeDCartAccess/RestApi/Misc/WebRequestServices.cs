@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ServiceStack;
 using SkuVault.Integrations.Core.Helpers;
 using ThreeDCartAccess.Misc;
@@ -16,11 +17,13 @@ namespace ThreeDCartAccess.RestApi.Misc
 	{
 		private readonly RestThreeDCartConfig _config;
 		private readonly string RestApiPrivateKey;
+		private readonly ILogger _logger;
 
-		public WebRequestServices( RestThreeDCartConfig config, string restApiPrivateKey )
+		public WebRequestServices( RestThreeDCartConfig config, string restApiPrivateKey, ILogger logger )
 		{
 			this._config = config;
 			this.RestApiPrivateKey = restApiPrivateKey;
+			this._logger = logger;
 
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}
@@ -215,7 +218,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			var httpWebResponse = ex.Response as HttpWebResponse;
 			if( httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.NotFound )
 			{
-				ThreeDCartLogger.Log.Trace( "Marker: '{0}'. Skip not found exception.\n{1}", marker, jsonError );
+				this._logger?.LogTrace( "Marker: '{Mark}'. Skip not found exception.\n{Error}", marker, jsonError );
 				return default(T);
 			}
 
@@ -226,7 +229,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			var error = errors.First();
 			if( error.Message.Equals( "Offset amount exceeds the total number of records", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				ThreeDCartLogger.Log.Trace( "Marker: '{0}'. Skip exception for paging.\n{1}", marker, jsonError );
+				this._logger?.LogTrace( "Marker: '{Mark}'. Skip exception for paging.\n{Error}", marker, jsonError );
 				return default(T);
 			}
 
@@ -235,32 +238,33 @@ namespace ThreeDCartAccess.RestApi.Misc
 
 		private void LogGetInfo( string url, string marker )
 		{
-			ThreeDCartLogger.Log.Trace( "Marker: '{0}'. GET call for url '{1}'", marker, url );
+			this._logger?.LogTrace( "Marker: '{Mark}'. GET call for url '{Url}'", marker, url );
 		}
 
 		private void LogGetInfoResult( string url, HttpStatusCode statusCode, string jsonContent, string marker )
 		{
-			ThreeDCartLogger.Log.Trace( "Marker: '{0}'. GET call for url '{1}' has been completed with code '{2}'.\n{3}", marker, url, statusCode, jsonContent );
+			this._logger?.LogTrace( "Marker: '{Mark}'. GET call for url '{Url}' has been completed with code '{StatusCode}'.\n{JsonContent}", 
+				marker, url, statusCode, jsonContent );
 		}
 
 		private Exception ExceptionForGetInfo( string url, Exception ex, string marker )
 		{
-			return new Exception( string.Format( "Marker: '{0}'. GET call for url '{1}' failed", marker, url ), ex );
+			return new Exception( string.Format( "Marker: '{Mark}'. GET call for url '{1}' failed", marker, url ), ex );
 		}
 
 		private void LogPutInfo( string url, string jsonContent, string marker )
 		{
-			ThreeDCartLogger.Log.Trace( "Marker: '{0}'. PUT/POST data for url '{1}':\n{2}", marker, url, jsonContent );
+			this._logger?.LogTrace( "Marker: '{Mark}'. PUT/POST data for url '{Url}':\n{JsonContent}", marker, url, jsonContent );
 		}
 
 		private void LogPutInfoResult( string url, HttpStatusCode statusCode, string jsonContent, string marker )
 		{
-			ThreeDCartLogger.Log.Trace( "Marker: '{0}'. PUT/POST data for url '{1}' has been completed with code '{2}'.\n{3}", marker, url, statusCode, jsonContent );
+			this._logger?.LogTrace( "Marker: '{Mark}'. PUT/POST data for url '{Url}' has been completed with code '{StatusCode}'.\n{JsonContent}", marker, url, statusCode, jsonContent );
 		}
 
 		private Exception ExceptionForPutInfo( string url, Exception ex, string marker )
 		{
-			return new Exception( string.Format( "Marker: '{0}'. PUT/POST data for url '{1}' failed", marker, url ), ex );
+			return new Exception( string.Format( "Marker: '{Mark}'. PUT/POST data for url '{1}' failed", marker, url ), ex );
 		}
 		#endregion
 	}
