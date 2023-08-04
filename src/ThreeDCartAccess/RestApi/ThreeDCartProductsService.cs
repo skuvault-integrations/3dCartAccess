@@ -120,7 +120,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
 			var parentProduct = new ThreeDCartProductWithoutOptions( inventory );
-			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, parentProduct.ToJson(), marker ) );
+			ActionPolicies.Submit( this._logger ).Do( () => this.WebRequestServices.PutData( endpoint, parentProduct.ToJson(), marker ) );
 			this.UpdateOptionsInventory( inventory.SKUInfo.CatalogID, inventory.AdvancedOptionList, marker );
 		}
 
@@ -129,7 +129,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
 			var parentProduct = new ThreeDCartProductWithoutOptions( inventory );
-			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProduct.ToJson(), marker ) );
+			await ActionPolicies.SubmitAsync( this._logger ).Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProduct.ToJson(), marker ) );
 			await this.UpdateOptionsInventoryAsync( inventory.SKUInfo.CatalogID, inventory.AdvancedOptionList, marker );
 		}
 
@@ -141,7 +141,7 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var part in parts )
 			{
 				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
-				ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, parentProducts.ToJson(), marker ) );
+				ActionPolicies.Submit( this._logger ).Do( () => this.WebRequestServices.PutData( endpoint, parentProducts.ToJson(), marker ) );
 				foreach( var threeDCartProduct in part )
 				{
 					this.UpdateOptionsInventory( threeDCartProduct.SKUInfo.CatalogID, threeDCartProduct.AdvancedOptionList, marker );
@@ -157,7 +157,7 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var part in parts )
 			{
 				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
-				await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProducts.ToJson(), marker ) );
+				await ActionPolicies.SubmitAsync( this._logger ).Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProducts.ToJson(), marker ) );
 				foreach( var threeDCartProduct in part )
 				{
 					await this.UpdateOptionsInventoryAsync( threeDCartProduct.SKUInfo.CatalogID, threeDCartProduct.AdvancedOptionList, marker );
@@ -171,7 +171,7 @@ namespace ThreeDCartAccess.RestApi
 				return;
 
 			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( catalogId );
-			ActionPolicies.Submit.Do( () => this.WebRequestServices.PutData( endpoint, optionList.ToJson(), marker ) );
+			ActionPolicies.Submit( this._logger ).Do( () => this.WebRequestServices.PutData( endpoint, optionList.ToJson(), marker ) );
 		}
 
 		private async Task UpdateOptionsInventoryAsync( long catalogId, List< ThreeDCartAdvancedOption > optionList, string marker )
@@ -180,7 +180,7 @@ namespace ThreeDCartAccess.RestApi
 				return;
 
 			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( catalogId );
-			await ActionPolicies.SubmitAsync.Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, optionList.ToJson(), marker ) );
+			await ActionPolicies.SubmitAsync( this._logger ).Do( async () => await this.WebRequestServices.PutDataAsync( endpoint, optionList.ToJson(), marker ) );
 		}
 		#endregion
 	}

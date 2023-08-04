@@ -70,7 +70,6 @@
     <Compile Include="Misc\ActionPolicies.cs" />
     <Compile Include="SoapApi\Misc\ErrorHelpers.cs" />
     <Compile Include="SoapApi\Misc\ScriptsBuilder.cs" />
-    <Compile Include="Misc\ThreeDCartLogger.cs" />
     <Compile Include="RestApi\Misc\EndpointsBuilder.cs" />
     <Compile Include="SoapApi\Misc\WebRequestServices.cs" />
     <Compile Include="SoapApi\Misc\XmlSerializeHelpers.cs" />

@@ -12,13 +12,14 @@ namespace ThreeDCartAccess.RestApi
 	public abstract class ThreeDCartServiceBase
 	{
 		protected readonly RestThreeDCartConfig Config;
-		protected readonly ILogger Logger;
+		protected readonly ILogger _logger;
 		internal readonly WebRequestServices WebRequestServices;
 
 		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey, ILogger logger )
 		{
 			this.Config = config;
-			this.WebRequestServices = new WebRequestServices( config, restApiPrivateKey, logger );
+			this._logger = logger;
+			this.WebRequestServices = new WebRequestServices( config, restApiPrivateKey, this._logger );
 
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}
@@ -45,7 +46,7 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
+				portion = ActionPolicies.Get( this._logger ).Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
 				if( portion == null || portion.Count == 0 )
 					break;
 
@@ -64,7 +65,7 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
+				portion = await ActionPolicies.GetAsync( this._logger ).Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
 				if( portion == null || portion.Count == 0 )
 					break;
 

@@ -116,7 +116,7 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var invoiceNumber in invoiceNumbers )
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
-				var portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
+				var portion = ActionPolicies.Get( this._logger ).Get( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
 				if( portion == null )
 					continue;
 
@@ -141,7 +141,7 @@ namespace ThreeDCartAccess.RestApi
 			await invoiceNumbers.DoInBatchAsync( 10, async invoiceNumber =>
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
-				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
+				var portion = await ActionPolicies.GetAsync( this._logger ).Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
 				if( portion == null )
 					return;
 

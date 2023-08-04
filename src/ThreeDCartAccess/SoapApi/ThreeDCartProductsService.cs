@@ -58,7 +58,7 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartProduct >();
 			for( var i = 1;; i += BatchSize )
 			{
-				var portion = ActionPolicies.Get.Get(
+				var portion = ActionPolicies.Get( this._logger ).Get(
 					() => this._webRequestServices.Execute< ThreeDCartProducts >( "GetProducts", this._config,
 						() => this._service.getProduct( this._config.StoreUrl, this._config.UserKey, BatchSize, i, "", "" ) ) );
 				if( portion == null )
@@ -77,7 +77,7 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartProduct >();
 			for( var i = 1;; i += BatchSize )
 			{
-				var portion = await ActionPolicies.GetAsync.Get(
+				var portion = await ActionPolicies.GetAsync( this._logger ).Get(
 					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartProducts >( "GetProductsAsync", this._config,
 						async () => ( await this._service.getProductAsync( this._config.StoreUrl, this._config.UserKey, BatchSize, i, "", "" ) ).Body.getProductResult ) );
 				if( portion == null )
@@ -103,7 +103,7 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartInventory >();
 			for( var i = 1;; i += BatchSizeAdvanced )
 			{
-				var portion = ActionPolicies.Get.Get( () => this.GetInventoryPageOrAllPages( i ) );
+				var portion = ActionPolicies.Get( this._logger ).Get( () => this.GetInventoryPageOrAllPages( i ) );
 				if( portion == null )
 					break;
 				if( portion.IsFullInventory )
@@ -124,7 +124,7 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartInventory >();
 			for( var i = 1;; i += BatchSizeAdvanced )
 			{
-				var portion = await ActionPolicies.GetAsync.Get( async () => await this.GetInventoryPageOrAllPagesAsync( i ) );
+				var portion = await ActionPolicies.GetAsync( this._logger ).Get( async () => await this.GetInventoryPageOrAllPagesAsync( i ) );
 				if( portion == null )
 					break;
 				if( portion.IsFullInventory )
@@ -254,7 +254,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		private ThreeDCartUpdateInventory UpdateProductInventory( ThreeDCartUpdateInventory inventory )
 		{
-			var result = ActionPolicies.Submit.Get(
+			var result = ActionPolicies.Submit( this._logger ).Get(
 				() => this._webRequestServices.Execute< ThreeDCartUpdateInventory >( "UpdateProductInventory", this._config,
 					() => this._service.updateProductInventory( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.NewQuantity, true, "" ) ) );
 			return result;
@@ -262,7 +262,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		private async Task< ThreeDCartUpdateInventory > UpdateProductInventoryAsync( ThreeDCartUpdateInventory inventory )
 		{
-			var result = await ActionPolicies.SubmitAsync.Get(
+			var result = await ActionPolicies.SubmitAsync( this._logger ).Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartUpdateInventory >( "UpdateProductInventoryAsync", this._config,
 					async () => ( await this._service.updateProductInventoryAsync( this._config.StoreUrl, this._config.UserKey, inventory.ProductId, inventory.NewQuantity, true, "" ) )
 						.Body.updateProductInventoryResult ) );
@@ -272,7 +272,7 @@ namespace ThreeDCartAccess.SoapApi
 		private ThreeDCartUpdateInventory UpdateProductOptionInventory( ThreeDCartUpdateInventory inventory )
 		{
 			var sql = ScriptsBuilder.UpdateProductOptionInventory( inventory.NewQuantity, inventory.OptionCode );
-			var result = ActionPolicies.Submit.Get(
+			var result = ActionPolicies.Submit( this._logger ).Get(
 				() => this._webRequestServices.Execute< ThreeDCartUpdatedOptionInventory >( "UpdateProductOptionInventory", this._config,
 					() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) ) );
 			return inventory;
@@ -281,7 +281,7 @@ namespace ThreeDCartAccess.SoapApi
 		private async Task< ThreeDCartUpdateInventory > UpdateProductOptionInventoryAsync( ThreeDCartUpdateInventory inventory )
 		{
 			var sql = ScriptsBuilder.UpdateProductOptionInventory( inventory.NewQuantity, inventory.OptionCode );
-			var result = await ActionPolicies.SubmitAsync.Get(
+			var result = await ActionPolicies.SubmitAsync( this._logger ).Get(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartUpdatedOptionInventory >( "UpdateProductOptionInventoryAsync", this._config,
 					async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult ) );
 			return inventory;
