@@ -17,9 +17,9 @@ namespace ThreeDCartAccess.RestApi.Misc
 	{
 		private readonly RestThreeDCartConfig _config;
 		private readonly string RestApiPrivateKey;
-		private readonly ILogger _logger;
+		private readonly ILogger< string > _logger;
 
-		public WebRequestServices( RestThreeDCartConfig config, string restApiPrivateKey, ILogger logger )
+		public WebRequestServices( RestThreeDCartConfig config, string restApiPrivateKey, ILogger< string > logger )
 		{
 			this._config = config;
 			this.RestApiPrivateKey = restApiPrivateKey;

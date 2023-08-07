@@ -8,7 +8,7 @@ namespace ThreeDCartAccess.SoapApi.Misc
 	public static class ErrorHelpers
 	{
 		/// <summary>Throw if the response indicates an error</summary>
-		public static void ThrowIfError( XElement ordersResponse, string storeUrl, ILogger logger, [ CallerMemberName ] string callerMethodName = "" )
+		public static void ThrowIfError( XElement ordersResponse, string storeUrl, ILogger< string > logger, [ CallerMemberName ] string callerMethodName = "" )
 		{
 			var isResponseInvalid = ordersResponse.Name != null
 						&& ordersResponse.Value != null

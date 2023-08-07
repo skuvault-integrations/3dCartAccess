@@ -12,10 +12,10 @@ namespace ThreeDCartAccess.RestApi
 	public abstract class ThreeDCartServiceBase
 	{
 		protected readonly RestThreeDCartConfig Config;
-		protected readonly ILogger _logger;
+		protected readonly ILogger< string > _logger;
 		internal readonly WebRequestServices WebRequestServices;
 
-		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey, ILogger logger )
+		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey, ILogger< string > logger )
 		{
 			this.Config = config;
 			this._logger = logger;

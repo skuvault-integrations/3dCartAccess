@@ -21,9 +21,9 @@ namespace ThreeDCartAccess.SoapApi
 		private readonly WebRequestServices _webRequestServices;
 		private const int BatchSize = 100;
 		private const int BatchSizeAdvanced = 500;
-		private ILogger _logger;
+		private ILogger< string > _logger;
 
-		public ThreeDCartProductsService( ThreeDCartConfig config, ILogger logger )
+		public ThreeDCartProductsService( ThreeDCartConfig config, ILogger< string > logger )
 		{
 			this._config = config;
 			this._logger = logger;

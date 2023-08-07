@@ -17,7 +17,7 @@ namespace ThreeDCartAccessTests.SoapApi.Misc
 			const string storeUrl = "www.some-store.abc";
 
 			Assert.Throws< Exception >(() => 
-				ErrorHelpers.ThrowIfError( responseWithError, storeUrl, TestHelper.CreateLogger() ) );
+				ErrorHelpers.ThrowIfError( responseWithError, storeUrl, TestHelper.CreateConsoleLogger() ) );
 		}
 	}
 }

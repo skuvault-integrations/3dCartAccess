@@ -19,13 +19,13 @@ namespace ThreeDCartAccess.SoapApi
 	{
 		private static readonly CultureInfo _culture = new CultureInfo( "en-US" );
 		private readonly ThreeDCartConfig _config;
-		private readonly ILogger _logger;
+		private readonly ILogger< string > _logger;
 		private readonly cartAPISoapClient _service;
 		private readonly cartAPIAdvancedSoapClient _advancedService;
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
 
-		public ThreeDCartOrdersService( ThreeDCartConfig config, ILogger logger )
+		public ThreeDCartOrdersService( ThreeDCartConfig config, ILogger< string > logger )
 		{
 			this._config = config;
 			this._logger = logger;

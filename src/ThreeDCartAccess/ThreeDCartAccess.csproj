@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DependencyInjection\ServiceCollectionExtensions.cs" />
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />
     <Compile Include="RestApi\Models\Configuration\SkuVaultDeveloperSettings.cs" />

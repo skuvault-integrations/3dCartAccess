@@ -12,7 +12,7 @@ namespace ThreeDCartAccessTests.SoapApi
 		{
 			ThreeDCartConfig config = null;
 
-			Assert.Throws< ArgumentException >( () => new ThreeDCartProductsService( config, TestHelper.CreateLogger() ) );
+			Assert.Throws< ArgumentException >( () => new ThreeDCartProductsService( config, TestHelper.CreateConsoleLogger() ) );
 		}
 	}
 }

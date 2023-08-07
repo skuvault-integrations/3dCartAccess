@@ -9,9 +9,9 @@ namespace ThreeDCartAccess.SoapApi.Misc
 {
 	internal class WebRequestServices
 	{
-		private readonly ILogger _logger;
+		private readonly ILogger< string > _logger;
 
-		public WebRequestServices(ILogger logger )
+		public WebRequestServices(ILogger< string > logger )
 		{
 			this._logger = logger;
 		}

@@ -1,8 +1,7 @@
 using System.Linq;
 using LINQtoCSV;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using ThreeDCartAccess;
-using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
 namespace ThreeDCartAccessTests
@@ -24,8 +23,8 @@ namespace ThreeDCartAccessTests
 
 			if( testConfig != null )
 			{
-				var testDevSettings = Options.Create( new SkuVaultDeveloperSettings() );
-				this.ThreeDCartFactory = new ThreeDCartFactory( testDevSettings, TestHelper.CreateLogger() );
+				var serviceProvider = TestHelper.CreateServiceProvider( apiPrivateKey: "" );
+				this.ThreeDCartFactory = serviceProvider.GetRequiredService< IThreeDCartFactory >();
 				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey, testConfig.TimeZone );
 			}
 		}

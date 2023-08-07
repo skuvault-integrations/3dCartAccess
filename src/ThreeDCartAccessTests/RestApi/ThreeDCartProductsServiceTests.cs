@@ -15,7 +15,7 @@ namespace ThreeDCartAccessTests.RestApi
 		{
 			RestThreeDCartConfig config = null;
 
-			Assert.Throws< ArgumentException >( () => new ThreeDCartProductsService( config, _randomizer.GetString(), TestHelper.CreateLogger() ) );
+			Assert.Throws< ArgumentException >( () => new ThreeDCartProductsService( config, _randomizer.GetString(), TestHelper.CreateConsoleLogger() ) );
 		}
 	}
 }
