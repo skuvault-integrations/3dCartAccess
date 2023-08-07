@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ServiceStack;
 using SkuVault.Integrations.Core.Helpers;
-using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Models;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
@@ -28,7 +27,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}
 
-		//TODO TD-257 Add tests
+		//TODO GUARD-3057 Add tests
 		private IEnumerable< string > GetValidationErrors()
 		{
 			var validationErrors = new List<string>();

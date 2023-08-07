@@ -17,10 +17,10 @@ namespace ThreeDCartAccess
 
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
-		public string RestApiPrivateKey{ get; }
+		private string RestApiPrivateKey{ get; }
 		private readonly ILogger< string > _logger;
 
-		public ThreeDCartFactory( IOptions< SkuVaultDeveloperSettings > settings, ILogger< string > logger )
+		public ThreeDCartFactory( IOptions< ThreeDCartSettings > settings, ILogger< string > logger )
 		{
 			this.RestApiPrivateKey = settings?.Value?.PrivateApiKey;
 			this._logger = logger;

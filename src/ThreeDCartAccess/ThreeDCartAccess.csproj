@@ -38,9 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\ServiceCollectionExtensions.cs" />
+    <Compile Include="Resilience\Policies.cs" />
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />
-    <Compile Include="RestApi\Models\Configuration\SkuVaultDeveloperSettings.cs" />
+    <Compile Include="RestApi\Models\Configuration\ThreeDCartSettings.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrder.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartQuestion.cs" />
@@ -68,7 +69,6 @@
     <Compile Include="RestApi\ThreeDCartServiceBase.cs" />
     <Compile Include="SoapApi\IThreeDCartOrdersService.cs" />
     <Compile Include="SoapApi\IThreeDCartProductsService.cs" />
-    <Compile Include="Misc\ActionPolicies.cs" />
     <Compile Include="SoapApi\Misc\ErrorHelpers.cs" />
     <Compile Include="SoapApi\Misc\ScriptsBuilder.cs" />
     <Compile Include="RestApi\Misc\EndpointsBuilder.cs" />

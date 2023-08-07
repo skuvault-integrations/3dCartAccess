@@ -43,7 +43,7 @@ public static class ServiceCollectionExtensions
 	{
 		internalServices.AddLogging( configureLogging );
 
-		internalServices.Configure< SkuVaultDeveloperSettings >( settings => settings.PrivateApiKey = restApiPrivateKey );
+		internalServices.Configure< ThreeDCartSettings >( settings => settings.PrivateApiKey = restApiPrivateKey );
 		internalServices.AddSingleton< IThreeDCartFactory, ThreeDCartFactory >();
 
 		return internalServices;

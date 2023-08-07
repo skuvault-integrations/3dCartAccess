@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SkuVault.Integrations.Core.Helpers;
-using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
@@ -46,7 +45,7 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = ActionPolicies.Get( this._logger ).Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
+				portion = Resilience.Policies.Get( this._logger ).Execute( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
 				if( portion == null || portion.Count == 0 )
 					break;
 
@@ -65,7 +64,7 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = await ActionPolicies.GetAsync( this._logger ).Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
+				portion = await Resilience.Policies.GetAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
 				if( portion == null || portion.Count == 0 )
 					break;
 
