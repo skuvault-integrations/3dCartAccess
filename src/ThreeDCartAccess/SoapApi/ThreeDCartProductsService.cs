@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SkuVault.Integrations.Core.Helpers;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Product;
@@ -20,9 +20,9 @@ namespace ThreeDCartAccess.SoapApi
 		private readonly WebRequestServices _webRequestServices;
 		private const int BatchSize = 100;
 		private const int BatchSizeAdvanced = 500;
-		private ILogger< string > _logger;
+		private IIntegrationLogger _logger;
 
-		public ThreeDCartProductsService( ThreeDCartConfig config, ILogger< string > logger )
+		public ThreeDCartProductsService( ThreeDCartConfig config, IIntegrationLogger logger )
 		{
 			this._config = config;
 			this._logger = logger;

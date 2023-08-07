@@ -3,8 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Netco.Extensions;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Order;
@@ -15,7 +15,7 @@ namespace ThreeDCartAccess.RestApi
 	{
 		protected const int GetOrdersLimit = 300;
 
-		public ThreeDCartOrdersService( RestThreeDCartConfig config, string restApiPrivateKey, ILogger< string > logger ): base( config, restApiPrivateKey, logger )
+		public ThreeDCartOrdersService( RestThreeDCartConfig config, string restApiPrivateKey, IIntegrationLogger logger ): base( config, restApiPrivateKey, logger )
 		{
 		}
 

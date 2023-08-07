@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
@@ -18,9 +18,9 @@ namespace ThreeDCartAccess
 	public class ThreeDCartFactory: IThreeDCartFactory
 	{
 		private string RestApiPrivateKey{ get; }
-		private readonly ILogger< string > _logger;
+		private readonly IIntegrationLogger _logger;
 
-		public ThreeDCartFactory( IOptions< ThreeDCartSettings > settings, ILogger< string > logger )
+		public ThreeDCartFactory( IOptions< ThreeDCartSettings > settings, IIntegrationLogger logger )
 		{
 			this.RestApiPrivateKey = settings?.Value?.PrivateApiKey;
 			this._logger = logger;

@@ -1,7 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SkuVault.Integrations.Core.Logging;
+using ThreeDCartAccess.Logging;
 using ThreeDCartAccess.RestApi.Models.Configuration;
+using SkuVault.Integrations.Core.DependencyInjection;
 
 namespace ThreeDCartAccess.DependencyInjection;
 
@@ -42,6 +45,11 @@ public static class ServiceCollectionExtensions
 	private static IServiceCollection RegisterInternalServices( this IServiceCollection internalServices, string restApiPrivateKey, Action< ILoggingBuilder > configureLogging )
 	{
 		internalServices.AddLogging( configureLogging );
+		// Custom logging filter should be registered after the HttpClients, so it will replace built-in logging handlers registered when adding clients.
+		//TODO If add Http handler pipeline, then set useDetailedHttpLogging to true
+		internalServices.AddIntegrationLogging< ThreeDCartLogger >( "ThreeDCart", false );
+
+		internalServices.AddSingleton< IIntegrationLogger, ThreeDCartLogger >();
 
 		internalServices.Configure< ThreeDCartSettings >( settings => settings.PrivateApiKey = restApiPrivateKey );
 		internalServices.AddSingleton< IThreeDCartFactory, ThreeDCartFactory >();

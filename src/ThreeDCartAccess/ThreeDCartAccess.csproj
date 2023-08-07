@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DependencyInjection\ServiceCollectionExtensions.cs" />
+    <Compile Include="Logging\ThreeDCartLogger.cs" />
     <Compile Include="Resilience\Policies.cs" />
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />

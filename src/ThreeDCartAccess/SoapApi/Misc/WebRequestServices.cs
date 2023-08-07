@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.SoapApi.Models;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
@@ -9,9 +10,9 @@ namespace ThreeDCartAccess.SoapApi.Misc
 {
 	internal class WebRequestServices
 	{
-		private readonly ILogger< string > _logger;
+		private readonly IIntegrationLogger _logger;
 
-		public WebRequestServices(ILogger< string > logger )
+		public WebRequestServices( IIntegrationLogger logger )
 		{
 			this._logger = logger;
 		}
@@ -38,14 +39,14 @@ namespace ThreeDCartAccess.SoapApi.Misc
 			this.LogRequest( methodName, config );
 			var funkResult = await func();
 
-			if ( funkResult.Name != null && funkResult.Name.LocalName != "Error" )
+			if( funkResult.Name != null && funkResult.Name.LocalName != "Error" )
 			{
 				var funkResultStr = funkResult.ToString();
 				this.LogResponse( methodName, config, funkResultStr );
 				return this.ParseResult< TResponse >( funkResult, funkResultStr );
 			}
 
-			return default( TResponse );
+			return default(TResponse);
 		}
 
 		public T ParseResult< T >( XElement xElement, string xElementStr )
@@ -77,12 +78,12 @@ namespace ThreeDCartAccess.SoapApi.Misc
 
 		private void LogRequest( string methodName, ThreeDCartConfig config )
 		{
-			this._logger.LogTrace( "Request for {MethodName}\tStoreUrl:{StoreUrl}", methodName, config.StoreUrl );
+			this._logger.Logger.LogTrace( "Request for {MethodName}\tStoreUrl:{StoreUrl}", methodName, config.StoreUrl );
 		}
 
 		private void LogResponse( string methodName, ThreeDCartConfig config, string response )
 		{
-			this._logger.LogTrace( "Response for {MethodName}\tStoreUrl:{StoreUrl}\tData:\n {Response}", methodName, config.StoreUrl, response );
+			this._logger.Logger.LogTrace( "Response for {MethodName}\tStoreUrl:{StoreUrl}\tData:\n {Response}", methodName, config.StoreUrl, response );
 		}
 	}
 }

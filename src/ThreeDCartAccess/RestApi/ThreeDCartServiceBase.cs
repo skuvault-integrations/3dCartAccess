@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SkuVault.Integrations.Core.Helpers;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
@@ -11,10 +11,10 @@ namespace ThreeDCartAccess.RestApi
 	public abstract class ThreeDCartServiceBase
 	{
 		protected readonly RestThreeDCartConfig Config;
-		protected readonly ILogger< string > _logger;
+		protected readonly IIntegrationLogger _logger;
 		internal readonly WebRequestServices WebRequestServices;
 
-		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey, ILogger< string > logger )
+		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey, IIntegrationLogger logger )
 		{
 			this.Config = config;
 			this._logger = logger;

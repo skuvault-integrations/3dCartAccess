@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Netco.Extensions;
 using SkuVault.Integrations.Core.Helpers;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Order;
@@ -18,13 +18,13 @@ namespace ThreeDCartAccess.SoapApi
 	{
 		private static readonly CultureInfo _culture = new CultureInfo( "en-US" );
 		private readonly ThreeDCartConfig _config;
-		private readonly ILogger< string > _logger;
+		private readonly IIntegrationLogger _logger;
 		private readonly cartAPISoapClient _service;
 		private readonly cartAPIAdvancedSoapClient _advancedService;
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
 
-		public ThreeDCartOrdersService( ThreeDCartConfig config, ILogger< string > logger )
+		public ThreeDCartOrdersService( ThreeDCartConfig config, IIntegrationLogger logger )
 		{
 			this._config = config;
 			this._logger = logger;
