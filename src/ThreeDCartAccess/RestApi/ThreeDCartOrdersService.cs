@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Netco.Extensions;
 using SkuVault.Integrations.Core.Logging;
+using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Order;
@@ -115,7 +116,7 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var invoiceNumber in invoiceNumbers )
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
-				var portion = Resilience.Policies.Get( this._logger ).Execute( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
+				var portion = ResiliencePolicies.Get( this._logger ).Execute( () => this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker ) );
 				if( portion == null )
 					continue;
 
@@ -140,7 +141,7 @@ namespace ThreeDCartAccess.RestApi
 			await invoiceNumbers.DoInBatchAsync( 10, async invoiceNumber =>
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
-				var portion = await Resilience.Policies.GetAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
+				var portion = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
 				if( portion == null )
 					return;
 

@@ -249,7 +249,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 
 		private Exception ExceptionForGetInfo( string url, Exception ex, string marker )
 		{
-			return new Exception( string.Format( "Marker: '{Mark}'. GET call for url '{1}' failed", marker, url ), ex );
+			return new Exception( $"Marker: '{marker}'. GET call for url '{url}' failed", ex );
 		}
 
 		private void LogPutInfo( string url, string jsonContent, string marker )
@@ -264,7 +264,7 @@ namespace ThreeDCartAccess.RestApi.Misc
 
 		private Exception ExceptionForPutInfo( string url, Exception ex, string marker )
 		{
-			return new Exception( string.Format( "Marker: '{Mark}'. PUT/POST data for url '{1}' failed", marker, url ), ex );
+			return new Exception( $"Marker: '{marker}'. PUT/POST data for url '{url}' failed", ex );
 		}
 		#endregion
 	}

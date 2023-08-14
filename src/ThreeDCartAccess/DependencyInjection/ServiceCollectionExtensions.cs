@@ -17,10 +17,10 @@ public static class ServiceCollectionExtensions
 	/// Registers all the required services for the ThreeDCart Access library with the provided <see cref="IServiceCollection"/>.
 	/// </summary>
 	/// <param name="services">The <see cref="IServiceCollection"/> the services are being registered with</param>
-	/// <param name="apiPrivateKey">The private key used to access the 3DCart API</param>
+	/// <param name="apiPrivateKey">The developer private key used to access the 3DCart API</param>
 	/// <param name="configureLogging">The <see cref="ILoggingBuilder"/> configuration delegate</param>
 	/// <returns>The <see cref="IServiceCollection"/> the method was called on</returns>
-	/// <exception cref="ArgumentNullException">If the <see cref="IServiceCollection"/> provided is null</exception>
+	/// <exception cref="ArgumentNullException">If the "services" or "configureLogging" param is null</exception>
 	public static IServiceCollection Add3DCartServices( this IServiceCollection services, string apiPrivateKey, Action< ILoggingBuilder > configureLogging )
 	{
 		if( services is null )

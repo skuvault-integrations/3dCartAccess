@@ -6,7 +6,7 @@ using SkuVault.Integrations.Core.Logging;
 
 namespace ThreeDCartAccess.Resilience;
 
-public static class Policies
+public static class ResiliencePolicies
 {
 	private const int RetryCount = 10;
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Netco.Extensions;
 using ServiceStack;
 using SkuVault.Integrations.Core.Logging;
+using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 using ThreeDCartAccess.RestApi.Models.Product.GetProducts;
@@ -119,7 +120,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
 			var parentProduct = new ThreeDCartProductWithoutOptions( inventory );
-			Resilience.Policies.Submit( this._logger ).Execute( () => this.WebRequestServices.PutData( endpoint, parentProduct.ToJson(), marker ) );
+			ResiliencePolicies.Submit( this._logger ).Execute( () => this.WebRequestServices.PutData( endpoint, parentProduct.ToJson(), marker ) );
 			this.UpdateOptionsInventory( inventory.SKUInfo.CatalogID, inventory.AdvancedOptionList, marker );
 		}
 
@@ -128,7 +129,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductEnpoint( inventory.SKUInfo.CatalogID );
 			var parentProduct = new ThreeDCartProductWithoutOptions( inventory );
-			await Resilience.Policies.SubmitAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProduct.ToJson(), marker ) );
+			await ResiliencePolicies.SubmitAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProduct.ToJson(), marker ) );
 			await this.UpdateOptionsInventoryAsync( inventory.SKUInfo.CatalogID, inventory.AdvancedOptionList, marker );
 		}
 
@@ -140,7 +141,7 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var part in parts )
 			{
 				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
-				Resilience.Policies.Submit( this._logger ).Execute( () => this.WebRequestServices.PutData( endpoint, parentProducts.ToJson(), marker ) );
+				ResiliencePolicies.Submit( this._logger ).Execute( () => this.WebRequestServices.PutData( endpoint, parentProducts.ToJson(), marker ) );
 				foreach( var threeDCartProduct in part )
 				{
 					this.UpdateOptionsInventory( threeDCartProduct.SKUInfo.CatalogID, threeDCartProduct.AdvancedOptionList, marker );
@@ -156,7 +157,7 @@ namespace ThreeDCartAccess.RestApi
 			foreach( var part in parts )
 			{
 				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
-				await Resilience.Policies.SubmitAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProducts.ToJson(), marker ) );
+				await ResiliencePolicies.SubmitAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.PutDataAsync( endpoint, parentProducts.ToJson(), marker ) );
 				foreach( var threeDCartProduct in part )
 				{
 					await this.UpdateOptionsInventoryAsync( threeDCartProduct.SKUInfo.CatalogID, threeDCartProduct.AdvancedOptionList, marker );
@@ -170,7 +171,7 @@ namespace ThreeDCartAccess.RestApi
 				return;
 
 			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( catalogId );
-			Resilience.Policies.Submit( this._logger ).Execute( () => this.WebRequestServices.PutData( endpoint, optionList.ToJson(), marker ) );
+			ResiliencePolicies.Submit( this._logger ).Execute( () => this.WebRequestServices.PutData( endpoint, optionList.ToJson(), marker ) );
 		}
 
 		private async Task UpdateOptionsInventoryAsync( long catalogId, List< ThreeDCartAdvancedOption > optionList, string marker )
@@ -179,7 +180,7 @@ namespace ThreeDCartAccess.RestApi
 				return;
 
 			var endpoint = EndpointsBuilder.UpdateProductOptionsEnpoint( catalogId );
-			await Resilience.Policies.SubmitAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.PutDataAsync( endpoint, optionList.ToJson(), marker ) );
+			await ResiliencePolicies.SubmitAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.PutDataAsync( endpoint, optionList.ToJson(), marker ) );
 		}
 		#endregion
 	}
