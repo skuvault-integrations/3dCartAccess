@@ -150,6 +150,7 @@
     <Compile Include="Integration\Products\SoapApiProductTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestApiTestConfig.cs" />
+    <Compile Include="RestApi\Misc\WebRequestServicesTests.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigTests.cs" />
     <Compile Include="RestApi\ThreeDCartProductsServiceTests.cs" />
     <Compile Include="RestApi\ThreeDCartOrdersServiceTests.cs" />

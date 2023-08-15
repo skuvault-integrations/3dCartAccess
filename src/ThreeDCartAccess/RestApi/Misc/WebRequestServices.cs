@@ -28,7 +28,6 @@ namespace ThreeDCartAccess.RestApi.Misc
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}
 
-		//TODO GUARD-3057 Add tests
 		private IEnumerable< string > GetValidationErrors()
 		{
 			var validationErrors = new List<string>();
