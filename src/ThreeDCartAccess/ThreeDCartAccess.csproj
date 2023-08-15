@@ -37,6 +37,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\BatchDetails.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="RestApi\IThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfig.cs" />
     <Compile Include="RestApi\Models\Order\ThreeDCartOrderItem.cs" />

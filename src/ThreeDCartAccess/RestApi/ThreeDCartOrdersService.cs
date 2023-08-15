@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Netco.Extensions;
+using ThreeDCartAccess.Extensions;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
@@ -137,7 +137,7 @@ namespace ThreeDCartAccess.RestApi
 		public async Task GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			await invoiceNumbers.DoInBatchAsync( 10, async invoiceNumber =>
+			await invoiceNumbers.DoInBatchesAsync( 10, async invoiceNumber =>
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
 				var portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );

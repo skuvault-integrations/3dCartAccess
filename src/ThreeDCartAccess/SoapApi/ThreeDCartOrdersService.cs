@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Netco.Extensions;
 using SkuVault.Integrations.Core.Helpers;
+using ThreeDCartAccess.Extensions;
 using ThreeDCartAccess.Misc;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
@@ -118,7 +118,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
-			var orders = await invoiceNumbers.ProcessInBatchAsync( 50, async invoiceNumber =>
+			var orders = await invoiceNumbers.DoInBatchesAsync( 50, async invoiceNumber =>
 			{
 				var order = await this.GetOrderByNumberAsync( invoiceNumber.Trim() );
 				return order;
