@@ -45,7 +45,7 @@ namespace ThreeDCartAccessTests.Integration.Orders
 		public async Task GetNewOrdersAsync()
 		{
 			var service = this.ThreeDCartFactory.CreateSoapOrdersService( this.Config );
-			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddHours( -4 ), DateTime.UtcNow ) ).ToList();
+			var result = ( await service.GetNewOrdersAsync( DateTime.UtcNow.AddMonths( -4 ), DateTime.UtcNow ) ).ToList();
 
 			result.Should().NotBeNull();
 			result.Count().Should().BeGreaterThan( 0 );

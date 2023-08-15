@@ -1,5 +1,5 @@
-﻿using System.Xml.Serialization;
-using Netco.Extensions;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace ThreeDCartAccess.SoapApi.Models.Order
 {
@@ -12,10 +12,9 @@ namespace ThreeDCartAccess.SoapApi.Models.Order
 		public string DefinitionStr{ get; set; }
 
 		[ XmlIgnore ]
-		public ThreeDCartOrderStatusEnum Definition
-		{
-			get { return this.DefinitionStr.ToEnum( ThreeDCartOrderStatusEnum.Undefined ); }
-		}
+		public ThreeDCartOrderStatusEnum Definition => 
+			Enum.TryParse< ThreeDCartOrderStatusEnum >( this.DefinitionStr.Replace( " ", "" ), ignoreCase: true, out var result ) 
+				? result : ThreeDCartOrderStatusEnum.Undefined;
 
 		[ XmlElement( ElementName = "StatusText" ) ]
 		public string Text{ get; set; }
