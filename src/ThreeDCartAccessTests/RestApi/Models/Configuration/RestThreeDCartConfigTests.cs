@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
 namespace ThreeDCartAccessTests.RestApi.Models.Configuration

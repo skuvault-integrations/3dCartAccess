@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Netco.Extensions;
 using ServiceStack;
+using SkuVault.Integrations.Core.Extensions;
 using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.RestApi.Misc;
@@ -137,7 +138,7 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			var endpoint = EndpointsBuilder.UpdateProductsEnpoint();
-			var parts = inventory.Slice( UpdateInventoryLimit );
+			var parts = inventory.SplitInBatches( UpdateInventoryLimit );
 			foreach( var part in parts )
 			{
 				var parentProducts = part.Select( x => new ThreeDCartProductWithoutOptions( x ) ).ToList();
