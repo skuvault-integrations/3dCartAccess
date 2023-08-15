@@ -2,8 +2,8 @@ using System.Linq;
 using LINQtoCSV;
 using Microsoft.Extensions.DependencyInjection;
 using ThreeDCartAccess;
-using ThreeDCartAccess.DependencyInjection;
 using ThreeDCartAccess.RestApi.Models.Configuration;
+using ThreeDCartAccessTests.Integration;
 
 namespace ThreeDCartAccessTests
 {
@@ -29,12 +29,17 @@ namespace ThreeDCartAccessTests
 
 			if( testConfig != null )
 			{
-				var serviceProvider = TestHelper.CreateServiceProvider( testConfig.PrivateKey );
-				this.ThreeDCartFactory = serviceProvider.GetRequiredService< IThreeDCartFactory >();
+				this.SetupDependencyInjection( testConfig.PrivateKey );
 				this.StoreUrl = testConfig.StoreUrl;
 				this.Token = testConfig.Token;
 				this.TimeZone = testConfig.TimeZone;
 			}
+		}
+
+		private void SetupDependencyInjection( string apiPrivateKey )
+		{
+			var serviceProvider = TestHelper.CreateServiceProvider( apiPrivateKey );
+			this.ThreeDCartFactory = serviceProvider.GetRequiredService< IThreeDCartFactory >();
 		}
 	}
 }
