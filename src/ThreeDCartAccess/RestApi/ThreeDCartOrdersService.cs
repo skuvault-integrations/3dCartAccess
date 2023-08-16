@@ -14,7 +14,8 @@ namespace ThreeDCartAccess.RestApi
 {
 	public class ThreeDCartOrdersService: ThreeDCartServiceBase, IThreeDCartOrdersService
 	{
-		protected const int GetOrdersLimit = 300;
+		private const int OrdersByNumbersMaxConcurrentThreads = 10;
+		private const int OrdersMaxPageSize = 300;
 
 		public ThreeDCartOrdersService( RestThreeDCartConfig config, string restApiPrivateKey, IIntegrationLogger logger ): base( config, restApiPrivateKey, logger )
 		{
@@ -27,7 +28,7 @@ namespace ThreeDCartAccess.RestApi
 				var marker = this.GetMarker();
 				startDateUtc = startDateUtc ?? DateTime.UtcNow.AddDays( -30 );
 				endDateUtc = endDateUtc ?? DateTime.UtcNow.AddDays( 1 );
-				var endpoint = EndpointsBuilder.GetNewOrdersEnpoint( 1, GetOrdersLimit, startDateUtc.Value, endDateUtc.Value, this.Config.TimeZone );
+				var endpoint = EndpointsBuilder.GetNewOrdersEnpoint( 1, OrdersMaxPageSize, startDateUtc.Value, endDateUtc.Value, this.Config.TimeZone );
 				this.WebRequestServices.GetResponse< List< ThreeDCartOrder > >( endpoint, marker );
 				return true;
 			}
@@ -50,7 +51,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			this.GetCollection< ThreeDCartOrder >(
 				marker,
-				GetOrdersLimit,
+				OrdersMaxPageSize,
 				( offset, pageSize ) => EndpointsBuilder.GetNewOrdersEnpoint( offset, pageSize, startDateUtc, endDateUtc, this.Config.TimeZone ),
 				portion =>
 				{
@@ -72,7 +73,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			await this.GetCollectionAsync< ThreeDCartOrder >(
 				marker,
-				GetOrdersLimit,
+				OrdersMaxPageSize,
 				( offset, pageSize ) => EndpointsBuilder.GetNewOrdersEnpoint( offset, pageSize, startDateUtc, endDateUtc, this.Config.TimeZone ),
 				portion =>
 				{
@@ -89,7 +90,7 @@ namespace ThreeDCartAccess.RestApi
 			var marker = this.GetMarker();
 			await this.GetCollectionAsync< ThreeDCartOrder >(
 				marker,
-				GetOrdersLimit,
+				OrdersMaxPageSize,
 				( offset, pageSize ) => EndpointsBuilder.GetUpdatedOrdersEnpoint( offset, pageSize, startDateUtc, endDateUtc, this.Config.TimeZone ),
 				portion =>
 				{
@@ -138,8 +139,7 @@ namespace ThreeDCartAccess.RestApi
 		public async Task GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc, Action< ThreeDCartOrder > processAction )
 		{
 			var marker = this.GetMarker();
-			//TODO GUARD-3057 Extract batch size as a constant
-			await invoiceNumbers.DoInBatchesAsync( 10, async invoiceNumber =>
+			await invoiceNumbers.DoInBatchesAsync( OrdersByNumbersMaxConcurrentThreads, async invoiceNumber =>
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
 				var portion = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );

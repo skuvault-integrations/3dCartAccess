@@ -24,6 +24,7 @@ namespace ThreeDCartAccess.SoapApi
 		private readonly cartAPIAdvancedSoapClient _advancedService;
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
+		private const int OrdersByNumbersMaxConcurrentThreads = 50;
 
 		public ThreeDCartOrdersService( ThreeDCartConfig config, IIntegrationLogger logger )
 		{
@@ -121,8 +122,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
-			//TODO GUARD-3057 Extract batch size as a constant
-			var orders = await invoiceNumbers.DoInBatchesAsync( 50, async invoiceNumber =>
+			var orders = await invoiceNumbers.DoInBatchesAsync( OrdersByNumbersMaxConcurrentThreads, async invoiceNumber =>
 			{
 				var order = await this.GetOrderByNumberAsync( invoiceNumber.Trim() );
 				return order;
