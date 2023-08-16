@@ -18,9 +18,6 @@ public class BatchDetails< TInput, TResult >
 		ValidationHelper.ThrowOnValidationErrors< BatchDetails< TInput, TResult > >( GetValidationErrors() );
 	}
 
-	//TODO GUARD-3057 Add tests
-	// Condition.Requires( batchSize, "batchSize" ).IsGreaterOrEqual( 1 );
-	// Condition.Requires( processor, "processor" ).IsNotNull();
 	private IEnumerable< string > GetValidationErrors()
 	{
 		var validationErrors = new List< string >();
@@ -51,9 +48,6 @@ public class BatchDetails< TInput >
 		ValidationHelper.ThrowOnValidationErrors< BatchDetails< TInput, Task > >( GetValidationErrors() );
 	}
 
-	//TODO GUARD-3057 Add tests
-	// Condition.Requires( batchSize, "batchSize" ).IsGreaterOrEqual( 1 );
-	// Condition.Requires( processor, "processor" ).IsNotNull();
 	private IEnumerable< string > GetValidationErrors()
 	{
 		var validationErrors = new List< string >();

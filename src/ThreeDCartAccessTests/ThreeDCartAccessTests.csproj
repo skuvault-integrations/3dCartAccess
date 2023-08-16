@@ -67,6 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseRestApiTests.cs" />
+    <Compile Include="Extensions\BatchDetailsTInputTests.cs" />
+    <Compile Include="Extensions\BatchDetailsTInputTResultTests.cs" />
+    <Compile Include="Extensions\ParallelProcessExtensionsTests.cs" />
     <Compile Include="Integration\Orders\RestApiOrderTests.cs" />
     <Compile Include="Integration\Orders\SoapApiOrderTests.cs" />
     <Compile Include="Integration\Products\RestApiProductTests.cs" />

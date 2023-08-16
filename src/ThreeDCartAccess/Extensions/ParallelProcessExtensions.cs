@@ -7,8 +7,7 @@ namespace ThreeDCartAccess.Extensions;
 
 //TODO In TD-270 the below methods will be moved to Integrations.Core
 //TODO TD-271 Call the instances in Integrations.Core and remove these methods and related code (tests)
-//TODO GUARD-3057 Add integration tests
-internal static class EnumerableExtensions
+internal static class ParallelProcessExtensions
 {
 	/// <summary>
 	/// Performs an asynchronous action on each element of enumerable in a batch.
