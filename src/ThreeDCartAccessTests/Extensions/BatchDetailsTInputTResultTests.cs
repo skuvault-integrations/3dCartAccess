@@ -14,7 +14,6 @@ namespace ThreeDCartAccessTests.Extensions
 
 		[ TestCase( -1 ) ]
 		[ TestCase( 0 ) ]
-		[ TestCase( null ) ]
 		public void Constructor_ShouldThrow_WhenBatchSizeIsBelowOne( int batchSize )
 		{
 			Assert.Throws< ArgumentException >( () => new BatchDetails< int, int >( batchSize, validProcessor ) );

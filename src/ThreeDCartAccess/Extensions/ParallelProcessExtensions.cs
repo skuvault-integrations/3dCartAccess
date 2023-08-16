@@ -10,12 +10,12 @@ namespace ThreeDCartAccess.Extensions;
 internal static class ParallelProcessExtensions
 {
 	/// <summary>
-	/// Performs an asynchronous action on each element of enumerable in a batch.
+	/// Performs an asynchronous action on each element of enumerable in <paramref name="batchSize"/> of concurrent tasks.
 	/// </summary>
 	/// <typeparam name="TInput">The type of the input.</typeparam>
 	/// <param name="inputEnumerable">The input enumerable.</param>
 	/// <param name="batchSize">Size of the batch.</param>
-	/// <param name="processor">The processor.</param>
+	/// <param name="processor">The processor delegate method.</param>
 	/// <returns>Task indicating when all action have been performed.</returns>
 	public static async Task DoInBatchesAsync< TInput >( this IEnumerable< TInput > inputEnumerable, int batchSize, Func< TInput, Task > processor )
 	{
@@ -46,13 +46,13 @@ internal static class ParallelProcessExtensions
 	}
 
 	/// <summary>
-	/// Processes elements asynchronously the in batch of the specified size.
+	/// Calls an asynchronous function on each element of enumerable in <paramref name="batchSize"/> of concurrent tasks.
 	/// </summary>
 	/// <typeparam name="TInput">The type of the input.</typeparam>
 	/// <typeparam name="TResult">The type of the result.</typeparam>
 	/// <param name="inputEnumerable">The input enumerable.</param>
 	/// <param name="batchSize">Size of the batch.</param>
-	/// <param name="processor">The processor.</param>
+	/// <param name="processor">The processor delegate method.</param>
 	/// <param name="ignoreNull">if set to <c>true</c> and <paramref name="processor"/> returns <c>null</c> the result is ignored.</param>
 	/// <returns>Result of processing.</returns>
 	public static async Task< IEnumerable< TResult > > DoInBatchesAsync< TInput, TResult >( this IEnumerable< TInput > inputEnumerable, int batchSize, Func< TInput, Task< TResult > > processor, bool ignoreNull = true )
@@ -85,9 +85,9 @@ internal static class ParallelProcessExtensions
 		return result;
 	}
 
-	private static void AddResultToList< TResult >( IEnumerable< TResult > intermidiateResult, List< TResult > endResult, bool ignoreNull )
+	private static void AddResultToList< TResult >( IEnumerable< TResult > intermediateResult, List< TResult > endResult, bool ignoreNull )
 	{
-		foreach( var value in intermidiateResult )
+		foreach( var value in intermediateResult )
 		{
 			if( ignoreNull && Equals( value, default(TResult) ) )
 				continue;
