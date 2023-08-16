@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//TODO GUARD-3057 Once https://github.com/skuvault-integrations/3dCartAccess/pull/15 is merged, completely remove references to Netco & (implicit) CuttingEdge.Conditions
 using ThreeDCartAccess.Extensions;
 using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.Resilience;
