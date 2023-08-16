@@ -121,6 +121,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
+			//TODO GUARD-3057 Extract batch size as a constant
 			var orders = await invoiceNumbers.ProcessInBatchAsync( 50, async invoiceNumber =>
 			{
 				var order = await this.GetOrderByNumberAsync( invoiceNumber.Trim() );
