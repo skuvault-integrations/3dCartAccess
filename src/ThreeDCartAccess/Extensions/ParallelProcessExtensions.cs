@@ -55,7 +55,6 @@ internal static class ParallelProcessExtensions
 	/// <param name="processor">The processor.</param>
 	/// <param name="ignoreNull">if set to <c>true</c> and <paramref name="processor"/> returns <c>null</c> the result is ignored.</param>
 	/// <returns>Result of processing.</returns>
-	///
 	public static async Task< IEnumerable< TResult > > DoInBatchesAsync< TInput, TResult >( this IEnumerable< TInput > inputEnumerable, int batchSize, Func< TInput, Task< TResult > > processor, bool ignoreNull = true )
 	{
 		var batchDetails = new BatchDetails< TInput, TResult >( batchSize, processor );
