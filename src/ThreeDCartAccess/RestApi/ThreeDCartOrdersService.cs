@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 //TODO GUARD-3057 Once https://github.com/skuvault-integrations/3dCartAccess/pull/15 is merged, completely remove references to Netco & (implicit) CuttingEdge.Conditions
-using Netco.Extensions;
+using ThreeDCartAccess.Extensions;
 using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.RestApi.Misc;
@@ -140,7 +140,7 @@ namespace ThreeDCartAccess.RestApi
 		{
 			var marker = this.GetMarker();
 			//TODO GUARD-3057 Extract batch size as a constant
-			await invoiceNumbers.DoInBatchAsync( 10, async invoiceNumber =>
+			await invoiceNumbers.DoInBatchesAsync( 10, async invoiceNumber =>
 			{
 				var endpoint = EndpointsBuilder.GetOrderEndpoint( invoiceNumber );
 				var portion = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.GetResponseAsync< List< ThreeDCartOrder > >( endpoint, marker ) );
