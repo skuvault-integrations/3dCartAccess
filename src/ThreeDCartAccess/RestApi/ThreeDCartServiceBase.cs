@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SkuVault.Integrations.Core.Helpers;
-using ThreeDCartAccess.Misc;
+using SkuVault.Integrations.Core.Logging;
+using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.RestApi.Misc;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
@@ -11,12 +12,14 @@ namespace ThreeDCartAccess.RestApi
 	public abstract class ThreeDCartServiceBase
 	{
 		protected readonly RestThreeDCartConfig Config;
+		protected readonly IIntegrationLogger _logger;
 		internal readonly WebRequestServices WebRequestServices;
 
-		internal ThreeDCartServiceBase( RestThreeDCartConfig config )
+		internal ThreeDCartServiceBase( RestThreeDCartConfig config, string restApiPrivateKey, IIntegrationLogger logger )
 		{
 			this.Config = config;
-			this.WebRequestServices = new WebRequestServices( config );
+			this._logger = logger;
+			this.WebRequestServices = new WebRequestServices( config, restApiPrivateKey, this._logger );
 
 			ValidationHelper.ThrowOnValidationErrors< RestThreeDCartConfig >( GetValidationErrors() );
 		}
@@ -43,7 +46,7 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = ActionPolicies.Get.Get( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
+				portion = ResiliencePolicies.Get( this._logger ).Execute( () => this.WebRequestServices.GetResponse< List< T > >( endpoint, marker ) );
 				if( portion == null || portion.Count == 0 )
 					break;
 
@@ -62,7 +65,7 @@ namespace ThreeDCartAccess.RestApi
 			for( var i = 1;; i += portion.Count )
 			{
 				var endpoint = endpointFunc( i, pageSize );
-				portion = await ActionPolicies.GetAsync.Get( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
+				portion = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync( async () => await this.WebRequestServices.GetResponseAsync< List< T > >( endpoint, marker ) );
 				if( portion == null || portion.Count == 0 )
 					break;
 

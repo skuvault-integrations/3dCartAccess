@@ -2,34 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LINQtoCSV;
-using Netco.Logging;
 using NUnit.Framework;
-using ThreeDCartAccess;
-using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Product;
 
 namespace ThreeDCartAccessTests.Integration.Products
 {
-	public class SoapApiProductTests
+	public class SoapApiProductTests : BaseSoapApiTests
 	{
-		private IThreeDCartFactory ThreeDCartFactory;
-		private ThreeDCartConfig Config;
-
 		[ SetUp ]
 		public void Init()
 		{
-			NetcoLogger.LoggerFactory = new ConsoleLoggerFactory();
-			const string credentialsFilePath = @"..\..\Files\ThreeDCartCredentials.csv";
-
-			var cc = new CsvContext();
-			var testConfig = cc.Read< SoapApiTestConfig >( credentialsFilePath, new CsvFileDescription { FirstLineHasColumnNames = true, IgnoreUnknownColumns = true } ).FirstOrDefault();
-
-			if( testConfig != null )
-			{
-				this.ThreeDCartFactory = new ThreeDCartFactory();
-				this.Config = new ThreeDCartConfig( testConfig.StoreUrl, testConfig.UserKey, testConfig.TimeZone );
-			}
+			base.GetCredentials();
 		}
 
 		[ Test ]

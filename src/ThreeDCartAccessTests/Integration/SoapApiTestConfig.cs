@@ -1,6 +1,6 @@
 ﻿using LINQtoCSV;
 
-namespace ThreeDCartAccessTests
+namespace ThreeDCartAccessTests.Integration
 {
 	internal class SoapApiTestConfig
 	{

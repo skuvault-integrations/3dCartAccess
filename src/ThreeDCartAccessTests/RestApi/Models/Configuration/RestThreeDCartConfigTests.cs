@@ -1,16 +1,11 @@
 using System;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using ThreeDCartAccess.RestApi.Models.Configuration;
 
 namespace ThreeDCartAccessTests.RestApi.Models.Configuration
 {
 	public class RestThreeDCartConfigTests
 	{
-		private static readonly Randomizer _randomizer = new Randomizer();
-		private readonly string validToken = _randomizer.GetString();
-		private readonly string validStoreUrl = _randomizer.GetString();
-
 		[ TestCase( "" ) ]
 		[ TestCase( " " ) ]
 		[ TestCase( "	" ) ]
@@ -18,7 +13,7 @@ namespace ThreeDCartAccessTests.RestApi.Models.Configuration
 		[ TestCase( "https://www.\\" ) ]
 		public void Constructor_ShouldThrow_WhenStoreUrlIsWhiteSpace_orNull( string storeUrl )
 		{
-			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( storeUrl: storeUrl, this.validToken ) );
+			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( storeUrl: storeUrl, TestHelper.validToken ) );
 		}
 
 		[ TestCase( "" ) ]
@@ -27,46 +22,35 @@ namespace ThreeDCartAccessTests.RestApi.Models.Configuration
 		[ TestCase( null ) ]
 		public void Constructor_ShouldThrow_WhenTokenIsWhiteSpace_orNull( string token )
 		{
-			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( this.validStoreUrl, token: token ) );
+			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( TestHelper.validStoreUrl, token: token ) );
 		}
 
 		[ TestCase( -13 ) ]
 		[ TestCase( 13 ) ]
 		public void Constructor_ShouldThrow_WhenTimeZoneIsOutOfRange( int timeZone )
 		{
-			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( this.validStoreUrl, this.validToken, timeZone ) );
+			Assert.Throws< ArgumentException >( () => CreateRestThreeDCartConfig( TestHelper.validStoreUrl, TestHelper.validToken, timeZone ) );
 		}
 
 		[ Test ]
 		public void Constructor_ShouldNotThrow_WhenAllParamsAreValid()
 		{
-			Assert.DoesNotThrow( () => CreateRestThreeDCartConfig( this.validStoreUrl, this.validToken ) );
+			Assert.DoesNotThrow( () => CreateRestThreeDCartConfig( TestHelper.validStoreUrl, TestHelper.validToken ) );
 		}
 
 		[ TestCase( -12 ) ]
 		[ TestCase( 12 ) ]
 		public void Constructor_ShouldNotThrow_WhenTimeZoneIsOnTheBoundary( int timeZone )
 		{
-			Assert.DoesNotThrow( () => CreateRestThreeDCartConfig( this.validStoreUrl, this.validToken, timeZone ) );
+			Assert.DoesNotThrow( () => CreateRestThreeDCartConfig( TestHelper.validStoreUrl, TestHelper.validToken, timeZone ) );
 		}
 
 		[ TestCase( "https://www.SomeThing.com/\\", "something.com" ) ]
 		public void Constructor_ShouldReturnStandardizedStoreUrl_WhenNonStandardStoreUrlIsPassed( string storeUrl, string storeUrlStandardized )
 		{
-			var result = CreateRestThreeDCartConfig( storeUrl, this.validToken );
+			var result = CreateRestThreeDCartConfig( storeUrl, TestHelper.validToken );
 
 			Assert.That( result.StoreUrl, Is.EqualTo( storeUrlStandardized ));
-		}
-
-		[ TestCase( "" ) ]
-		[ TestCase( " " ) ]
-		[ TestCase( "	" ) ]
-		[ TestCase( null ) ]
-		public void SetPrivateKey_ShouldThrow_WhenPrivateKeyIsWhiteSpace_orNull( string privateKey )
-		{
-			var config = CreateRestThreeDCartConfig( this.validStoreUrl, this.validToken );
-
-			Assert.Throws< ArgumentException >( () => config.SetPrivateKey( privateKey ) );
 		}
 
 		/// <summary>
@@ -80,7 +64,7 @@ namespace ThreeDCartAccessTests.RestApi.Models.Configuration
 		{
 			return new RestThreeDCartConfig( storeUrl, 
 				token,
-				timeZone ?? ( int )_randomizer.NextDecimal( -12, 12 ) );
+				timeZone ?? TestHelper.validTimeZone );
 		}
 	}
 }

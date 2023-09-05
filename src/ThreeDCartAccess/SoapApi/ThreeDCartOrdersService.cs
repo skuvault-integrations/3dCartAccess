@@ -4,8 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using SkuVault.Integrations.Core.Helpers;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.Extensions;
-using ThreeDCartAccess.Misc;
+using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.SoapApi.Misc;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 using ThreeDCartAccess.SoapApi.Models.Order;
@@ -18,17 +19,20 @@ namespace ThreeDCartAccess.SoapApi
 	{
 		private static readonly CultureInfo _culture = new CultureInfo( "en-US" );
 		private readonly ThreeDCartConfig _config;
+		private readonly IIntegrationLogger _logger;
 		private readonly cartAPISoapClient _service;
 		private readonly cartAPIAdvancedSoapClient _advancedService;
 		private readonly WebRequestServices _webRequestServices;
 		private const int _batchSize = 100;
+		private const int OrdersByNumbersMaxConcurrentThreads = 50;
 
-		public ThreeDCartOrdersService( ThreeDCartConfig config )
+		public ThreeDCartOrdersService( ThreeDCartConfig config, IIntegrationLogger logger )
 		{
 			this._config = config;
+			this._logger = logger;
 			this._service = new cartAPISoapClient();
 			this._advancedService = new cartAPIAdvancedSoapClient();
-			this._webRequestServices = new WebRequestServices();
+			this._webRequestServices = new WebRequestServices( this._logger );
 
 			ValidationHelper.ThrowOnValidationErrors< ThreeDCartOrdersService >( GetValidationErrors() );
 		}
@@ -52,7 +56,7 @@ namespace ThreeDCartAccess.SoapApi
 				() =>
 				{
 					var ordersResponse = this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, 1, true, "", "", startDate, endDate, "" );
-					ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+					ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl, this._logger );
 					return ordersResponse;
 				} );
 			return true;
@@ -65,7 +69,7 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
-				var portion = ActionPolicies.Get.Get(
+				var portion = ResiliencePolicies.Get( this._logger ).Execute(
 					() => this._webRequestServices.Execute< ThreeDCartOrders >( "GetNewOrders", this._config,
 						() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ) );
 				if( portion == null )
@@ -87,14 +91,14 @@ namespace ThreeDCartAccess.SoapApi
 			var result = new List< ThreeDCartOrder >();
 			for( var i = 1;; i += _batchSize )
 			{
-				var portion = await ActionPolicies.GetAsync.Get(
+				var portion = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync(
 					async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetNewOrdersAsync", this._config,
-						async () => { 
-							var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
+						async () => {
+								var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, _batchSize, i, true, "", "", startDate, endDate, "" ) ).Body.getOrderResult;
 							
-							ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+								ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl, this._logger );
 							
-							return ordersResponse;
+								return ordersResponse;
 						} ) );
 				
 				if ( portion == null )
@@ -118,7 +122,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		public async Task< List< ThreeDCartOrder > > GetOrdersByNumberAsync( List< string > invoiceNumbers, DateTime startDateUtc, DateTime endDateUtc )
 		{
-			var orders = await invoiceNumbers.DoInBatchesAsync( 50, async invoiceNumber =>
+			var orders = await invoiceNumbers.DoInBatchesAsync( OrdersByNumbersMaxConcurrentThreads, async invoiceNumber =>
 			{
 				var order = await this.GetOrderByNumberAsync( invoiceNumber.Trim() );
 				return order;
@@ -130,7 +134,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		public ThreeDCartOrder GetOrderByNumber( string invoiceNumber )
 		{
-			var portion = ActionPolicies.Get.Get(
+			var portion = ResiliencePolicies.Get( this._logger ).Execute(
 				() => this._webRequestServices.Execute< ThreeDCartOrders >( "GetOrder", this._config,
 					() => this._service.getOrder( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ) );
 
@@ -138,13 +142,13 @@ namespace ThreeDCartAccess.SoapApi
 		}
 
 		public async Task< ThreeDCartOrder > GetOrderByNumberAsync( string invoiceNumber )
-		{									
-			var portion = await ActionPolicies.GetAsync.Get(
+		{
+			var portion = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrders >( "GetOrderAsync", this._config,
 					async () =>
 					{
 						var ordersResponse = ( await this._service.getOrderAsync( this._config.StoreUrl, this._config.UserKey, 1, 1, false, invoiceNumber, "", "", "", "" ) ).Body.getOrderResult;
-						ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl );
+						ErrorHelpers.ThrowIfError( ordersResponse, this._config.StoreUrl, this._logger );
 						return ordersResponse;
 					}
 					)
@@ -171,7 +175,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		private int GetOrdersCount( string startDateUtc, string endDateUtc )
 		{
-			var result = ActionPolicies.Get.Get(
+			var result = ResiliencePolicies.Get( this._logger ).Execute(
 				() => this._webRequestServices.Execute< ThreeDCartOrdersCount >( "GetOrdersCount", this._config,
 					() => this._service.getOrderCount( this._config.StoreUrl, this._config.UserKey, false, "", "", startDateUtc, endDateUtc, "" ) ) );
 			return result.Quantity;
@@ -179,7 +183,7 @@ namespace ThreeDCartAccess.SoapApi
 
 		private async Task< int > GetOrdersCountAsync( string startDateUtc, string endDateUtc )
 		{
-			var result = await ActionPolicies.GetAsync.Get(
+			var result = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrdersCount >( "GetOrdersCountAsync", this._config,
 					async () => ( await this._service.getOrderCountAsync( this._config.StoreUrl, this._config.UserKey, false, "", "", startDateUtc, endDateUtc, "" ) ).Body.getOrderCountResult ) );
 			return result.Quantity;
@@ -188,7 +192,7 @@ namespace ThreeDCartAccess.SoapApi
 		public List< ThreeDCartOrderStatus > GetOrderStatuses()
 		{
 			var sql = ScriptsBuilder.GetOrderStatuses();
-			var result = ActionPolicies.Get.Get(
+			var result = ResiliencePolicies.Get( this._logger ).Execute(
 				() => this._webRequestServices.Execute< ThreeDCartOrderStatuses >( "GetOrderStatuses", this._config,
 					() => this._advancedService.runQuery( this._config.StoreUrl, this._config.UserKey, sql, "" ) ) );
 			return result.Statuses;
@@ -197,7 +201,7 @@ namespace ThreeDCartAccess.SoapApi
 		public async Task< List< ThreeDCartOrderStatus > > GetOrderStatusesAsync()
 		{
 			var sql = ScriptsBuilder.GetOrderStatuses();
-			var result = await ActionPolicies.GetAsync.Get(
+			var result = await ResiliencePolicies.GetAsync( this._logger ).ExecuteAsync(
 				async () => await this._webRequestServices.ExecuteAsync< ThreeDCartOrderStatuses >( "GetOrderStatusesAsync", this._config,
 					async () => ( await this._advancedService.runQueryAsync( this._config.StoreUrl, this._config.UserKey, sql, "" ) ).Body.runQueryResult ) );
 			return result.Statuses;

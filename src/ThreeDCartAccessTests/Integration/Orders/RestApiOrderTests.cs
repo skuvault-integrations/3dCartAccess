@@ -1,36 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LINQtoCSV;
-using Netco.Logging;
 using NUnit.Framework;
-using ThreeDCartAccess;
 using ThreeDCartAccess.RestApi.Models.Order;
 
 namespace ThreeDCartAccessTests.Integration.Orders
 {
 	public class RestApiOrderTests : BaseRestApiTests
 	{
-		private IThreeDCartFactory ThreeDCartFactory;
-
 		[ SetUp ]
 		public void Init()
 		{
-			NetcoLogger.LoggerFactory = new ConsoleLoggerFactory();
-			const string credentialsFilePath = @"..\..\Files\RestApiThreeDCartCredentials.csv";
-
-			var cc = new CsvContext();
-			var testConfig = cc.Read< RestApiTestConfig >( credentialsFilePath, new CsvFileDescription { FirstLineHasColumnNames = true, IgnoreUnknownColumns = true } ).FirstOrDefault();
-
-			if( testConfig != null )
-			{
-				this.ThreeDCartFactory = new ThreeDCartFactory( testConfig.PrivateKey );
-				this.StoreUrl = testConfig.StoreUrl;
-				this.Token = testConfig.Token;
-				this.TimeZone = testConfig.TimeZone;
-			}
+			base.GetCredentials();
 		}
 
 		[ Test ]

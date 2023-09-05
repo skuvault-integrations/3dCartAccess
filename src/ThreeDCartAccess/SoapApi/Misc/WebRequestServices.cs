@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using ThreeDCartAccess.Misc;
+using Microsoft.Extensions.Logging;
+using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.SoapApi.Models;
 using ThreeDCartAccess.SoapApi.Models.Configuration;
 
@@ -9,6 +10,13 @@ namespace ThreeDCartAccess.SoapApi.Misc
 {
 	internal class WebRequestServices
 	{
+		private readonly IIntegrationLogger _logger;
+
+		public WebRequestServices( IIntegrationLogger logger )
+		{
+			this._logger = logger;
+		}
+
 		public TResponse Execute< TResponse >( string methodName, ThreeDCartConfig config, Func< XElement > func )
 		{
 			if( methodName == null )
@@ -31,14 +39,14 @@ namespace ThreeDCartAccess.SoapApi.Misc
 			this.LogRequest( methodName, config );
 			var funkResult = await func();
 
-			if ( funkResult.Name != null && funkResult.Name.LocalName != "Error" )
+			if( funkResult.Name != null && funkResult.Name.LocalName != "Error" )
 			{
 				var funkResultStr = funkResult.ToString();
 				this.LogResponse( methodName, config, funkResultStr );
 				return this.ParseResult< TResponse >( funkResult, funkResultStr );
 			}
 
-			return default( TResponse );
+			return default(TResponse);
 		}
 
 		public T ParseResult< T >( XElement xElement, string xElementStr )
@@ -70,14 +78,12 @@ namespace ThreeDCartAccess.SoapApi.Misc
 
 		private void LogRequest( string methodName, ThreeDCartConfig config )
 		{
-			var logstr = string.Format( "Request for {0}\tStoreUrl:{1}", methodName, config.StoreUrl );
-			ThreeDCartLogger.Log.Trace( logstr );
+			this._logger.Logger.LogTrace( "Request for {MethodName}\tStoreUrl:{StoreUrl}", methodName, config.StoreUrl );
 		}
 
 		private void LogResponse( string methodName, ThreeDCartConfig config, string response )
 		{
-			var logstr = string.Format( "Response for {0}\tStoreUrl:{1}\tData:\n {2}", methodName, config.StoreUrl, response );
-			ThreeDCartLogger.Log.Trace( logstr );
+			this._logger.Logger.LogTrace( "Response for {MethodName}\tStoreUrl:{StoreUrl}\tData:\n {Response}", methodName, config.StoreUrl, response );
 		}
 	}
 }

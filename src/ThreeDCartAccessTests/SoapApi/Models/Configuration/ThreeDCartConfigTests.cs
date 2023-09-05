@@ -7,10 +7,6 @@ namespace ThreeDCartAccessTests.SoapApi.Models.Configuration
 {
 	public class ThreeDCartConfigTests
 	{
-		private static readonly Randomizer _randomizer = new Randomizer();
-		private readonly string validUserKey = _randomizer.GetString();
-		private readonly string validStoreUrl = _randomizer.GetString();
-
 		[ TestCase( "" ) ]
 		[ TestCase( " " ) ]
 		[ TestCase( "	" ) ]
@@ -18,7 +14,7 @@ namespace ThreeDCartAccessTests.SoapApi.Models.Configuration
 		[ TestCase( "https://www.\\" ) ]
 		public void Constructor_ShouldThrow_WhenStoreUrlIsWhiteSpace_orNull( string storeUrl )
 		{
-			Assert.Throws< ArgumentException >( () => CreateThreeDCartConfig( storeUrl: storeUrl, this.validUserKey ) );
+			Assert.Throws< ArgumentException >( () => CreateThreeDCartConfig( storeUrl: storeUrl, TestHelper.validUserKey ) );
 		}
 
 		[ TestCase( "" ) ]
@@ -27,33 +23,33 @@ namespace ThreeDCartAccessTests.SoapApi.Models.Configuration
 		[ TestCase( null ) ]
 		public void Constructor_ShouldThrow_WhenUserKeyIsWhiteSpace_orNull( string userKey )
 		{
-			Assert.Throws< ArgumentException >( () => CreateThreeDCartConfig( this.validStoreUrl, userKey: userKey ) );
+			Assert.Throws< ArgumentException >( () => CreateThreeDCartConfig( TestHelper.validStoreUrl, userKey: userKey ) );
 		}
 
 		[ TestCase( -13 ) ]
 		[ TestCase( 13 ) ]
 		public void Constructor_ShouldThrow_WhenTimeZoneIsOutOfRange( int timeZone )
 		{
-			Assert.Throws< ArgumentException >( () => CreateThreeDCartConfig( this.validStoreUrl, this.validUserKey, timeZone ) );
+			Assert.Throws< ArgumentException >( () => CreateThreeDCartConfig( TestHelper.validStoreUrl, TestHelper.validUserKey, timeZone ) );
 		}
 
 		[ Test ]
 		public void Constructor_ShouldNotThrow_WhenAllParamsAreValid()
 		{
-			Assert.DoesNotThrow( () => CreateThreeDCartConfig( this.validStoreUrl, this.validUserKey ) );
+			Assert.DoesNotThrow( () => CreateThreeDCartConfig( TestHelper.validStoreUrl, TestHelper.validUserKey ) );
 		}
 
 		[ TestCase( -12 ) ]
 		[ TestCase( 12 ) ]
 		public void Constructor_ShouldNotThrow_WhenTimeZoneIsOnTheBoundary( int timeZone )
 		{
-			Assert.DoesNotThrow( () => CreateThreeDCartConfig( this.validStoreUrl, this.validUserKey, timeZone ) );
+			Assert.DoesNotThrow( () => CreateThreeDCartConfig( TestHelper.validStoreUrl, TestHelper.validUserKey, timeZone ) );
 		}
 
 		[ TestCase( "https://www.SomeThing.com/\\", "something.com" ) ]
 		public void Constructor_ShouldReturnStandardizedStoreUrl_WhenNonStandardStoreUrlIsPassed( string storeUrl, string storeUrlStandardized )
 		{
-			var result = CreateThreeDCartConfig( storeUrl, this.validUserKey );
+			var result = CreateThreeDCartConfig( storeUrl, TestHelper.validUserKey );
 
 			Assert.That( result.StoreUrl, Is.EqualTo( storeUrlStandardized ));
 		}
@@ -69,7 +65,7 @@ namespace ThreeDCartAccessTests.SoapApi.Models.Configuration
 		{
 			return new ThreeDCartConfig( storeUrl, 
 				userKey,
-				timeZone ?? ( int )_randomizer.NextDecimal( -12, 12 ) );
+				timeZone ?? TestHelper.validTimeZone );
 		}
 	}
 }

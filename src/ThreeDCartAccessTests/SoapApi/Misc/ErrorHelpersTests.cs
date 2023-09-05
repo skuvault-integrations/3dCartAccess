@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using NUnit.Framework;
 using ThreeDCartAccess.SoapApi.Misc;
@@ -21,7 +17,7 @@ namespace ThreeDCartAccessTests.SoapApi.Misc
 			const string storeUrl = "www.some-store.abc";
 
 			Assert.Throws< Exception >(() => 
-				ErrorHelpers.ThrowIfError( responseWithError, storeUrl ) );
+				ErrorHelpers.ThrowIfError( responseWithError, storeUrl, TestHelper.GetMockLogger() ) );
 		}
 	}
 }
