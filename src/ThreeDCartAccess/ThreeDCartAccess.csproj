@@ -12,10 +12,10 @@
     <PackageProjectUrl>https://github.com/skuvault-integrations/3dCartAccess</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skuvault-integrations/3dCartAccess</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/skuvault-integrations/3dCartAccess/blob/master/License.txt</PackageLicenseUrl>
-    <Version>2.3.1-alpha.4</Version>
+    <Version>2.4.0-alpha.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.3.1.4</AssemblyVersion>
-    <FileVersion>2.3.1.4</FileVersion>
+    <AssemblyVersion>2.4.0.0</AssemblyVersion>
+    <FileVersion>2.4.0.0</FileVersion>
     <Description>3dCart webservices API wrapper.</Description>
     <Copyright>Copyright (C) 2023 SkuVault Inc.</Copyright>
   </PropertyGroup>
@@ -37,8 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extensions\BatchDetails.cs" />
-    <Compile Include="Extensions\ParallelProcessExtensions.cs" />
     <Compile Include="DependencyInjection\ServiceCollectionExtensions.cs" />
     <Compile Include="Logging\ThreeDCartLogger.cs" />
     <Compile Include="Resilience\ResiliencePolicies.cs" />
@@ -201,7 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ServiceStack.Text" Version="6.2.0" />
-    <PackageReference Include="skuvault.integrations.core" Version="1.1.0" />
+    <PackageReference Include="Skuvault.Integrations.Core" Version="1.3.0-alpha.1" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>

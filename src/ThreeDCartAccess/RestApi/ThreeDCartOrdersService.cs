@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ThreeDCartAccess.Extensions;
+using SkuVault.Integrations.Core.Extensions;
 using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.Resilience;
 using ThreeDCartAccess.RestApi.Misc;
