@@ -12,10 +12,10 @@
     <PackageProjectUrl>https://github.com/skuvault-integrations/3dCartAccess</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skuvault-integrations/3dCartAccess</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/skuvault-integrations/3dCartAccess/blob/master/License.txt</PackageLicenseUrl>
-    <Version>2.4.0</Version>
+    <Version>3.0.0-alpha.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.4.0.0</AssemblyVersion>
-    <FileVersion>2.4.0.0</FileVersion>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <FileVersion>3.0.0</FileVersion>
     <Description>3dCart webservices API wrapper.</Description>
     <Copyright>Copyright (C) 2023 SkuVault Inc.</Copyright>
   </PropertyGroup>
@@ -68,44 +68,7 @@
     <Compile Include="RestApi\Models\ThreeDCartError.cs" />
     <Compile Include="RestApi\ThreeDCartOrdersService.cs" />
     <Compile Include="RestApi\ThreeDCartServiceBase.cs" />
-    <Compile Include="SoapApi\IThreeDCartOrdersService.cs" />
-    <Compile Include="SoapApi\IThreeDCartProductsService.cs" />
-    <Compile Include="SoapApi\Misc\ErrorHelpers.cs" />
-    <Compile Include="SoapApi\Misc\ScriptsBuilder.cs" />
     <Compile Include="RestApi\Misc\EndpointsBuilder.cs" />
-    <Compile Include="SoapApi\Misc\WebRequestServices.cs" />
-    <Compile Include="SoapApi\Misc\XmlSerializeHelpers.cs" />
-    <Compile Include="SoapApi\Models\Configuration\ThreeDCartConfig.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartBillingAddress.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartOrder.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartOrderItem.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartOrders.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartOrdersCount.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartOrderStatus.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartOrderStatuses.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartShipment.cs" />
-    <Compile Include="SoapApi\Models\Order\ThreeDCartShippingInformation.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartInventories.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartInventory.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartProductsCount.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartProduct.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartProducts.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartUpdatedInventory.cs" />
-    <Compile Include="SoapApi\Models\Product\ThreeDCartUpdatedOptionInventory.cs" />
-    <Compile Include="SoapApi\Models\RunQueryResponse.cs" />
-    <Compile Include="SoapApi\Models\ThreeDCartError.cs" />
-    <Compile Include="Service References\ThreeDCartAdvancedService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\ThreeDCartService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="SoapApi\ThreeDCartOrdersService.cs" />
-    <Compile Include="SoapApi\ThreeDCartProductsService.cs" />
     <Compile Include="RestApi\IThreeDCartProductsService.cs" />
     <Compile Include="RestApi\Misc\WebRequestServices.cs" />
     <Compile Include="RestApi\Models\Product\GetProducts\ThreeDCartProduct.cs" />
@@ -116,86 +79,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Properties\DataSources\System.Xml.Linq.XElement.datasource" />
-    <None Include="Service References\ThreeDCartAdvancedService\cart_advanced.wsdl" />
-    <None Include="Service References\ThreeDCartAdvancedService\ThreeDCartAccess.ThreeDCartAdvancedService.runQueryResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\cart.wsdl" />
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.editCustomerResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getCustomerCountResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getCustomerLoginTokenResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getCustomerResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getOrderCountResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getOrderResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getOrderStatusResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getProductCountResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getProductInventoryResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.getProductResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.updateOrderShipmentResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.updateOrderStatusResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ThreeDCartService\ThreeDCartAccess.ThreeDCartService.updateProductInventoryResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ThreeDCartAdvancedService\" />
-    <WCFMetadataStorage Include="Service References\ThreeDCartService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartService\cart.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartService\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartService\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartAdvancedService\cart_advanced.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartAdvancedService\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartAdvancedService\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ThreeDCartAdvancedService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ServiceStack.Text" Version="6.2.0" />

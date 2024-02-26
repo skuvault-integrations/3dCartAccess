@@ -1,15 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using SkuVault.Integrations.Core.Logging;
 using ThreeDCartAccess.RestApi.Models.Configuration;
-using ThreeDCartAccess.SoapApi;
-using ThreeDCartAccess.SoapApi.Models.Configuration;
 
 namespace ThreeDCartAccess
 {
 	public interface IThreeDCartFactory
 	{
-		IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config );
-		IThreeDCartOrdersService CreateSoapOrdersService( ThreeDCartConfig config );
 
 		RestApi.IThreeDCartProductsService CreateRestProductsService( RestThreeDCartConfig config );
 		RestApi.IThreeDCartOrdersService CreateRestOrdersService( RestThreeDCartConfig config );
@@ -24,16 +20,6 @@ namespace ThreeDCartAccess
 		{
 			this.RestApiPrivateKey = settings?.Value?.PrivateApiKey;
 			this._logger = logger;
-		}
-
-		public IThreeDCartProductsService CreateSoapProductsService( ThreeDCartConfig config )
-		{
-			return new ThreeDCartProductsService( config, this._logger );
-		}
-
-		public IThreeDCartOrdersService CreateSoapOrdersService( ThreeDCartConfig config )
-		{
-			return new ThreeDCartOrdersService( config, this._logger );
 		}
 
 		public RestApi.IThreeDCartProductsService CreateRestProductsService( RestThreeDCartConfig config )
