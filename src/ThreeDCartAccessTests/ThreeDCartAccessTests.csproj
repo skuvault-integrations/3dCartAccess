@@ -140,22 +140,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseRestApiTests.cs" />
-    <Compile Include="BaseSoapApiTests.cs" />
     <Compile Include="Integration\Orders\RestApiOrderTests.cs" />
-    <Compile Include="Integration\Orders\SoapApiOrderTests.cs" />
     <Compile Include="Integration\Products\RestApiProductTests.cs" />
-    <Compile Include="Integration\Products\SoapApiProductTests.cs" />
     <Compile Include="Integration\RestApiTestConfig.cs" />
-    <Compile Include="Integration\SoapApiTestConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RestApi\Misc\WebRequestServicesTests.cs" />
     <Compile Include="RestApi\Models\Configuration\RestThreeDCartConfigTests.cs" />
     <Compile Include="RestApi\ThreeDCartProductsServiceTests.cs" />
     <Compile Include="RestApi\ThreeDCartOrdersServiceTests.cs" />
-    <Compile Include="SoapApi\Misc\ErrorHelpersTests.cs" />
-    <Compile Include="SoapApi\Models\Configuration\ThreeDCartConfigTests.cs" />
-    <Compile Include="SoapApi\ThreeDCartOrdersServiceTests.cs" />
-    <Compile Include="SoapApi\ThreeDCartProductsServiceTests.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
